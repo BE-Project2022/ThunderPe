@@ -4,27 +4,33 @@
     "slug": "client",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/Logo_Yel.png",
+    "icon": "./assets/images/Logo_Yel.png",
     "splash": {
-      "image": "./assets/Logo_white.png",
+      "image": "./assets/images/Logo_white.png",
       "resizeMode": "contain",
       "backgroundColor": "#FFC100"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/Logo_Yel.png",
+        "foregroundImage": "./assets/images/Logo_Yel.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./assets/Logo_Yel.png"
+      "favicon": "./assets/images/Logo_Yel.png"
+    },
+    "androidStatusBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#ffc100"
     }
   }
 }
