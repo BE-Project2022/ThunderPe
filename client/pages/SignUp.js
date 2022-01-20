@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View, Button, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import React from 'react';
 import Logo from "../assets/images/Logo_Yel.png";
 import Input from "../components/Input";
