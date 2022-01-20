@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Text, View, Button, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import React from 'react';
 import Logo from "../assets/images/Logo_Yel.png";
 import Input from "../components/Input";
@@ -8,43 +8,45 @@ import Mobile from "../assets/images/mobile.png"
 import Key from "../assets/images/key.png"
 const SignUp = () => {
     return (
-        <View>
-            <View style={styles.header}>
-                <Text style={styles.title}>SIGN UP</Text>
-            </View>
-            <View style={styles.container}>
-                <Image source={Logo} style={styles.img} />
-                <View style={{ position: 'relative' }}>
-                    <Input name="Full Name" val="false" />
-                    <Image source={User} style={{ position: 'absolute', top: 10, right: 5 }} />
+        <KeyboardAvoidingView behavior='position'>
+            <View>
+                <View style={styles.header}>
+                    <Text style={styles.title}>SIGN UP</Text>
                 </View>
-                <View style={{ position: 'relative' }}>
-                    <Input name="Email Id" val="false" />
-                    <Image source={Email} style={{ position: 'absolute', top: 10, right: 5 }} />
+                <View style={styles.container}>
+                    <Image source={Logo} style={styles.img} />
+                    <View style={{ position: 'relative' }}>
+                        <Input name="Full Name" val="false" />
+                        <Image source={User} style={{ position: 'absolute', top: 10, right: 5 }} />
+                    </View>
+                    <View style={{ position: 'relative' }}>
+                        <Input name="Email Id" val="false" />
+                        <Image source={Email} style={{ position: 'absolute', top: 10, right: 5 }} />
+                    </View>
+                    <View style={{ position: 'relative' }}>
+                        <Input name="Mobile" val="false" type="numeric" />
+                        <Image source={Mobile} style={{ position: 'absolute', top: 10, right: 5 }} />
+                    </View>
+                    <View style={{ position: 'relative' }}>
+                        <Input name="Password" val="true" />
+                        <Image source={Key} style={{ position: 'absolute', top: 10, right: 5 }} />
+                    </View>
+                    <View style={{ position: 'relative' }}>
+                        <Input name="Confirm Password" val="true" />
+                        <Image source={Key} style={{ position: 'absolute', top: 10, right: 5 }} />
+                    </View>
+                    <View>
+                        <TouchableOpacity style={styles.button}>
+                            <Text style={{ textAlign: 'center', marginTop: 8, color: '#fff', fontWeight: "bold" }}>Sign Up</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.bottomText}>
+                        <Text style={{ marginBottom: 10 }}>Already a user? Login here</Text>
+                    </View>
                 </View>
-                <View style={{ position: 'relative' }}>
-                    <Input name="Mobile" val="false" type="numeric" />
-                    <Image source={Mobile} style={{ position: 'absolute', top: 10, right: 5 }} />
-                </View>
-                <View style={{ position: 'relative' }}>
-                    <Input name="Password" val="true" />
-                    <Image source={Key} style={{ position: 'absolute', top: 10, right: 5 }} />
-                </View>
-                <View style={{ position: 'relative' }}>
-                    <Input name="Confirm Password" val="true" />
-                    <Image source={Key} style={{ position: 'absolute', top: 10, right: 5 }} />
-                </View>
-                <View>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={{ textAlign: 'center', marginTop: 8, color: '#fff', fontWeight: "bold" }}>Sign Up</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.bottomText}>
-                    <Text style={{ marginBottom: 10 }}>Already a user? Login here</Text>
-                </View>
-            </View>
 
-        </View>
+            </View>
+        </KeyboardAvoidingView>
     );
 };
 
