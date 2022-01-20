@@ -11,10 +11,14 @@ const Login = () => {
       </View>
       <View style={styles.container}>
         <Image source={Logo} style={styles.img} />
-        <Input name="Username" />
-        <Input name="Password" />
+        <Input name="Username" val="false" />
+        <Input name="Password" val="true" />
         <View style={styles.button}>
-          <Button title="Login" color="#FFC100" />
+          <Button title="Login" color="#FFC100" style={{ marginBottom: 10 }} />
+        </View>
+        <View style={styles.bottomText}>
+          <Text style={{ marginBottom: 10 }}>Forgot Password?</Text>
+          <Text>Not a user? Register</Text>
         </View>
       </View>
     </View>
@@ -33,16 +37,23 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 10,
+    marginBottom: 10,
     height: 40,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
   title: {
     fontSize: 20,
+    color: "white",
     backgroundColor: "#FFC100",
     height: 40,
-    fontWeight: "bold",
     textAlign: "center",
+    fontWeight: "bold",
     marginTop: 30,
     marginBottom: 20,
+  },
+  bottomText: {
+    alignItems: "center",
   },
 });
 

@@ -4,7 +4,11 @@ import { View, StyleSheet, TextInput } from "react-native";
 const Input = (props) => {
   return (
     <View>
-      <TextInput style={styles.input} placeholder={props.name} />
+      <TextInput
+        style={styles.input}
+        placeholder={props.name}
+        secureTextEntry={props.val === "true"}
+      />
     </View>
   );
 };
