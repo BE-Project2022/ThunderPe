@@ -1,34 +1,100 @@
-import React from "react";
-import { View, TextInput, Button, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
-import Input from "../components/Input";
+import React, { useState } from "react";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Image,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import Logo from "../assets/images/Logo_Yel.png";
-import User from '../assets/images/user.png'
-import Key from "../assets/images/key.png"
+import User from "../assets/images/user.png";
+import Key from "../assets/images/key.png";
 import { StackActions } from "@react-navigation/routers";
+import axios from "axios";
 
 const Login = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const changeEmail = (e) => {
+    setEmail(e);
+  };
+  const changePassword = (e) => {
+    setPassword(e);
+  };
+
+  const handleLogin = async (e) => {
+    if (email === "" && password === "") {
+      alert("Please fill all the fields");
+    } else {
+      const user = { email: email, password: password };
+      console.log(user);
+      // await axios.post(,user)
+      // .then(res => {
+      // })
+      // .catch(err => {
+      // });
+    }
+  };
+
   return (
-    <View style={{ backgroundColor: "#fff", height: '100%' }}>
+    <View style={{ backgroundColor: "#fff", height: "100%" }}>
       <View style={styles.header}>
         <Text style={styles.title}>LOGIN</Text>
       </View>
       <View style={styles.container}>
         <Image source={Logo} style={styles.img} />
-        <View style={{ position: 'relative' }}>
-          <Input name="Username (Email Id)" val="false" />
-          <Image source={User} style={{ position: 'absolute', top: 10, right: 5 }} />
+        <View style={{ position: "relative" }}>
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder="Username (Email Id)"
+              secureTextEntry={false}
+              onChangeText={changeEmail}
+            />
+          </View>
+          <Image
+            source={User}
+            style={{ position: "absolute", top: 10, right: 5 }}
+          />
         </View>
 
-        <View style={{ position: 'relative' }}>
-          <Input name="Password" val="true" />
-          <Image source={Key} style={{ position: 'absolute', top: 10, right: 5 }} />
+        <View style={{ position: "relative" }}>
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              secureTextEntry={true}
+              onChangeText={changePassword}
+            />
+          </View>
+          <Image
+            source={Key}
+            style={{ position: "absolute", top: 10, right: 5 }}
+          />
         </View>
-        <TouchableOpacity style={styles.button}>
-          <Text style={{ textAlign: 'center', marginTop: 8, color: '#fff', fontWeight: "bold" }}>Login</Text>
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text
+            style={{
+              textAlign: "center",
+              marginTop: 8,
+              color: "#fff",
+              fontWeight: "bold",
+            }}
+          >
+            Login
+          </Text>
         </TouchableOpacity>
         <View style={styles.bottomText}>
-          <TouchableOpacity style={{ marginBottom: 10 }}><Text>Forgot Password?</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.dispatch(StackActions.replace('SignUp'))}><Text>Not a user? Register</Text></TouchableOpacity>
+          <TouchableOpacity style={{ marginBottom: 10 }}>
+            <Text>Forgot Password?</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.dispatch(StackActions.replace("SignUp"))}
+          >
+            <Text>Not a user? Register</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -36,10 +102,9 @@ const Login = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-
   header: {
     backgroundColor: "#ffc100",
-    height: 49
+    height: 49,
   },
   container: {
     backgroundColor: "#fff",
@@ -55,7 +120,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     height: 45,
     borderRadius: 25,
-    marginBottom: 10
+    marginBottom: 10,
   },
   title: {
     fontSize: 20,
@@ -65,10 +130,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     marginTop: 8,
-    marginBottom: 20
+    marginBottom: 20,
   },
   bottomText: {
     alignItems: "center",
+  },
+  input: {
+    borderBottomColor: "#000",
+    borderBottomWidth: 1,
+    marginBottom: 25,
+    height: 40,
   },
 });
 
