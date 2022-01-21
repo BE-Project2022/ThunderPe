@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import Logo from "../assets/images/Logo_Yel.png";
-import Input from "../components/Input";
 import User from "../assets/images/user.png";
 import Email from "../assets/images/email.png";
 import Mobile from "../assets/images/mobile.png";
