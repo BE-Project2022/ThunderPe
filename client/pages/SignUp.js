@@ -6,10 +6,14 @@ import User from '../assets/images/user.png'
 import Email from '../assets/images/email.png'
 import Mobile from "../assets/images/mobile.png"
 import Key from "../assets/images/key.png"
-const SignUp = () => {
+import { StackActions } from '@react-navigation/native'
+const SignUp = ({ navigation }) => {
+    // navigation.dispatch(
+    //     StackActions.replace('Login', { user: 'jane', })
+    // );
     return (
         <KeyboardAvoidingView behavior='position'>
-            <View>
+            <View style={{ backgroundColor: "#fff" }}>
                 <View style={styles.header}>
                     <Text style={styles.title}>SIGN UP</Text>
                 </View>
@@ -41,7 +45,9 @@ const SignUp = () => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.bottomText}>
-                        <Text style={{ marginBottom: 10 }}>Already a user? Login here</Text>
+                        <TouchableOpacity onPress={() => navigation.dispatch(StackActions.replace('Login'))}>
+                            <Text style={{ marginBottom: 10 }}>Already a user? Login here</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -57,6 +63,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         width: "80%",
         alignSelf: "center",
+        // height: '100%'
     },
     button: {
         backgroundColor: "#ffc100",

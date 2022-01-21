@@ -6,9 +6,8 @@
     "orientation": "portrait",
     "icon": "./assets/images/Logo_Yel.png",
     "splash": {
-      "image": "./assets/images/Logo_white.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#FFC100"
+      "image": "./assets/images/Splash.png",
+      "resizeMode": "cover"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -27,10 +26,6 @@
     },
     "web": {
       "favicon": "./assets/images/Logo_Yel.png"
-    },
-    "androidStatusBar": {
-      "barStyle": "dark-content",
-      "backgroundColor": "#ffc100"
     }
   }
 }

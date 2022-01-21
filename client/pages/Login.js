@@ -4,9 +4,11 @@ import Input from "../components/Input";
 import Logo from "../assets/images/Logo_Yel.png";
 import User from '../assets/images/user.png'
 import Key from "../assets/images/key.png"
-const Login = () => {
+import { StackActions } from "@react-navigation/routers";
+
+const Login = ({ navigation }) => {
   return (
-    <View>
+    <View style={{ backgroundColor: "#fff", height: '100%' }}>
       <View style={styles.header}>
         <Text style={styles.title}>LOGIN</Text>
       </View>
@@ -25,8 +27,8 @@ const Login = () => {
           <Text style={{ textAlign: 'center', marginTop: 8, color: '#fff', fontWeight: "bold" }}>Login</Text>
         </TouchableOpacity>
         <View style={styles.bottomText}>
-          <Text style={{ marginBottom: 10 }}>Forgot Password?</Text>
-          <Text>Not a user? Register</Text>
+          <TouchableOpacity style={{ marginBottom: 10 }}><Text>Forgot Password?</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.dispatch(StackActions.replace('SignUp'))}><Text>Not a user? Register</Text></TouchableOpacity>
         </View>
       </View>
     </View>
