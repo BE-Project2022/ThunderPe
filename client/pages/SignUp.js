@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   KeyboardAvoidingView,
+  TextInput,
 } from "react-native";
 import React, { useState } from "react";
 import Logo from "../assets/images/Logo_Yel.png";
@@ -18,10 +19,11 @@ const SignUp = ({ navigation }) => {
   // navigation.dispatch(
   //     StackActions.replace('Login', { user: 'jane', })
   // );
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [mobile, setMobile] = useState("");
   const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const changeEmail = (e) => {
     setEmail(e);
@@ -39,9 +41,15 @@ const SignUp = ({ navigation }) => {
     setFullname(e);
   };
 
+  const changeConfirmPassword = (e) => {
+    setConfirmPassword(e);
+  };
+
   const handleSignUp = async (e) => {
     if (fullname === "" || email === "" || password === "" || mobile === "") {
       alert("Please fill in all fields");
+    } else if (password !== confirmPassword) {
+      alert("Passwords do not match");
     } else {
       const user = {
         fullname: fullname,
@@ -75,35 +83,67 @@ const SignUp = ({ navigation }) => {
         <View style={styles.container}>
           <Image source={Logo} style={styles.img} />
           <View style={{ position: "relative" }}>
-            <Input name="Full Name" val="false" />
+            <View>
+              <TextInput
+                style={styles.input}
+                placeholder="Full Name"
+                onChangeText={changeFullname}
+              />
+            </View>
             <Image
               source={User}
               style={{ position: "absolute", top: 10, right: 5 }}
             />
           </View>
           <View style={{ position: "relative" }}>
-            <Input name="Email Id" val="false" />
+            <View>
+              <TextInput
+                style={styles.input}
+                placeholder="Email Id"
+                onChangeText={changeEmail}
+              />
+            </View>
             <Image
               source={Email}
               style={{ position: "absolute", top: 10, right: 5 }}
             />
           </View>
           <View style={{ position: "relative" }}>
-            <Input name="Mobile" val="false" type="numeric" />
+            <View>
+              <TextInput
+                style={styles.input}
+                placeholder="Mobile"
+                onChangeText={changeMobile}
+              />
+            </View>
             <Image
               source={Mobile}
               style={{ position: "absolute", top: 10, right: 5 }}
             />
           </View>
           <View style={{ position: "relative" }}>
-            <Input name="Password" val="true" />
+            <View>
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                secureTextEntry={true}
+                onChangeText={changePassword}
+              />
+            </View>
             <Image
               source={Key}
               style={{ position: "absolute", top: 10, right: 5 }}
             />
           </View>
           <View style={{ position: "relative" }}>
-            <Input name="Confirm Password" val="true" />
+            <View>
+              <TextInput
+                style={styles.input}
+                placeholder="Confirm Password"
+                secureTextEntry={true}
+                onChangeText={changeConfirmPassword}
+              />
+            </View>
             <Image
               source={Key}
               style={{ position: "absolute", top: 10, right: 5 }}
@@ -174,5 +214,11 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "#ffc100",
     height: 49,
+  },
+  input: {
+    borderBottomColor: "#000",
+    borderBottomWidth: 1,
+    marginBottom: 25,
+    height: 40,
   },
 });
