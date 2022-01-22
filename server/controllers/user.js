@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import {} from "dotenv/config";
 
-import ThunderUser from "../models/userSchema";
+import ThunderUser from "../models/userSchema.js";
 
 const router = express.Router();
 
