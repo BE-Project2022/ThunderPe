@@ -19,11 +19,7 @@
     "googleapis": "^92.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.5",
-<<<<<<< HEAD
     "nodemailer": "^6.7.2",
     "nodemon": "^2.0.15"
-=======
-    "nodemailer": "^6.7.2"
->>>>>>> 9cc023dc63c61f5669e68286be7db50097f7dbe6
   }
 }
