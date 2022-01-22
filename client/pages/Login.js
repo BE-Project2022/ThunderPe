@@ -29,12 +29,18 @@ const Login = ({ navigation }) => {
       alert("Please fill all the fields");
     } else {
       const user = { email: email, password: password };
-      console.log(user);
-      // await axios.post(,user)
-      // .then(res => {
-      // })
-      // .catch(err => {
-      // });
+      await axios
+        .post("http://localhost:5000/auth/login", user)
+        .then((res) => {
+          // localStorage.setItem("token", res.data.token);
+          // console.log(res.data.token);
+          // setLogstate(true);
+          console.log("successfully logged in");
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("Invalid email or password");
+        });
     }
   };
 

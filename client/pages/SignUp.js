@@ -56,20 +56,20 @@ const SignUp = ({ navigation }) => {
         password: password,
         mobile: mobile,
       };
-      //   axios
-      //     .post("http://localhost:5000/auth/signup", user)
-      //     .then((res) => {
-      //       console.log(res);
-      //       setSignState(true);
-      //     })
-      //     .catch((err) => {
-      //       if (err.response.status === 400) {
-      //         alert("email id already exists");
-      //         console.log(err);
-      //       }
-      //     });
+      axios
+        .post("http://localhost:5000/auth/signup", user)
+        .then((res) => {
+          console.log(res);
+          // setSignState(true);
+        })
+        .catch((err) => {
+          if (err.response.status === 400) {
+            alert("email id already exists");
+            console.log(err);
+          }
+        });
 
-      console.log(user);
+      // console.log(user);
     }
   };
 
