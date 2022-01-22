@@ -75,7 +75,7 @@ export const forgotPassword = async (req, res) => {
   const user = await ThunderUser.findOne({
     email: req.body.email,
   });
-  console.log("HI")
+  // console.log("HI")
   if (user) {
     if (user.mobile === req.body.mobile) {
       const OTP = Math.floor(1000 + Math.random() * 9000);
@@ -116,7 +116,7 @@ export const verifyOTP = async (req, res) => {
       return res.status(200).send({ error: 'Invalid Verification ID' });
     }
     if (veri.otp !== otp) {
-      return res.status(200).send({ error: 'Incorrect OTP' });
+      return res.status(401).send({ error: 'Incorrect OTP' });
     }
     await Verification.deleteOne({ _id: id });
     return res.status(200).send({ isValid: true });

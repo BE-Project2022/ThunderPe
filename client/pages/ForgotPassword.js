@@ -7,6 +7,7 @@ import Mobile from "../assets/images/mobile.png"
 import Key from "../assets/images/key.png"
 import Back from '../assets/images/back.png'
 import { getStateFromPath } from '@react-navigation/core';
+import { StackActions } from '@react-navigation/routers';
 import axios from 'axios'
 const ForgotPassword = ({ navigation }) => {
     const [email, setEmail] = useState("");
@@ -19,12 +20,23 @@ const ForgotPassword = ({ navigation }) => {
         setMobile(e);
     };
 
-    const getOTP = () => {
+    const getOTP = async () => {
         // console.log(email, mobile)
         if (email === '' || mobile === '') {
             alert('Please fill all the fields')
         }
         else {
+            const user = { email: email, mobile: mobile }
+            await axios
+                .post('https://thunderpe.herokuapp.com/auth/forgotPassword', user)
+                .then((res) => {
+                    console.log('Authenticated', res)
+                    navigation.dispatch(StackActions.replace('EnterOTP', { id: res.data.user._id, email: res.data.user.email }))
+                })
+                .catch((err) => {
+                    console.log(err)
+                    console.log("Invalid Mobile or Email")
+                })
 
         }
     }
