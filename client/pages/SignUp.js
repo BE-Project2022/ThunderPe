@@ -57,7 +57,7 @@ const SignUp = ({ navigation }) => {
         mobile: mobile,
       };
       axios
-        .post("http://localhost:5000/auth/signup", user)
+        .post("https://thunderpe.herokuapp.com/auth/signup", user)
         .then((res) => {
           console.log(res);
           // setSignState(true);
