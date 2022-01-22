@@ -5,7 +5,8 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "JWT_SECRET=wearebeprojectmembersand&buildingafull#fledged$#reactnativemobile!paymentsappusingnotusingweb69 MONGODB_URI=mongodb+srv://Group18:Group18@cluster0.wsx5d.mongodb.net/ThunderUser?retryWrites=true&w=majority node app.js"
   },
   "keywords": [],
   "author": "",
