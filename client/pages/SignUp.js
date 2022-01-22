@@ -14,10 +14,8 @@ import Email from "../assets/images/email.png";
 import Mobile from "../assets/images/mobile.png";
 import Key from "../assets/images/key.png";
 import { StackActions } from "@react-navigation/native";
+import axios from "axios";
 const SignUp = ({ navigation }) => {
-  // navigation.dispatch(
-  //     StackActions.replace('Login', { user: 'jane', })
-  // );
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
@@ -60,6 +58,7 @@ const SignUp = ({ navigation }) => {
         .post("https://thunderpe.herokuapp.com/auth/signup", user)
         .then((res) => {
           console.log(res);
+          navigation.dispatch(StackActions.replace('Login'))
           // setSignState(true);
         })
         .catch((err) => {
@@ -112,6 +111,7 @@ const SignUp = ({ navigation }) => {
               <TextInput
                 style={styles.input}
                 placeholder="Mobile"
+                keyboardType='numeric'
                 onChangeText={changeMobile}
               />
             </View>

@@ -80,12 +80,12 @@ export const forgotPassword = async (req, res) => {
     if (user.mobile === req.body.mobile) {
       const OTP = Math.floor(1000 + Math.random() * 9000);
       console.log(OTP)
-      // sendEmail({
-      //   subject: "OTP Verification for ThunderPe",
-      //   text: `Hi there, your OTP for verification is ${OTP}`,
-      //   to: "pratik0312@gmail.com",
-      //   from: process.env.GOOGLE_EMAIL
-      // });
+      sendEmail({
+        subject: "OTP Verification for ThunderPe",
+        text: `Hi there, your OTP for verification is ${OTP}`,
+        to: user.email,
+        from: process.env.GOOGLE_EMAIL
+      });
       const veri = await Verification.create({ otp: OTP });
       res.status(200).send({ user, id: veri._doc._id })
     }

@@ -12,6 +12,7 @@ import User from "../assets/images/user.png";
 import Key from "../assets/images/key.png";
 import { StackActions } from "@react-navigation/routers";
 import axios from "axios";
+import Back from '../assets/images/back.png'
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -35,7 +36,7 @@ const Login = ({ navigation }) => {
           // localStorage.setItem("token", res.data.token);
           // console.log(res.data.token);
           // setLogstate(true);
-          console.log("successfully logged in");
+          console.log("Successfully logged in ", res.data.user._id);
         })
         .catch((err) => {
           console.log(err);
@@ -47,6 +48,9 @@ const Login = ({ navigation }) => {
   return (
     <View style={{ backgroundColor: "#fff", height: "100%" }}>
       <View style={styles.header}>
+        <TouchableOpacity style={{ width: '12%' }} onPress={() => navigation.canGoBack() ? navigation.goBack() : null}>
+          <Image source={navigation.canGoBack() ? Back : null} style={{ left: 12, height: 30, top: 11 }} />
+        </TouchableOpacity>
         <Text style={styles.title}>LOGIN</Text>
       </View>
       <View style={styles.container}>
@@ -93,7 +97,10 @@ const Login = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
         <View style={styles.bottomText}>
-          <TouchableOpacity style={{ marginBottom: 10 }}>
+          <TouchableOpacity
+            style={{ marginBottom: 10 }}
+            onPress={() => navigation.navigate('ForgotPassword')}
+          >
             <Text>Forgot Password?</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -111,6 +118,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "#ffc100",
     height: 49,
+    flexDirection: 'row'
   },
   container: {
     backgroundColor: "#fff",
@@ -131,12 +139,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     color: "white",
-    // backgroundColor: "#FFC100",
     height: 40,
-    textAlign: "center",
+    alignSelf: 'center',
     fontWeight: "bold",
     marginTop: 8,
     marginBottom: 20,
+    marginLeft: '30%',
+    top: 9
   },
   bottomText: {
     alignItems: "center",
