@@ -6,8 +6,7 @@ const verificationSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-    },
-    { timestamps: true }
+    }
 );
 
 const Verification = mongoose.model('Verification', verificationSchema);

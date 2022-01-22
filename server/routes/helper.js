@@ -9,11 +9,12 @@ const router = express.Router();
 //get methods
 router.get("/getallusers", getUser);
 router.get('/getallotp', getVerification)
+router.get('/verifyOTP', verifyOTP)
+
 //post methods
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/forgotPassword", forgotPassword)
-router.post('/verifyOTP', verifyOTP)
 
 
 export default router;
