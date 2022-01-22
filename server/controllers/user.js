@@ -61,3 +61,11 @@ export const login = async (req, res) => {
     res.status(404).send("Email id not found");
   }
 };
+
+export const getUser = async (req, res) => {
+  const user = await ThunderUser.find({});
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+  res.status(200).json(user);
+};

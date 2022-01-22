@@ -30,7 +30,7 @@ const Login = ({ navigation }) => {
     } else {
       const user = { email: email, password: password };
       await axios
-        .post("http://localhost:5000/auth/login", user)
+        .post("https://glacial-dusk-92889.herokuapp.com/auth/login", user)
         .then((res) => {
           // localStorage.setItem("token", res.data.token);
           // console.log(res.data.token);
