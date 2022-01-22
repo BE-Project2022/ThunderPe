@@ -113,7 +113,7 @@ export const verifyOTP = async (req, res) => {
     const { id, otp } = req.body;
     const veri = await Verification.findOne({ _id: id });
     if (!veri) {
-      return res.status(200).send({ error: 'Invalid Verification ID' });
+      return res.status(401).send({ error: 'Invalid Verification ID' });
     }
     if (veri.otp !== otp) {
       return res.status(401).send({ error: 'Incorrect OTP' });
