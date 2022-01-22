@@ -1,10 +1,10 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import {} from "dotenv/config";
-
+import { } from "dotenv/config";
 import ThunderUser from "../models/userSchema.js";
-
+import { sendEmail } from "../services/MailService.js";
+import Verification from "../models/Verification.js";
 const router = express.Router();
 
 export const signup = async (req, res) => {
@@ -69,3 +69,59 @@ export const getUser = async (req, res) => {
   }
   res.status(200).json(user);
 };
+
+
+export const forgotPassword = async (req, res) => {
+  const user = await ThunderUser.findOne({
+    email: req.body.email,
+  });
+  console.log("HI")
+  if (user) {
+    if (user.mobile === req.body.mobile) {
+      const OTP = Math.floor(1000 + Math.random() * 9000);
+      console.log(OTP)
+      // sendEmail({
+      //   subject: "OTP Verification for ThunderPe",
+      //   text: `Hi there, your OTP for verification is ${OTP}`,
+      //   to: "pratik0312@gmail.com",
+      //   from: process.env.GOOGLE_EMAIL
+      // });
+      const veri = await Verification.create({ otp: OTP });
+      res.status(200).send({ user, id: veri._doc._id })
+    }
+    else {
+      res.status(401).send("Invalid Mobile Number")
+    }
+  }
+  else {
+    res.status(404).send("Email id not found");
+  }
+  res.status(200).json({ user });
+}
+
+export const getVerification = async (req, res) => {
+  const user = await Verification.find({});
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+  res.status(200).json(user);
+};
+
+
+export const verifyOTP = async (req, res) => {
+  try {
+    const { id, otp } = req.body;
+    const veri = await Verification.findOne({ _id: id });
+    if (!veri) {
+      return res.status(200).send({ error: 'Invalid Verification ID' });
+    }
+    if (veri.otp !== otp) {
+      return res.status(200).send({ error: 'Incorrect OTP' });
+    }
+    await Verification.deleteOne({ _id: id });
+    return res.status(200).send({ isValid: true });
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send({ error });
+  }
+}
