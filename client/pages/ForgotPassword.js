@@ -9,9 +9,12 @@ import Back from '../assets/images/back.png'
 import { getStateFromPath } from '@react-navigation/core';
 import { StackActions } from '@react-navigation/routers';
 import axios from 'axios'
+import Spinner from 'react-native-loading-spinner-overlay/lib';
+
 const ForgotPassword = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [mobile, setMobile] = useState("");
+    const [spin, changeSpin] = useState(false)
 
     const changeEmail = (e) => {
         setEmail(e);
@@ -27,15 +30,19 @@ const ForgotPassword = ({ navigation }) => {
         }
         else {
             const user = { email: email, mobile: mobile }
+            changeSpin(true)
             await axios
                 .post('https://thunderpe.herokuapp.com/auth/forgotPassword', user)
                 .then((res) => {
-                    console.log('Authenticated', res)
-                    navigation.dispatch(StackActions.replace('EnterOTP', { id: res.data.user._id, email: res.data.user.email }))
+                    console.log('Authenticated')
+                    changeSpin(false)
+
+                    navigation.dispatch(StackActions.replace('EnterOTP', { id: res.data.id, email: res.data.user.email }))
                 })
                 .catch((err) => {
                     console.log(err)
-                    console.log("Invalid Mobile or Email")
+                    alert("Invalid Mobile or Email")
+                    changeSpin(false)
                 })
 
         }
@@ -60,6 +67,14 @@ const ForgotPassword = ({ navigation }) => {
                     marginTop: 8,
                     marginBottom: 20
                 }}>FORGOT PASSWORD?</Text>
+                {spin ? (<Spinner
+                    visible={spin}
+                    textContent={'Sending OTP...'}
+                    textStyle={styles.spinnerTextStyle}
+                    color='#323133'
+                    overlayColor='rgba(255,255,255,0.8)'
+
+                />) : null}
                 <View style={{ position: 'relative' }}>
                     <TextInput
                         style={styles.input}

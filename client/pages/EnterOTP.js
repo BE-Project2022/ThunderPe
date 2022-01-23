@@ -22,12 +22,15 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 const CELL_COUNT = 4;
 const EnterOTP = ({ route, navigation }) => {
   let email = route.params.email;
 
   const [value, setValue] = useState("");
+  const [spin, changeSpin] = useState(false)
+
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
@@ -43,14 +46,17 @@ const EnterOTP = ({ route, navigation }) => {
       alert("Please Enter OTP");
     } else {
       const user = { id: route.params.id, otp: value };
+      changeSpin(true)
       await axios
         .post("https://thunderpe.herokuapp.com/auth/verifyOTP", user)
         .then((res) => {
           console.log(res);
+          changeSpin(false)
         })
         .catch((err) => {
           console.log(err);
           alert("Invalid OTP. Try again");
+          changeSpin(false)
         });
     }
   };
@@ -82,7 +88,14 @@ const EnterOTP = ({ route, navigation }) => {
         >
           ENTER OTP
         </Text>
+        {spin ? (<Spinner
+          visible={spin}
+          textContent={'Logging In...'}
+          textStyle={styles.spinnerTextStyle}
+          color='#323133'
+          overlayColor='rgba(255,255,255,0.8)'
 
+        />) : null}
         <Text style={styles.info}>
           We have sent an OTP on your registered email id {email}
         </Text>

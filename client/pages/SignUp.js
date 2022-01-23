@@ -15,12 +15,14 @@ import Mobile from "../assets/images/mobile.png";
 import Key from "../assets/images/key.png";
 import { StackActions } from "@react-navigation/native";
 import axios from "axios";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 const SignUp = ({ navigation }) => {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [spin, changeSpin] = useState(false)
 
   const changeEmail = (e) => {
     setEmail(e);
@@ -54,10 +56,12 @@ const SignUp = ({ navigation }) => {
         password: password,
         mobile: mobile,
       };
+      changeSpin(true)
       axios
         .post("https://thunderpe.herokuapp.com/auth/signup", user)
         .then((res) => {
           console.log(res);
+          changeSpin(false)
           navigation.dispatch(StackActions.replace('Login'))
           // setSignState(true);
         })
@@ -65,6 +69,7 @@ const SignUp = ({ navigation }) => {
           if (err.response.status === 400) {
             alert("email id already exists");
             console.log(err);
+            changeSpin(false)
           }
         });
 
@@ -80,6 +85,14 @@ const SignUp = ({ navigation }) => {
         </View>
         <View style={styles.container}>
           <Image source={Logo} style={styles.img} />
+          {spin ? (<Spinner
+            visible={spin}
+            textContent={'Registering...'}
+            textStyle={styles.spinnerTextStyle}
+            color='#323133'
+            overlayColor='rgba(255,255,255,0.8)'
+
+          />) : null}
           <View style={{ position: "relative" }}>
             <View>
               <TextInput
@@ -94,6 +107,7 @@ const SignUp = ({ navigation }) => {
             />
           </View>
           <View style={{ position: "relative" }}>
+
             <View>
               <TextInput
                 style={styles.input}
@@ -219,5 +233,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginBottom: 25,
     height: 40,
+  },
+  spinnerTextStyle: {
+    color: '#000'
   },
 });

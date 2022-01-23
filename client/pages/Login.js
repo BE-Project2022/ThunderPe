@@ -13,10 +13,13 @@ import Key from "../assets/images/key.png";
 import { StackActions } from "@react-navigation/routers";
 import axios from "axios";
 import Back from '../assets/images/back.png'
+import Spinner from 'react-native-loading-spinner-overlay'
+
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [spin, changeSpin] = useState(false)
 
   const changeEmail = (e) => {
     setEmail(e);
@@ -26,10 +29,12 @@ const Login = ({ navigation }) => {
   };
 
   const handleLogin = async (e) => {
+    // console.log(spin)
     if (email === "" && password === "") {
       alert("Please fill all the fields");
     } else {
       const user = { email: email, password: password };
+      changeSpin(true)
       await axios
         .post("https://thunderpe.herokuapp.com/auth/login", user)
         .then((res) => {
@@ -37,10 +42,12 @@ const Login = ({ navigation }) => {
           // console.log(res.data.token);
           // setLogstate(true);
           console.log("Successfully logged in ", res.data.user._id);
+          changeSpin(false)
         })
         .catch((err) => {
           console.log(err);
           alert("Invalid email or password");
+          changeSpin(false)
         });
     }
   };
@@ -56,6 +63,14 @@ const Login = ({ navigation }) => {
       <View style={styles.container}>
         <Image source={Logo} style={styles.img} />
         <View style={{ position: "relative" }}>
+          {spin ? (<Spinner
+            visible={spin}
+            textContent={'Logging In...'}
+            textStyle={styles.spinnerTextStyle}
+            color='#323133'
+            overlayColor='rgba(255,255,255,0.8)'
+
+          />) : null}
           <View>
             <TextInput
               style={styles.input}
@@ -155,6 +170,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginBottom: 25,
     height: 40,
+  },
+  spinnerTextStyle: {
+    color: '#000'
   },
 });
 
