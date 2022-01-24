@@ -79,7 +79,7 @@ const SignUp = ({ navigation }) => {
         .then((res) => {
           console.log(res);
           changeSpin(false)
-          // navigation.dispatch(StackActions.replace('Login'))
+          navigation.dispatch(StackActions.replace('Login'))
           // setSignState(true);
         })
         .catch((err) => {
