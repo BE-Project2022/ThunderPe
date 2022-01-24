@@ -15,6 +15,8 @@ const ForgotPassword = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [mobile, setMobile] = useState("");
     const [spin, changeSpin] = useState(false)
+    var mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    var mobileFormat = /^\d{10}$/;
 
     const changeEmail = (e) => {
         setEmail(e);
@@ -28,6 +30,10 @@ const ForgotPassword = ({ navigation }) => {
         if (email === '' || mobile === '') {
             alert('Please fill all the fields')
         }
+        else if (!email.match(mailFormat))
+            alert('Please check username')
+        else if (!mobile.match(mobileFormat))
+            alert('Mobile Number must contain 10 digits')
         else {
             const user = { email: email, mobile: mobile }
             changeSpin(true)

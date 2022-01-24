@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { createRef, useState } from "react";
 import {
   View,
   TextInput,
@@ -14,13 +14,19 @@ import { StackActions } from "@react-navigation/routers";
 import axios from "axios";
 import Back from '../assets/images/back.png'
 import Spinner from 'react-native-loading-spinner-overlay'
-
+import Eye from '../assets/images/eye.png'
+import EyeSlash from '../assets/images/eye-slash.png'
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [spin, changeSpin] = useState(false)
+  const [passwordVisible, showPassword] = useState(true)
+  var mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+  var passwordFormat = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
 
+  const emailField = createRef()
+  const passwordField = createRef()
   const changeEmail = (e) => {
     setEmail(e);
   };
@@ -32,7 +38,12 @@ const Login = ({ navigation }) => {
     // console.log(spin)
     if (email === "" && password === "") {
       alert("Please fill all the fields");
-    } else {
+    }
+    else if (!email.match(mailFormat))
+      alert('Please check username')
+    else if (!password.match(passwordFormat))
+      alert('Password must be 8 to 15 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character')
+    else {
       const user = { email: email, password: password };
       changeSpin(true)
       await axios
@@ -41,13 +52,18 @@ const Login = ({ navigation }) => {
           // localStorage.setItem("token", res.data.token);
           // console.log(res.data.token);
           // setLogstate(true);
-          console.log("Successfully logged in ", res.data.user._id);
+          // console.log(res)
+          emailField.current.clear()
+          passwordField.current.clear()
+          alert("Successfully logged in ");
           changeSpin(false)
         })
         .catch((err) => {
-          console.log(err);
-          alert("Invalid email or password");
+          console.log(err.response.data);
+          alert(err.response.data)
           changeSpin(false)
+          // alert("Invalid email or password");
+
         });
     }
   };
@@ -62,7 +78,9 @@ const Login = ({ navigation }) => {
       </View>
       <View style={styles.container}>
         <Image source={Logo} style={styles.img} />
-        <View style={{ position: "relative" }}>
+        <View style={{
+          flexDirection: 'row'
+        }}>
           {spin ? (<Spinner
             visible={spin}
             textContent={'Logging In...'}
@@ -71,33 +89,41 @@ const Login = ({ navigation }) => {
             overlayColor='rgba(255,255,255,0.8)'
 
           />) : null}
-          <View>
-            <TextInput
-              style={styles.input}
-              placeholder="Username (Email Id)"
-              secureTextEntry={false}
-              onChangeText={changeEmail}
-            />
-          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Username (Email Id)"
+            secureTextEntry={false}
+            onChangeText={changeEmail}
+            ref={emailField}
+          />
           <Image
             source={User}
-            style={{ position: "absolute", top: 10, right: 5 }}
+            style={{ position: "absolute", top: 10 }}
           />
         </View>
 
-        <View style={{ position: "relative" }}>
-          <View>
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              secureTextEntry={true}
-              onChangeText={changePassword}
-            />
-          </View>
+        <View style={{
+          flexDirection: 'row'
+        }}>
           <Image
             source={Key}
-            style={{ position: "absolute", top: 10, right: 5 }}
+            style={{ position: "absolute", top: 10 }}
           />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry={passwordVisible}
+            onChangeText={changePassword}
+            ref={passwordField}
+          />
+          <TouchableOpacity
+            style={{ width: 30, height: 35, position: "absolute", top: 2, right: -3 }}
+            onPress={() => showPassword(!passwordVisible)}
+          >
+            <Image
+              source={passwordVisible ? EyeSlash : Eye}
+              style={{ position: "absolute", top: 10, right: 5 }} />
+          </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text
@@ -170,6 +196,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginBottom: 25,
     height: 40,
+    flex: 1,
+    paddingLeft: 30
   },
   spinnerTextStyle: {
     color: '#000'

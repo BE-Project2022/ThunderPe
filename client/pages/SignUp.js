@@ -16,6 +16,10 @@ import Key from "../assets/images/key.png";
 import { StackActions } from "@react-navigation/native";
 import axios from "axios";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import Eye from '../assets/images/eye.png'
+import EyeSlash from '../assets/images/eye-slash.png'
+
+
 const SignUp = ({ navigation }) => {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
@@ -23,7 +27,11 @@ const SignUp = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [spin, changeSpin] = useState(false)
-
+  const [passwordVisible, showPassword] = useState(true)
+  const [confirmPassVisible, confirmPassShow] = useState(true)
+  var mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+  var passwordFormat = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
+  var mobileFormat = /^\d{10}$/;
   const changeEmail = (e) => {
     setEmail(e);
   };
@@ -45,33 +53,42 @@ const SignUp = ({ navigation }) => {
   };
 
   const handleSignUp = async (e) => {
-    if (fullname === "" || email === "" || password === "" || mobile === "") {
+    if (fullname === "" || email === "" || password === "" || mobile === "" || confirmPassword === "") {
       alert("Please fill in all fields");
     } else if (password !== confirmPassword) {
       alert("Passwords do not match");
-    } else {
+    }
+    else if (!email.match(mailFormat)) {
+      alert("Please check email Id")
+    }
+    else if (!mobile.match(mobileFormat))
+      alert('Mobile Number must contain 10 digits')
+
+    else if (!password.match(passwordFormat))
+      alert("Password must be 8 to 15 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character")
+    else {
       const user = {
         fullname: fullname,
         email: email,
         password: password,
         mobile: mobile,
       };
-      changeSpin(true)
-      axios
-        .post("https://thunderpe.herokuapp.com/auth/signup", user)
-        .then((res) => {
-          console.log(res);
-          changeSpin(false)
-          navigation.dispatch(StackActions.replace('Login'))
-          // setSignState(true);
-        })
-        .catch((err) => {
-          if (err.response.status === 400) {
-            alert("email id already exists");
-            console.log(err);
-            changeSpin(false)
-          }
-        });
+      // changeSpin(true)
+      // axios
+      //   .post("https://thunderpe.herokuapp.com/auth/signup", user)
+      //   .then((res) => {
+      //     console.log(res);
+      //     changeSpin(false)
+      //     // navigation.dispatch(StackActions.replace('Login'))
+      //     // setSignState(true);
+      //   })
+      //   .catch((err) => {
+      //     if (err.response.status === 400) {
+      //       alert("email id already exists");
+      //       console.log(err);
+      //       changeSpin(false)
+      //     }
+      //   });
 
       // console.log(user);
     }
@@ -93,74 +110,80 @@ const SignUp = ({ navigation }) => {
             overlayColor='rgba(255,255,255,0.8)'
 
           />) : null}
-          <View style={{ position: "relative" }}>
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Full Name"
-                onChangeText={changeFullname}
-              />
-            </View>
+          <View style={{ flexDirection: 'row' }}>
+            <TextInput
+              style={styles.input}
+              placeholder="Full Name"
+              onChangeText={changeFullname}
+            />
             <Image
               source={User}
-              style={{ position: "absolute", top: 10, right: 5 }}
+              style={{ position: "absolute", top: 10 }}
             />
           </View>
-          <View style={{ position: "relative" }}>
-
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Email Id"
-                onChangeText={changeEmail}
-              />
-            </View>
+          <View style={{ flexDirection: 'row' }}>
+            <TextInput
+              style={styles.input}
+              placeholder="Email Id"
+              onChangeText={changeEmail}
+            />
             <Image
               source={Email}
-              style={{ position: "absolute", top: 10, right: 5 }}
+              style={{ position: "absolute", top: 10 }}
             />
           </View>
-          <View style={{ position: "relative" }}>
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Mobile"
-                keyboardType='numeric'
-                onChangeText={changeMobile}
-              />
-            </View>
+          <View style={{ flexDirection: 'row' }}>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Mobile"
+              keyboardType='numeric'
+              onChangeText={changeMobile}
+            />
             <Image
               source={Mobile}
-              style={{ position: "absolute", top: 10, right: 5 }}
+              style={{ position: "absolute", top: 10 }}
             />
           </View>
-          <View style={{ position: "relative" }}>
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Password"
-                secureTextEntry={true}
-                onChangeText={changePassword}
-              />
-            </View>
+          <View style={{ flexDirection: 'row' }}>
             <Image
               source={Key}
-              style={{ position: "absolute", top: 10, right: 5 }}
+              style={{ position: "absolute", top: 10 }}
             />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              secureTextEntry={passwordVisible}
+              onChangeText={changePassword}
+            />
+            <TouchableOpacity
+              style={{ width: 30, height: 35, position: "absolute", top: 2, right: -3 }}
+              onPress={() => showPassword(!passwordVisible)}
+            >
+              <Image
+                source={passwordVisible ? EyeSlash : Eye}
+                style={{ position: "absolute", top: 10, right: 5 }} />
+            </TouchableOpacity>
           </View>
-          <View style={{ position: "relative" }}>
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Confirm Password"
-                secureTextEntry={true}
-                onChangeText={changeConfirmPassword}
-              />
-            </View>
+          <View style={{ flexDirection: 'row' }}>
+            <TextInput
+              style={styles.input}
+              placeholder="Confirm Password"
+              secureTextEntry={confirmPassVisible}
+              onChangeText={changeConfirmPassword}
+            />
             <Image
               source={Key}
-              style={{ position: "absolute", top: 10, right: 5 }}
+              style={{ position: "absolute", top: 10 }}
             />
+            <TouchableOpacity
+              style={{ width: 30, height: 35, position: "absolute", top: 2, right: -3 }}
+              onPress={() => confirmPassShow(!confirmPassVisible)}
+            >
+              <Image
+                source={confirmPassVisible ? EyeSlash : Eye}
+                style={{ position: "absolute", top: 10, right: 5 }} />
+            </TouchableOpacity>
           </View>
           <View>
             <TouchableOpacity style={styles.button} onPress={handleSignUp}>
@@ -187,7 +210,7 @@ const SignUp = ({ navigation }) => {
           </View>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </KeyboardAvoidingView >
   );
 };
 
@@ -233,6 +256,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginBottom: 25,
     height: 40,
+    flex: 1,
+    paddingLeft: 30
   },
   spinnerTextStyle: {
     color: '#000'
