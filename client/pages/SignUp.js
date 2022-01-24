@@ -73,22 +73,22 @@ const SignUp = ({ navigation }) => {
         password: password,
         mobile: mobile,
       };
-      // changeSpin(true)
-      // axios
-      //   .post("https://thunderpe.herokuapp.com/auth/signup", user)
-      //   .then((res) => {
-      //     console.log(res);
-      //     changeSpin(false)
-      //     // navigation.dispatch(StackActions.replace('Login'))
-      //     // setSignState(true);
-      //   })
-      //   .catch((err) => {
-      //     if (err.response.status === 400) {
-      //       alert("email id already exists");
-      //       console.log(err);
-      //       changeSpin(false)
-      //     }
-      //   });
+      changeSpin(true)
+      axios
+        .post("https://thunderpe.herokuapp.com/auth/signup", user)
+        .then((res) => {
+          console.log(res);
+          changeSpin(false)
+          // navigation.dispatch(StackActions.replace('Login'))
+          // setSignState(true);
+        })
+        .catch((err) => {
+          if (err.response.status === 400) {
+            alert("email id already exists");
+            console.log(err);
+            changeSpin(false)
+          }
+        });
 
       // console.log(user);
     }
