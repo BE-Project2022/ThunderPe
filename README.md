@@ -9,11 +9,10 @@ ThunderPe is an peer to peer decentralized transaction platform.
 This project requires [NodeJS](https://nodejs.org/en/) to run.
 
 Clone the repository with the following command:
-     ```sh
-     git clone https://github.com/BE-Project2022/ThunderPe.git
-     cd ThunderPe
-     ```
+`sh git clone https://github.com/BE-Project2022/ThunderPe.git cd ThunderPe `
+
 - Client
+
   1. Navigate into the folder and install the necessary dependencies :
      ```sh
      cd client
@@ -25,6 +24,7 @@ Clone the repository with the following command:
      ```
 
 - Server:
+
   1. Navigate into the folder and install the necessary dependencies :
      ```sh
      cd server
@@ -45,5 +45,9 @@ Clone the repository with the following command:
      npm run dev
      ```
   4. The server should be running on port 5000. URL : [localhost:5000](http://localhost:5000)
+
+  5. ```git subtree push --prefix server heroku master
+
+     ```
 
 ---
