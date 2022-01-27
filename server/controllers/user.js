@@ -27,7 +27,7 @@ export const signup = async (req, res) => {
     const token = jwt.sign(
       {
         fullname: reactuser.fullname,
-        email: reactuser.email,
+        mobile: reactuser.mobile,
         userId: reactuser._id,
       },
       process.env.JWT_SECRET,
