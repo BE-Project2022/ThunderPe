@@ -45,9 +45,9 @@ Clone the repository with the following command:
      npm run dev
      ```
   4. The server should be running on port 5000. URL : [localhost:5000](http://localhost:5000)
-
-  5. ```git subtree push --prefix server heroku master
-
+  5. Push the server to heroku using the following command
+     ```sh
+     git subtree push --prefix server heroku master
      ```
 
 ---
