@@ -16,9 +16,8 @@ import Key from "../assets/images/key.png";
 import { StackActions } from "@react-navigation/native";
 import axios from "axios";
 import Spinner from "react-native-loading-spinner-overlay/lib";
-import Eye from '../assets/images/eye.png'
-import EyeSlash from '../assets/images/eye-slash.png'
-
+import Eye from "../assets/images/eye.png";
+import EyeSlash from "../assets/images/eye-slash.png";
 
 const SignUp = ({ navigation }) => {
   const [fullname, setFullname] = useState("");
@@ -26,11 +25,12 @@ const SignUp = ({ navigation }) => {
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [spin, changeSpin] = useState(false)
-  const [passwordVisible, showPassword] = useState(true)
-  const [confirmPassVisible, confirmPassShow] = useState(true)
-  var mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-  var passwordFormat = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
+  const [spin, changeSpin] = useState(false);
+  const [passwordVisible, showPassword] = useState(true);
+  const [confirmPassVisible, confirmPassShow] = useState(true);
+  var mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  var passwordFormat =
+    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
   var mobileFormat = /^\d{10}$/;
   const changeEmail = (e) => {
     setEmail(e);
@@ -53,40 +53,47 @@ const SignUp = ({ navigation }) => {
   };
 
   const handleSignUp = async (e) => {
-    if (fullname === "" || email === "" || password === "" || mobile === "" || confirmPassword === "") {
+    if (
+      fullname === "" ||
+      email === "" ||
+      password === "" ||
+      mobile === "" ||
+      confirmPassword === ""
+    ) {
       alert("Please fill in all fields");
     } else if (password !== confirmPassword) {
       alert("Passwords do not match");
-    }
-    else if (!email.match(mailFormat)) {
-      alert("Please check email Id")
-    }
-    else if (!mobile.match(mobileFormat))
-      alert('Mobile Number must contain 10 digits')
-
+    } else if (!email.match(mailFormat)) {
+      alert("Please check email Id");
+    } else if (!mobile.match(mobileFormat))
+      alert("Mobile Number must contain 10 digits");
     else if (!password.match(passwordFormat))
-      alert("Password must be 8 to 15 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character")
+      alert(
+        "Password must be 8 to 15 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character"
+      );
     else {
+      let mobileno = parseInt(mobile);
+      console.log(typeof mobileno);
       const user = {
         fullname: fullname,
         email: email,
         password: password,
-        mobile: mobile,
+        mobile: mobileno,
       };
-      changeSpin(true)
+      changeSpin(true);
       axios
         .post("https://thunderpe.herokuapp.com/auth/signup", user)
         .then((res) => {
           console.log(res);
-          changeSpin(false)
-          navigation.dispatch(StackActions.replace('Login'))
+          changeSpin(false);
+          navigation.dispatch(StackActions.replace("Login"));
           // setSignState(true);
         })
         .catch((err) => {
           if (err.response.status === 400) {
             alert("email id already exists");
             console.log(err);
-            changeSpin(false)
+            changeSpin(false);
           }
         });
 
@@ -102,54 +109,42 @@ const SignUp = ({ navigation }) => {
         </View>
         <View style={styles.container}>
           <Image source={Logo} style={styles.img} />
-          {spin ? (<Spinner
-            visible={spin}
-            textContent={'Registering...'}
-            textStyle={styles.spinnerTextStyle}
-            color='#323133'
-            overlayColor='rgba(255,255,255,0.8)'
-
-          />) : null}
-          <View style={{ flexDirection: 'row' }}>
+          {spin ? (
+            <Spinner
+              visible={spin}
+              textContent={"Registering..."}
+              textStyle={styles.spinnerTextStyle}
+              color="#323133"
+              overlayColor="rgba(255,255,255,0.8)"
+            />
+          ) : null}
+          <View style={{ flexDirection: "row" }}>
             <TextInput
               style={styles.input}
               placeholder="Full Name"
               onChangeText={changeFullname}
             />
-            <Image
-              source={User}
-              style={{ position: "absolute", top: 10 }}
-            />
+            <Image source={User} style={{ position: "absolute", top: 10 }} />
           </View>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: "row" }}>
             <TextInput
               style={styles.input}
               placeholder="Email Id"
               onChangeText={changeEmail}
             />
-            <Image
-              source={Email}
-              style={{ position: "absolute", top: 10 }}
-            />
+            <Image source={Email} style={{ position: "absolute", top: 10 }} />
           </View>
-          <View style={{ flexDirection: 'row' }}>
-
+          <View style={{ flexDirection: "row" }}>
             <TextInput
               style={styles.input}
               placeholder="Mobile"
-              keyboardType='numeric'
+              keyboardType="numeric"
               onChangeText={changeMobile}
             />
-            <Image
-              source={Mobile}
-              style={{ position: "absolute", top: 10 }}
-            />
+            <Image source={Mobile} style={{ position: "absolute", top: 10 }} />
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Image
-              source={Key}
-              style={{ position: "absolute", top: 10 }}
-            />
+          <View style={{ flexDirection: "row" }}>
+            <Image source={Key} style={{ position: "absolute", top: 10 }} />
             <TextInput
               style={styles.input}
               placeholder="Password"
@@ -157,32 +152,43 @@ const SignUp = ({ navigation }) => {
               onChangeText={changePassword}
             />
             <TouchableOpacity
-              style={{ width: 30, height: 35, position: "absolute", top: 2, right: -3 }}
+              style={{
+                width: 30,
+                height: 35,
+                position: "absolute",
+                top: 2,
+                right: -3,
+              }}
               onPress={() => showPassword(!passwordVisible)}
             >
               <Image
                 source={passwordVisible ? EyeSlash : Eye}
-                style={{ position: "absolute", top: 10, right: 5 }} />
+                style={{ position: "absolute", top: 10, right: 5 }}
+              />
             </TouchableOpacity>
           </View>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: "row" }}>
             <TextInput
               style={styles.input}
               placeholder="Confirm Password"
               secureTextEntry={confirmPassVisible}
               onChangeText={changeConfirmPassword}
             />
-            <Image
-              source={Key}
-              style={{ position: "absolute", top: 10 }}
-            />
+            <Image source={Key} style={{ position: "absolute", top: 10 }} />
             <TouchableOpacity
-              style={{ width: 30, height: 35, position: "absolute", top: 2, right: -3 }}
+              style={{
+                width: 30,
+                height: 35,
+                position: "absolute",
+                top: 2,
+                right: -3,
+              }}
               onPress={() => confirmPassShow(!confirmPassVisible)}
             >
               <Image
                 source={confirmPassVisible ? EyeSlash : Eye}
-                style={{ position: "absolute", top: 10, right: 5 }} />
+                style={{ position: "absolute", top: 10, right: 5 }}
+              />
             </TouchableOpacity>
           </View>
           <View>
@@ -210,7 +216,7 @@ const SignUp = ({ navigation }) => {
           </View>
         </View>
       </View>
-    </KeyboardAvoidingView >
+    </KeyboardAvoidingView>
   );
 };
 
@@ -257,9 +263,9 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     height: 40,
     flex: 1,
-    paddingLeft: 30
+    paddingLeft: 30,
   },
   spinnerTextStyle: {
-    color: '#000'
+    color: "#000",
   },
 });
