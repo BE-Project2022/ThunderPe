@@ -9,7 +9,7 @@ const router = express.Router();
 
 export const signup = async (req, res) => {
   const { fullname, email, mobile, password } = req.body;
-  const candidate = await ThunderUser.findOne({ email });
+  const candidate = await ThunderUser.findOne({ mobile });
   if (candidate) {
     return res.status(400).json({
       error: "User already exists",
