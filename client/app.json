@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "client",
-    "slug": "client",
+    "name": "ThunderPe",
+    "slug": "ThunderPe",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/Short_Logo_Yellow.png",
@@ -12,13 +12,12 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "package": "com.thunderpe",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/Short_Logo_Yellow.png",
         "backgroundColor": "#000"
