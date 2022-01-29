@@ -16,7 +16,7 @@ export const UserData = async (req, res) => {
     mobile: req.userId.mobile,
   }).exec();
   try {
-    res.status(200).json("hello world");
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json(err);
   }
