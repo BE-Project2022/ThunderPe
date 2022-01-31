@@ -37,14 +37,6 @@ const Login = ({ navigation }) => {
     setPassword(e);
   };
 
-  const storeData = async (value) => {
-    try {
-      await AsyncStorage.setItem("@storage_Key", value);
-    } catch (e) {
-      // saving error
-    }
-  };
-
   const handleLogin = async (e) => {
     // console.log(spin)
     if (email === "" && password === "") {
@@ -60,22 +52,13 @@ const Login = ({ navigation }) => {
       await axios
         .post("https://thunderpe.herokuapp.com/auth/login", user)
         .then((res) => {
-          if (res.status === 201) {
-            emailField.current.clear();
-            passwordField.current.clear();
-            alert("Successfully logged in ");
-            changeSpin(false);
-            console.log(res);
-          } else {
-            console.log(res);
-            alert(res);
-          }
+          alert("Login Successful");
+          changeSpin(false);
         })
         .catch((err) => {
-          console.log("hi", err);
-          alert(err);
+          console.log(err);
+          alert(err.response);
           changeSpin(false);
-          // alert("Invalid email or password");
         });
     }
   };

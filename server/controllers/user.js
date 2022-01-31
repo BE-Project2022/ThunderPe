@@ -55,10 +55,10 @@ export const login = async (req, res) => {
       );
       res.status(201).json({ user, token });
     } else {
-      res.status(401).send("Password invalid");
+      res.status(401).send({ error: "Password invalid" });
     }
   } else {
-    res.status(404).send("Email id not found");
+    res.status(404).send({ error: "Email id not found" });
   }
 };
 
