@@ -76,7 +76,7 @@ const SignUp = ({ navigation }) => {
       );
     else {
       let mobileno = parseInt(mobile);
-      console.log(typeof mobileno);
+
       const user = {
         fullname: fullname,
         email: email,
@@ -91,8 +91,8 @@ const SignUp = ({ navigation }) => {
             setSignState(true);
             changeSpin(false);
             navigation.dispatch(StackActions.replace("Login"));
-          } else {
-            alert(res.data.message);
+          } else if (res.status === 400) {
+            alert(res);
           }
           // console.log(res);
         })

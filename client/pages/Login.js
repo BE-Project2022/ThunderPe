@@ -7,26 +7,29 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import Logo from "../assets/images/Logo_Yel.png";
 import User from "../assets/images/user.png";
 import Key from "../assets/images/key.png";
 import { StackActions } from "@react-navigation/routers";
 import axios from "axios";
-import Back from '../assets/images/back.png'
-import Spinner from 'react-native-loading-spinner-overlay'
-import Eye from '../assets/images/eye.png'
-import EyeSlash from '../assets/images/eye-slash.png'
+import Back from "../assets/images/back.png";
+import Spinner from "react-native-loading-spinner-overlay";
+import Eye from "../assets/images/eye.png";
+import EyeSlash from "../assets/images/eye-slash.png";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [spin, changeSpin] = useState(false)
-  const [passwordVisible, showPassword] = useState(true)
-  var mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-  var passwordFormat = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
+  const [spin, changeSpin] = useState(false);
+  const [passwordVisible, showPassword] = useState(true);
+  var mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  var passwordFormat =
+    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
 
-  const emailField = createRef()
-  const passwordField = createRef()
+  const emailField = createRef();
+  const passwordField = createRef();
   const changeEmail = (e) => {
     setEmail(e);
   };
@@ -34,36 +37,44 @@ const Login = ({ navigation }) => {
     setPassword(e);
   };
 
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem("@storage_Key", value);
+    } catch (e) {
+      // saving error
+    }
+  };
+
   const handleLogin = async (e) => {
     // console.log(spin)
     if (email === "" && password === "") {
       alert("Please fill all the fields");
-    }
-    else if (!email.match(mailFormat))
-      alert('Please check username')
+    } else if (!email.match(mailFormat)) alert("Please check username");
     else if (!password.match(passwordFormat))
-      alert('Password must be 8 to 15 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character')
+      alert(
+        "Password must be 8 to 15 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character"
+      );
     else {
       const user = { email: email, password: password };
-      changeSpin(true)
+      changeSpin(true);
       await axios
         .post("https://thunderpe.herokuapp.com/auth/login", user)
         .then((res) => {
-          // localStorage.setItem("token", res.data.token);
-          // console.log(res.data.token);
-          // setLogstate(true);
-          // console.log(res)
-          emailField.current.clear()
-          passwordField.current.clear()
-          alert("Successfully logged in ");
-          changeSpin(false)
+          if (res.status === 201) {
+            emailField.current.clear();
+            passwordField.current.clear();
+            alert("Successfully logged in ");
+            changeSpin(false);
+            console.log(res);
+          } else {
+            alert(res);
+          }
         })
         .catch((err) => {
-          console.log(err.response.data);
-          alert(err.response.data)
-          changeSpin(false)
+          console.log(err);
+          alert(err);
+          changeSpin(false);
           // alert("Invalid email or password");
-
         });
     }
   };
@@ -71,24 +82,33 @@ const Login = ({ navigation }) => {
   return (
     <View style={{ backgroundColor: "#fff", height: "100%" }}>
       <View style={styles.header}>
-        <TouchableOpacity style={{ width: '12%' }} onPress={() => navigation.canGoBack() ? navigation.goBack() : null}>
-          <Image source={navigation.canGoBack() ? Back : null} style={{ left: 12, height: 30, top: 11 }} />
+        <TouchableOpacity
+          style={{ width: "12%" }}
+          onPress={() => (navigation.canGoBack() ? navigation.goBack() : null)}
+        >
+          <Image
+            source={navigation.canGoBack() ? Back : null}
+            style={{ left: 12, height: 30, top: 11 }}
+          />
         </TouchableOpacity>
         <Text style={styles.title}>LOGIN</Text>
       </View>
       <View style={styles.container}>
         <Image source={Logo} style={styles.img} />
-        <View style={{
-          flexDirection: 'row'
-        }}>
-          {spin ? (<Spinner
-            visible={spin}
-            textContent={'Logging In...'}
-            textStyle={styles.spinnerTextStyle}
-            color='#323133'
-            overlayColor='rgba(255,255,255,0.8)'
-
-          />) : null}
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          {spin ? (
+            <Spinner
+              visible={spin}
+              textContent={"Logging In..."}
+              textStyle={styles.spinnerTextStyle}
+              color="#323133"
+              overlayColor="rgba(255,255,255,0.8)"
+            />
+          ) : null}
           <TextInput
             style={styles.input}
             placeholder="Username (Email Id)"
@@ -96,19 +116,15 @@ const Login = ({ navigation }) => {
             onChangeText={changeEmail}
             ref={emailField}
           />
-          <Image
-            source={User}
-            style={{ position: "absolute", top: 10 }}
-          />
+          <Image source={User} style={{ position: "absolute", top: 10 }} />
         </View>
 
-        <View style={{
-          flexDirection: 'row'
-        }}>
-          <Image
-            source={Key}
-            style={{ position: "absolute", top: 10 }}
-          />
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <Image source={Key} style={{ position: "absolute", top: 10 }} />
           <TextInput
             style={styles.input}
             placeholder="Password"
@@ -117,12 +133,19 @@ const Login = ({ navigation }) => {
             ref={passwordField}
           />
           <TouchableOpacity
-            style={{ width: 30, height: 35, position: "absolute", top: 2, right: -3 }}
+            style={{
+              width: 30,
+              height: 35,
+              position: "absolute",
+              top: 2,
+              right: -3,
+            }}
             onPress={() => showPassword(!passwordVisible)}
           >
             <Image
               source={passwordVisible ? EyeSlash : Eye}
-              style={{ position: "absolute", top: 10, right: 5 }} />
+              style={{ position: "absolute", top: 10, right: 5 }}
+            />
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
@@ -140,7 +163,7 @@ const Login = ({ navigation }) => {
         <View style={styles.bottomText}>
           <TouchableOpacity
             style={{ marginBottom: 10 }}
-            onPress={() => navigation.navigate('ForgotPassword')}
+            onPress={() => navigation.navigate("ForgotPassword")}
           >
             <Text>Forgot Password?</Text>
           </TouchableOpacity>
@@ -159,7 +182,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "#ffc100",
     height: 49,
-    flexDirection: 'row'
+    flexDirection: "row",
   },
   container: {
     backgroundColor: "#fff",
@@ -181,12 +204,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "white",
     height: 40,
-    alignSelf: 'center',
+    alignSelf: "center",
     fontWeight: "bold",
     marginTop: 8,
     marginBottom: 20,
-    marginLeft: '30%',
-    top: 9
+    marginLeft: "30%",
+    top: 9,
   },
   bottomText: {
     alignItems: "center",
@@ -197,10 +220,10 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     height: 40,
     flex: 1,
-    paddingLeft: 30
+    paddingLeft: 30,
   },
   spinnerTextStyle: {
-    color: '#000'
+    color: "#000",
   },
 });
 

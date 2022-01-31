@@ -37,13 +37,13 @@ export const signup = async (req, res) => {
     );
     res.status(201).json({ reactuser, token });
   } catch (err) {
-    res.sendStatus(500);
+    res.Status(500).json(err);
   }
 };
 
 export const login = async (req, res) => {
   const user = await ThunderUser.findOne({
-    email: req.body.email,
+    mobile: req.body.mobile,
   });
   if (user) {
     const isMatch = await bcrypt.compare(req.body.password, user.password);
@@ -53,7 +53,7 @@ export const login = async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
-      res.status(200).json({ user, token });
+      res.status(201).json({ user, token });
     } else {
       res.status(401).send("Password invalid");
     }
