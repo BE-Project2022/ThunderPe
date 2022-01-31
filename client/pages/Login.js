@@ -37,6 +37,16 @@ const Login = ({ navigation }) => {
     setPassword(e);
   };
 
+  const storeData = async (value) => {
+    try {
+      let JsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem("@storage_Key", JsonValue);
+    } catch (e) {
+      console.log("error", e);
+      // saving error
+    }
+  };
+
   const handleLogin = async (e) => {
     // console.log(spin)
     if (email === "" && password === "") {
@@ -54,10 +64,11 @@ const Login = ({ navigation }) => {
         .then((res) => {
           alert("Login Successful");
           changeSpin(false);
+          storeData(res.data.token);
+          navigation.dispatch(StackActions.replace("Next"));
         })
         .catch((err) => {
-          console.log(err);
-          alert(err.response);
+          alert(err.response.data.error);
           changeSpin(false);
         });
     }

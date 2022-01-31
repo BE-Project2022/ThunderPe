@@ -87,24 +87,14 @@ const SignUp = ({ navigation }) => {
       axios
         .post("https://thunderpe.herokuapp.com/auth/signup", user)
         .then((res) => {
-          if (res.status === 201) {
-            setSignState(true);
-            changeSpin(false);
-            navigation.dispatch(StackActions.replace("Login"));
-          } else if (res.status === 400) {
-            alert(res);
-          }
-          // console.log(res);
+          setSignState(true);
+          changeSpin(false);
+          navigation.dispatch(StackActions.replace("Login"));
         })
         .catch((err) => {
-          if (err.response.status === 400) {
-            alert("email id already exists");
-            console.log(err);
-            changeSpin(false);
-          }
+          alert(err.response.data.err);
+          changeSpin(false);
         });
-
-      // console.log(user);
     }
   };
 
