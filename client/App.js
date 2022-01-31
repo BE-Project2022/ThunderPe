@@ -7,6 +7,7 @@ import Next from "./pages/Next";
 import { NavigationContainer } from "@react-navigation/native";
 import ForgotPassword from "./pages/ForgotPassword";
 import EnterOTP from "./pages/EnterOTP";
+import Pin from "./pages/Pin";
 export default function App() {
   const Navigate = createStackNavigator();
   return (
@@ -17,13 +18,14 @@ export default function App() {
           headerShown: false,
           cardStyle: { backgroundColor: "#fff" },
         }}
-        initialRouteName={"Login"}
+        initialRouteName={"Pin"}
       >
         <Navigate.Screen name="Login" component={Login} />
         <Navigate.Screen name="SignUp" component={SignUp} />
         <Navigate.Screen name="ForgotPassword" component={ForgotPassword} />
         <Navigate.Screen name="EnterOTP" component={EnterOTP} />
         <Navigate.Screen name="Next" component={Next} />
+        <Navigate.Screen name="Pin" component={Pin} />
       </Navigate.Navigator>
     </NavigationContainer>
   );

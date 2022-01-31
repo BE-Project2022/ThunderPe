@@ -18,7 +18,7 @@ import axios from "axios";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import Eye from "../assets/images/eye.png";
 import EyeSlash from "../assets/images/eye-slash.png";
-
+import Pin from '../assets/images/pin.png'
 const SignUp = ({ navigation }) => {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
@@ -163,6 +163,7 @@ const SignUp = ({ navigation }) => {
                 style={{ position: "absolute", top: 10, right: 5 }}
               />
             </TouchableOpacity>
+
           </View>
           <View style={{ flexDirection: "row" }}>
             <TextInput
@@ -187,6 +188,17 @@ const SignUp = ({ navigation }) => {
                 style={{ position: "absolute", top: 10, right: 5 }}
               />
             </TouchableOpacity>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <TextInput
+              style={styles.input}
+              placeholder="Pin (This will be used for authentication when you open the app)"
+              keyboardType="numeric"
+              onChangeText={changeMobile}
+              maxLength={4}
+              secureTextEntry={true}
+            />
+            <Image source={Pin} style={{ position: "absolute", top: 10 }} />
           </View>
           <View>
             <TouchableOpacity style={styles.button} onPress={handleSignUp}>
