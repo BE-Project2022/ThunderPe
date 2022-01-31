@@ -43,7 +43,7 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   const user = await ThunderUser.findOne({
-    mobile: req.body.mobile,
+    email: req.body.email,
   });
   if (user) {
     const isMatch = await bcrypt.compare(req.body.password, user.password);

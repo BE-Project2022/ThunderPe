@@ -67,11 +67,12 @@ const Login = ({ navigation }) => {
             changeSpin(false);
             console.log(res);
           } else {
+            console.log(res);
             alert(res);
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.log("hi", err);
           alert(err);
           changeSpin(false);
           // alert("Invalid email or password");
