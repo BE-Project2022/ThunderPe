@@ -20,11 +20,23 @@ import axios from "axios";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import Eye from "../assets/images/eye.png";
 import EyeSlash from "../assets/images/eye-slash.png";
+
 const Pin = ({ navigation }) => {
   const [pin, setPin] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const changePin = (e) => {
     setPin(e);
+  };
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("@storage_Key");
+      if (value !== null) return true;
+      else return false;
+    } catch (e) {
+      console.log("error", e);
+    }
   };
 
   const handleBiometricAuth = async () => {
@@ -32,11 +44,14 @@ const Pin = ({ navigation }) => {
       promptMessage: "Login with Fingerprint",
     });
     if (biometricAuth.success) {
-      navigation.navigate("Login");
+      if (!getData()) {
+        navigation.navigate("Login");
+      } else {
+        navigation.navigate("Next");
+      }
     }
   };
   const checkPin = () => {
-    // console.log(pin)
     if (pin === "1234") handleBiometricAuth();
     else if (pin === "") alert("Please Enter Pin");
     else {

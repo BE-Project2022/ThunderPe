@@ -5,12 +5,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Next = ({ navigation }) => {
   const getData = async () => {
-    console.log("getData");
     try {
       const value = await AsyncStorage.getItem("@storage_Key");
       if (value !== null) {
         // value previously stored
-        console.log("value=", value);
+        // console.log("value=", value);
       } else navigation.dispatch(StackActions.replace("Login"));
     } catch (e) {
       // error reading value

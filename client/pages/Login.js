@@ -47,25 +47,7 @@ const Login = ({ navigation }) => {
     }
   };
 
-  const getData = async () => {
-    console.log("getData");
-    try {
-      const value = await AsyncStorage.getItem("@storage_Key");
-      if (value !== null) {
-        // value previously stored
-        console.log("value=", value);
-        navigation.dispatch(StackActions.replace("Next"));
-      }
-    } catch (e) {
-      // error reading value
-      console.log("error", e);
-    }
-  };
-
-  getData();
-
   const handleLogin = async (e) => {
-    // console.log(spin)
     if (email === "" && password === "") {
       alert("Please fill all the fields");
     } else if (!email.match(mailFormat)) alert("Please check username");

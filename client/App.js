@@ -8,6 +8,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import ForgotPassword from "./pages/ForgotPassword";
 import EnterOTP from "./pages/EnterOTP";
 import Pin from "./pages/Pin";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// const _removeData = async (useName) => {
+//   try {
+//     await AsyncStorage.removeItem("@storage_Key");
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// _removeData();
+
 export default function App() {
   const Navigate = createStackNavigator();
   return (
