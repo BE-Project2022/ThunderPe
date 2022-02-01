@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
   KeyboardAvoidingView,
   TextInput,
 } from "react-native";
@@ -11,19 +10,9 @@ import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as LocalAuthentication from "expo-local-authentication";
 import Logo from "../assets/images/Logo_Yel.png";
-import User from "../assets/images/user.png";
-import Email from "../assets/images/email.png";
-import Mobile from "../assets/images/mobile.png";
-import Key from "../assets/images/key.png";
-import { StackActions } from "@react-navigation/native";
-import axios from "axios";
-import Spinner from "react-native-loading-spinner-overlay/lib";
-import Eye from "../assets/images/eye.png";
-import EyeSlash from "../assets/images/eye-slash.png";
 
 const Pin = ({ navigation }) => {
   const [pin, setPin] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const changePin = (e) => {
     setPin(e);
@@ -35,7 +24,7 @@ const Pin = ({ navigation }) => {
       if (value !== null) return true;
       else return false;
     } catch (e) {
-      console.log("error", e);
+      return e;
     }
   };
 
