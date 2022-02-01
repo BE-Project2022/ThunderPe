@@ -1,6 +1,6 @@
 //jshint version:6
 
-import {} from "dotenv/config";
+import { } from "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";

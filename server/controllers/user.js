@@ -38,7 +38,7 @@ export const signup = async (req, res) => {
     );
     res.status(201).json({ reactuser, token });
   } catch (err) {
-    res.Status(500).json(err);
+    res.status(500).json(err);
   }
 };
 
