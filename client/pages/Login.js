@@ -18,6 +18,7 @@ import Back from "../assets/images/back.png";
 import Spinner from "react-native-loading-spinner-overlay";
 import Eye from "../assets/images/eye.png";
 import EyeSlash from "../assets/images/eye-slash.png";
+import { storeData, getData } from "../controllers/Data";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -36,33 +37,6 @@ const Login = ({ navigation }) => {
   const changePassword = (e) => {
     setPassword(e);
   };
-
-  const storeData = async (value) => {
-    try {
-      let JsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem("@storage_Key", JsonValue);
-    } catch (e) {
-      console.log("error", e);
-      // saving error
-    }
-  };
-
-  const getData = async () => {
-    console.log("getData");
-    try {
-      const value = await AsyncStorage.getItem("@storage_Key");
-      if (value !== null) {
-        // value previously stored
-        console.log("value=", value);
-        navigation.dispatch(StackActions.replace("Next"));
-      }
-    } catch (e) {
-      // error reading value
-      console.log("error", e);
-    }
-  };
-
-  getData();
 
   const handleLogin = async (e) => {
     // console.log(spin)

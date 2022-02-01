@@ -29,6 +29,7 @@ const SignUp = ({ navigation }) => {
   const [passwordVisible, showPassword] = useState(true);
   const [signState, setSignState] = useState(false);
   const [confirmPassVisible, confirmPassShow] = useState(true);
+  const [pin, setPin] = useState("");
 
   var mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   var mobileFormat = /^\d{10}$/;
@@ -55,13 +56,18 @@ const SignUp = ({ navigation }) => {
     setConfirmPassword(e);
   };
 
+  const changePin = (e) => {
+    setPin(e);
+  };
+
   const handleSignUp = async (e) => {
     if (
       fullname === "" ||
       email === "" ||
       password === "" ||
       mobile === "" ||
-      confirmPassword === ""
+      confirmPassword === "" ||
+      pin === ""
     ) {
       alert("Please fill in all fields");
     } else if (password !== confirmPassword) {
@@ -82,6 +88,7 @@ const SignUp = ({ navigation }) => {
         email: email,
         password: password,
         mobile: mobileno,
+        pin: pin
       };
       changeSpin(true);
       axios
@@ -92,7 +99,8 @@ const SignUp = ({ navigation }) => {
           navigation.dispatch(StackActions.replace("Login"));
         })
         .catch((err) => {
-          alert(err.response.data.err);
+          alert(err.response.data.error);
+          console.log(err.response)
           changeSpin(false);
         });
     }
@@ -194,9 +202,9 @@ const SignUp = ({ navigation }) => {
               style={styles.input}
               placeholder="Pin (This will be used for authentication when you open the app)"
               keyboardType="numeric"
-              onChangeText={changeMobile}
               maxLength={4}
               secureTextEntry={true}
+              onChangeText={changePin}
             />
             <Image source={Pin} style={{ position: "absolute", top: 10 }} />
           </View>

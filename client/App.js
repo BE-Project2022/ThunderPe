@@ -8,8 +8,21 @@ import { NavigationContainer } from "@react-navigation/native";
 import ForgotPassword from "./pages/ForgotPassword";
 import EnterOTP from "./pages/EnterOTP";
 import Pin from "./pages/Pin";
+// AsyncStorageLib
+import { storeData, getData } from "./controllers/Data";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState } from "react";
+import { Decrypt } from "./controllers/Decrypt";
+
 export default function App() {
   const Navigate = createStackNavigator();
+  let isLoggedin
+  getData().then((res) => {
+    isLoggedin = res;
+    console.log(res)
+    // console.log(Decrypt(res))
+  })
+  // console.log('LoggedIn: ', isLoggedin)
   return (
     <NavigationContainer>
       <StatusBar backgroundColor="#ffc100" barStyle="light-content" />
@@ -18,7 +31,7 @@ export default function App() {
           headerShown: false,
           cardStyle: { backgroundColor: "#fff" },
         }}
-        initialRouteName={"Pin"}
+        initialRouteName={isLoggedin === null ? 'Login' : 'Pin'}
       >
         <Navigate.Screen name="Login" component={Login} />
         <Navigate.Screen name="SignUp" component={SignUp} />

@@ -32,7 +32,7 @@ const Pin = ({ navigation }) => {
       promptMessage: "Login with Fingerprint",
     });
     if (biometricAuth.success) {
-      navigation.navigate("Login");
+      navigation.navigate("Next");
     }
   };
   const checkPin = () => {
