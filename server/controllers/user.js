@@ -25,18 +25,7 @@ export const signup = async (req, res) => {
   });
   try {
     await reactuser.save();
-    const token = jwt.sign(
-      {
-        fullname: reactuser.fullname,
-        mobile: reactuser.mobile,
-        userId: reactuser._id,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "1h",
-      }
-    );
-    res.status(201).json({ reactuser, token });
+    res.status(201).json({ reactuser });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -51,14 +40,10 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(req.body.password, user.password);
     if (isMatch) {
       const token = jwt.sign(
-        { fullname: user.fullname, mobile: user.mobile, id: user._id },
+        { email: user.email, mobile: user.mobile, id: user._id, pin: user.pin },
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
-      // await ThunderUser.findOneAndUpdate({ email: req.body.email }, { 'token': token })
-      user['token'] = token
-      await user.save((err, res) => console.log(res))
-      // console.log(user.token)
       res.status(201).json({ user, token });
     } else {
       res.status(401).send({ error: "Password invalid" });
@@ -128,8 +113,3 @@ export const verifyOTP = async (req, res) => {
     res.status(500).send({ error });
   }
 };
-
-export const verifyPin = async (req, res) => {
-  const { token, pin } = req.body
-
-}
