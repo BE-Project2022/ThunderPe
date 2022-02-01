@@ -1,14 +1,14 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import {} from "dotenv/config";
+import { } from "dotenv/config";
 import ThunderUser from "../models/userSchema.js";
 import { sendEmail } from "../services/MailService.js";
 import Verification from "../models/Verification.js";
 const router = express.Router();
 
 export const signup = async (req, res) => {
-  const { fullname, email, mobile, password } = req.body;
+  const { fullname, email, mobile, password, pin } = req.body;
   const candidate = await ThunderUser.findOne({ mobile });
   if (candidate) {
     return res.status(400).json({
@@ -21,6 +21,7 @@ export const signup = async (req, res) => {
     email: email,
     mobile: mobile,
     password: hashedPassword,
+    pin: pin
   });
   try {
     await reactuser.save();
@@ -45,6 +46,7 @@ export const login = async (req, res) => {
   const user = await ThunderUser.findOne({
     email: req.body.email,
   });
+  // console.log(user)
   if (user) {
     const isMatch = await bcrypt.compare(req.body.password, user.password);
     if (isMatch) {
@@ -53,6 +55,10 @@ export const login = async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
+      // await ThunderUser.findOneAndUpdate({ email: req.body.email }, { 'token': token })
+      user['token'] = token
+      await user.save((err, res) => console.log(res))
+      // console.log(user.token)
       res.status(201).json({ user, token });
     } else {
       res.status(401).send({ error: "Password invalid" });
@@ -122,3 +128,8 @@ export const verifyOTP = async (req, res) => {
     res.status(500).send({ error });
   }
 };
+
+export const verifyPin = async (req, res) => {
+  const { token, pin } = req.body
+
+}
