@@ -39,7 +39,6 @@ const Login = ({ navigation }) => {
   };
 
   const handleLogin = async (e) => {
-    // console.log(spin)
     if (email === "" && password === "") {
       alert("Please fill all the fields");
     } else if (!email.match(mailFormat)) alert("Please check username");
