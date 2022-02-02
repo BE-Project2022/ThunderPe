@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { decode } from "react-native-pure-jwt";
 
 import Logo from "../assets/images/Logo_Yel.png";
 import User from "../assets/images/user.png";

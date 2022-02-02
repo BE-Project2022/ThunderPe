@@ -18,16 +18,6 @@ const Pin = ({ navigation }) => {
     setPin(e);
   };
 
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("@storage_Key");
-      if (value !== null) return true;
-      else return false;
-    } catch (e) {
-      return e;
-    }
-  };
-
   const handleBiometricAuth = async () => {
     const biometricAuth = await LocalAuthentication.authenticateAsync({
       promptMessage: "Login with Fingerprint",

@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Decrypt from "./Decrypt";
 
 export const storeData = async (value) => {
   try {
@@ -19,15 +18,7 @@ export const getData = async () => {
     // await AsyncStorage.removeItem("@storage_Key")
     const value = await AsyncStorage.getItem("@storage_Key");
     // console.log(value)
-    if (value !== null) {
-      // value previously stored
-      console.log("value=", value);
-      console.log("\nDecrypt: ", Decrypt(value));
-      return value;
-    } else {
-      // console.log('HERE')
-      return null;
-    }
+    return value;
   } catch (e) {
     // error reading value
     console.log("error", e);
