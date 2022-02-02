@@ -18,7 +18,7 @@ import axios from "axios";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import Eye from "../assets/images/eye.png";
 import EyeSlash from "../assets/images/eye-slash.png";
-import Pin from '../assets/images/pin.png'
+import Pin from "../assets/images/pin.png";
 const SignUp = ({ navigation }) => {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
@@ -27,7 +27,6 @@ const SignUp = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [spin, changeSpin] = useState(false);
   const [passwordVisible, showPassword] = useState(true);
-  const [signState, setSignState] = useState(false);
   const [confirmPassVisible, confirmPassShow] = useState(true);
   const [pin, setPin] = useState("");
 
@@ -82,25 +81,25 @@ const SignUp = ({ navigation }) => {
       );
     else {
       let mobileno = parseInt(mobile);
+      let pin = parseInt(pin);
 
       const user = {
         fullname: fullname,
         email: email,
         password: password,
         mobile: mobileno,
-        pin: pin
+        pin: pin,
       };
       changeSpin(true);
       axios
         .post("https://thunderpe.herokuapp.com/auth/signup", user)
         .then((res) => {
-          setSignState(true);
           changeSpin(false);
           navigation.dispatch(StackActions.replace("Login"));
         })
         .catch((err) => {
           alert(err.response.data.error);
-          console.log(err.response)
+          console.log(err.response);
           changeSpin(false);
         });
     }
@@ -171,7 +170,6 @@ const SignUp = ({ navigation }) => {
                 style={{ position: "absolute", top: 10, right: 5 }}
               />
             </TouchableOpacity>
-
           </View>
           <View style={{ flexDirection: "row" }}>
             <TextInput

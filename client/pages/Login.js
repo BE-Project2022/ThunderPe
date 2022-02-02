@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+// import { decode } from "react-native-pure-jwt";
 
 import Logo from "../assets/images/Logo_Yel.png";
 import User from "../assets/images/user.png";
@@ -19,6 +20,7 @@ import Spinner from "react-native-loading-spinner-overlay";
 import Eye from "../assets/images/eye.png";
 import EyeSlash from "../assets/images/eye-slash.png";
 import { storeData, getData } from "../controllers/Data";
+import jwtDecode from "jwt-decode";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -55,10 +57,12 @@ const Login = ({ navigation }) => {
           alert("Login Successful");
           changeSpin(false);
           storeData(res.data.token);
+          const decoded = jwtDecode(res.data.token);
+          console.log(decoded);
           navigation.dispatch(StackActions.replace("Next"));
         })
         .catch((err) => {
-          alert(err.response.data.error);
+          console.log(err);
           changeSpin(false);
         });
     }

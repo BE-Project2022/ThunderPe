@@ -12,16 +12,26 @@ import Pin from "./pages/Pin";
 import { storeData, getData } from "./controllers/Data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
-import { Decrypt } from "./controllers/Decrypt";
+import Decrypt from "./controllers/Decrypt";
+
+const _removeData = async (useName) => {
+  try {
+    await AsyncStorage.removeItem("@storage_Key");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+_removeData();
 
 export default function App() {
   const Navigate = createStackNavigator();
-  let isLoggedin
+  let isLoggedin;
   getData().then((res) => {
     isLoggedin = res;
-    console.log(res)
+    // console.log(res);
     // console.log(Decrypt(res))
-  })
+  });
   // console.log('LoggedIn: ', isLoggedin)
   return (
     <NavigationContainer>
@@ -31,7 +41,7 @@ export default function App() {
           headerShown: false,
           cardStyle: { backgroundColor: "#fff" },
         }}
-        initialRouteName={isLoggedin === null ? 'Login' : 'Pin'}
+        initialRouteName={isLoggedin === null ? "Login" : "Pin"}
       >
         <Navigate.Screen name="Login" component={Login} />
         <Navigate.Screen name="SignUp" component={SignUp} />
