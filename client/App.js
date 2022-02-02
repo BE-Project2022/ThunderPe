@@ -13,15 +13,15 @@ import { storeData, getData } from "./controllers/Data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 
-const _removeData = async (useName) => {
-  try {
-    await AsyncStorage.removeItem("@storage_Key");
-  } catch (error) {
-    console.log("error", error);
-  }
-};
+// const _removeData = async (useName) => {
+//   try {
+//     await AsyncStorage.removeItem("@storage_Key");
+//   } catch (error) {
+//     console.log("error", error);
+//   }
+// };
 
-_removeData();
+// _removeData();
 
 export default function App() {
   const Navigate = createStackNavigator();
@@ -29,8 +29,8 @@ export default function App() {
   getData().then((res) => {
     isLoggedin = res;
     if (isLoggedin === null) {
-      isLoggedin = false;
-    } else isLoggedin = true;
+      isLoggedin = "Login";
+    } else isLoggedin = "Pin";
     console.log(isLoggedin);
     // console.log(Decrypt(res))
   });
@@ -43,7 +43,7 @@ export default function App() {
           headerShown: false,
           cardStyle: { backgroundColor: "#fff" },
         }}
-        initialRouteName={isLoggedin === false ? "Login" : "Pin"}
+        initialRouteName={isLoggedin}
       >
         <Navigate.Screen name="Login" component={Login} />
         <Navigate.Screen name="SignUp" component={SignUp} />
