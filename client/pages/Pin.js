@@ -10,10 +10,14 @@ import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as LocalAuthentication from "expo-local-authentication";
 import Logo from "../assets/images/Logo_Yel.png";
+import jwtDecode from "jwt-decode";
+import { StackActions } from "@react-navigation/routers";
 
-const Pin = ({ navigation }) => {
-  const [pin, setPin] = useState("");
-
+const Pin = ({ route, navigation }) => {
+  const [pin, setPin] = useState();
+  const user = jwtDecode(route.params.token)
+  // console.log(typeof (user.pin))
+  // console.log()
   const changePin = (e) => {
     setPin(e);
   };
@@ -23,11 +27,11 @@ const Pin = ({ navigation }) => {
       promptMessage: "Login with Fingerprint",
     });
     if (biometricAuth.success) {
-      navigation.navigate("Next");
+      navigation.dispatch(StackActions.replace("Dashboard", { user: user }));
     }
   };
   const checkPin = () => {
-    if (pin === "1234") handleBiometricAuth();
+    if (parseInt(pin) === user.pin) handleBiometricAuth();
     else if (pin === "") alert("Please Enter Pin");
     else {
       alert("Please Enter valid Pin");

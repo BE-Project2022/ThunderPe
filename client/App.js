@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Platform, StatusBar } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import Next from "./pages/Next";
+import Dashboard from "./pages/Dashboard";
 import { NavigationContainer } from "@react-navigation/native";
 import ForgotPassword from "./pages/ForgotPassword";
 import EnterOTP from "./pages/EnterOTP";
@@ -12,6 +12,7 @@ import Pin from "./pages/Pin";
 import { storeData, getData } from "./controllers/Data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
+import SplashScreen from "./pages/SplashScreen";
 
 // const _removeData = async (useName) => {
 //   try {
@@ -25,15 +26,6 @@ import { useState } from "react";
 
 export default function App() {
   const Navigate = createStackNavigator();
-  var isLoggedin;
-  getData().then((res) => {
-    isLoggedin = res;
-    if (isLoggedin === null) {
-      isLoggedin = "Login";
-    } else isLoggedin = "Pin";
-    console.log(isLoggedin);
-    // console.log(Decrypt(res))
-  });
   // console.log('LoggedIn: ', isLoggedin)
   return (
     <NavigationContainer>
@@ -43,13 +35,14 @@ export default function App() {
           headerShown: false,
           cardStyle: { backgroundColor: "#fff" },
         }}
-        initialRouteName={isLoggedin}
+        initialRouteName={'SplashScreen'}
       >
         <Navigate.Screen name="Login" component={Login} />
+        <Navigate.Screen name="SplashScreen" component={SplashScreen} />
         <Navigate.Screen name="SignUp" component={SignUp} />
         <Navigate.Screen name="ForgotPassword" component={ForgotPassword} />
         <Navigate.Screen name="EnterOTP" component={EnterOTP} />
-        <Navigate.Screen name="Next" component={Next} />
+        <Navigate.Screen name="Dashboard" component={Dashboard} />
         <Navigate.Screen name="Pin" component={Pin} />
       </Navigate.Navigator>
     </NavigationContainer>

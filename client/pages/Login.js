@@ -57,8 +57,8 @@ const Login = ({ navigation }) => {
           changeSpin(false);
           storeData(res.data.token);
           const decoded = jwtDecode(res.data.token);
-          console.log(decoded);
-          navigation.dispatch(StackActions.replace("Next"));
+          // console.log(decoded);
+          navigation.dispatch(StackActions.replace("Dashboard", { user: decoded }));
         })
         .catch((err) => {
           console.log(err);

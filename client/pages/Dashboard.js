@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { StackActions } from "@react-navigation/routers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Next = ({ navigation }) => {
+const Dashboard = ({ navigation }) => {
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem("@storage_Key");
@@ -19,7 +19,7 @@ const Next = ({ navigation }) => {
   getData();
   return (
     <View>
-      <Text>Next</Text>
+      <Text>Dashboard</Text>
       <TouchableOpacity
         onPress={() => navigation.dispatch(StackActions.replace("SignUp"))}
       >
@@ -29,4 +29,4 @@ const Next = ({ navigation }) => {
   );
 };
 
-export default Next;
+export default Dashboard;
