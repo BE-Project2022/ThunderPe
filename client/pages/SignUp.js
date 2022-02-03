@@ -99,7 +99,7 @@ const SignUp = ({ navigation }) => {
         })
         .catch((err) => {
           alert(err.response.data.error);
-          console.log(err.response);
+          // console.log(err.response);
           changeSpin(false);
         });
     }

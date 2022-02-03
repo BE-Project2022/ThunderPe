@@ -4,26 +4,20 @@ import { StackActions } from "@react-navigation/routers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Dashboard = ({ navigation }) => {
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("@storage_Key");
-      if (value !== null) {
-        // value previously stored
-        // console.log("value=", value);
-      } else navigation.dispatch(StackActions.replace("Login"));
-    } catch (e) {
-      // error reading value
-      console.log("error", e);
-    }
-  };
-  getData();
   return (
     <View>
       <Text>Dashboard</Text>
       <TouchableOpacity
-        onPress={() => navigation.dispatch(StackActions.replace("SignUp"))}
+        onPress={async () => {
+          try {
+            await AsyncStorage.removeItem("@storage_Key");
+          } catch (error) {
+            console.log("error", error);
+          }
+          navigation.dispatch(StackActions.replace("Login"));
+        }}
       >
-        <Text>Not a user? Register</Text>
+        <Text>Logout</Text>
       </TouchableOpacity>
     </View>
   );
