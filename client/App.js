@@ -35,7 +35,7 @@ export default function App() {
           headerShown: false,
           cardStyle: { backgroundColor: "#fff" },
         }}
-        initialRouteName={'SplashScreen'}
+        initialRouteName={'Dashboard'}
       >
         <Navigate.Screen name="Login" component={Login} />
         <Navigate.Screen name="SplashScreen" component={SplashScreen} />
