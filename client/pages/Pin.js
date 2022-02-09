@@ -12,22 +12,40 @@ import * as LocalAuthentication from "expo-local-authentication";
 import Logo from "../assets/images/Logo_Yel.png";
 import jwtDecode from "jwt-decode";
 import { StackActions } from "@react-navigation/routers";
+import axios from "axios";
 
 const Pin = ({ route, navigation }) => {
   const [pin, setPin] = useState();
   const user = jwtDecode(route.params.token)
+  var usersData = []
   // console.log(typeof (user.pin))
   // console.log()
   const changePin = (e) => {
     setPin(e);
   };
+  useEffect(() => {
+    axios
+      .get("https://thunderpe.herokuapp.com/auth/getallusers")
+      .then((res) => {
+        res.data.forEach(item => {
+          // console.log(item.fullname)
+          usersData.push(item.fullname)
+          // console.log(text)
+        })
+      })
+      .catch((err) => {
+        alert(err.response.data.error);
+        // console.log(err.response);
+        changeSpin(false);
+      });
+  })
 
   const handleBiometricAuth = async () => {
     const biometricAuth = await LocalAuthentication.authenticateAsync({
       promptMessage: "Login with Fingerprint",
     });
     if (biometricAuth.success) {
-      navigation.dispatch(StackActions.replace("Dashboard", { user: user }));
+      navigation.dispatch(StackActions.replace("Dashboard", { user: user, users: usersData }));
     }
   };
   const checkPin = () => {

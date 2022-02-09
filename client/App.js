@@ -1,5 +1,5 @@
 // import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Platform, StatusBar } from "react-native";
+import { StyleSheet, Text, View, Platform, StatusBar, LogBox } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -26,6 +26,9 @@ import SplashScreen from "./pages/SplashScreen";
 
 export default function App() {
   const Navigate = createStackNavigator();
+  LogBox.ignoreLogs([
+    "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
+  ]);
   // console.log('LoggedIn: ', isLoggedin)
   return (
     <NavigationContainer>
@@ -35,7 +38,7 @@ export default function App() {
           headerShown: false,
           cardStyle: { backgroundColor: "#fff" },
         }}
-        initialRouteName={'Dashboard'}
+        initialRouteName={'SplashScreen'}
       >
         <Navigate.Screen name="Login" component={Login} />
         <Navigate.Screen name="SplashScreen" component={SplashScreen} />
