@@ -29,7 +29,7 @@ const Pin = ({ route, navigation }) => {
       .then((res) => {
         res.data.forEach(item => {
           // console.log(item.fullname)
-          usersData.push(item.fullname)
+          usersData.push(item)
           // console.log(text)
         })
       })
@@ -45,6 +45,7 @@ const Pin = ({ route, navigation }) => {
       promptMessage: "Login with Fingerprint",
     });
     if (biometricAuth.success) {
+      // console.log(usersData.length)
       navigation.dispatch(StackActions.replace("Dashboard", { user: user, users: usersData }));
     }
   };

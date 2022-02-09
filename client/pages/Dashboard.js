@@ -1,47 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Button } from "react-native";
 import Logo from '../assets/images/Short_Logo_White.png'
 import { LinearGradient } from "expo-linear-gradient";
 import Rupee from '../assets/images/rupee.png'
 import BottomSheet from 'react-native-bottomsheet-reanimated'
 import User from '../assets/images/user.png'
 import More from '../assets/images/more.png'
+import Reward from '../assets/images/reward.png'
+import Next from '../assets/images/next.png'
+
 const Dashboard = ({ route, navigation }) => {
 
   const [screenCover, setScreenCover] = useState('70%')
-  const [userData, setUserData] = useState([])
   const [expanded, setExpanded] = useState(false)
-  const [shown, setShown] = useState(false)
+  const [userData, setData] = useState([])
 
-  useEffect(() => {
-
-
-
-  }, [userData])
-
-
+  // console.log(route.params.users)
   const changeCover = (e) => {
     setScreenCover(e.value);
   };
   // var userData = [];
-  const clearUserData = async () => {
-    console.log(userData.length)
-    setUserData(userData.splice(0, userData.length))
-    setExpanded(true)
-    showAllUsers()
-    // userData = []
-    console.log(userData.length)
-  }
+  useEffect(() => {
+    userData.splice(0, userData.length)
+    if (route.params.users.length > 9 && expanded)
+      showAllUsers()
+  }, [expanded])
 
   const showAllUsers = () => {
-    console.log('HERE')
+    // console.log('HERE')
+    setExpanded(true)
+    userData.splice(0, userData.length)
+    // console.log(userData.length)
     for (let i = 0; i < route.params.users.length; i++) {
       userData.push(
         <View key={i}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={(res) => console.log(route.params.users[i])}>
             <View style={{ marginTop: 14, marginLeft: 20 }}>
               <Image source={User} style={{ height: 55, width: 55 }} />
-              <Text style={{ marginLeft: 10 }}>{route.params.users[i]}</Text>
+              <Text style={{ marginLeft: 4 }}>{route.params.users[i].fullname}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -51,14 +47,14 @@ const Dashboard = ({ route, navigation }) => {
   }
   // console.log("HERE: \n", route.params.users)
   const setLessUsers = () => {
-    setShown(true)
+    userData.splice(0, userData.length)
     for (let i = 0; i < route.params.users.length; i++) {
       userData.push(
         <View key={i}>
           <TouchableOpacity>
             <View style={{ marginTop: 14, marginLeft: 20 }}>
               <Image source={User} style={{ height: 55, width: 55 }} />
-              <Text style={{ marginLeft: 10 }}>{route.params.users[i]}</Text>
+              <Text style={{ marginLeft: 10 }}>{route.params.users[i].fullname}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -67,13 +63,14 @@ const Dashboard = ({ route, navigation }) => {
   }
   const setMoreUsers = () => {
     let i = 0
+    userData.splice(0, userData.length)
     for (i = 0; i < 9; i++) {
       userData.push(
         <View key={i}>
           <TouchableOpacity>
             <View style={{ marginTop: 14, marginLeft: 20 }}>
               <Image source={User} style={{ height: 55, width: 55 }} />
-              <Text style={{ marginLeft: 10 }}>{route.params.users[i]}</Text>
+              <Text style={{ marginLeft: 10 }}>{route.params.users[i].fullname}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -91,7 +88,7 @@ const Dashboard = ({ route, navigation }) => {
             marginTop: 20,
             marginLeft: 24
           }}>
-        <TouchableOpacity onPress={clearUserData}>
+        <TouchableOpacity onPress={showAllUsers}>
           <Image source={More} style={{ alignSelf: 'center', marginTop: 10 }} />
           <Text style={{ marginTop: 14, marginLeft: 3 }}>More</Text>
         </TouchableOpacity>
@@ -108,16 +105,15 @@ const Dashboard = ({ route, navigation }) => {
   else if (route.params.users.length < 9) {
     setLessUsers()
   }
-  // else if (route.params.users.length > 9 && expanded && !shown) {
-  //   showAllUsers()
-  // }
-
 
   return (
     <View>
       <View style={styles.header}>
         <Image source={Logo} style={styles.img} />
         <Text style={styles.title}>THUNDERPE</Text>
+        <TouchableOpacity>
+          <Image source={User} style={{ marginRight: '4%', height: 35, width: 35 }} />
+        </TouchableOpacity>
       </View>
       <View >
         <LinearGradient
@@ -150,14 +146,35 @@ const Dashboard = ({ route, navigation }) => {
         // bodyStyle={{backgroundColor:"red",flex:1}}
         onChangeSnap={changeCover}
         body={
-          <View style={styles.payments}>
-            <Text style={{ fontSize: 18 }}>Recent Payments</Text>
-            <View style={styles.paymentUsers}>
-              {userData}
+          <ScrollView>
+            <View style={styles.payments}>
+              <Text style={{ fontSize: 18 }}>Recent Payments</Text>
+              <View style={styles.paymentUsers}>
+                {userData}
+              </View>
+              <View style={{ backgroundColor: '#D8D2D2', height: 1, width: '104%', marginTop: 15, marginLeft: -14 }} />
+              <View style={{ marginTop: 10 }}>
+                <Text style={{ fontSize: 18 }}>Promotions</Text>
+                <TouchableOpacity style={{ marginTop: 13, width: 59 }}>
+                  <Image source={Reward} style={{ backgroundColor: 'transparent', height: 55, width: 55 }} />
+                  <Text style={{ fontSize: 13 }}>Rewards</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ backgroundColor: '#D8D2D2', height: 1, width: '104%', marginTop: 15, marginLeft: -14 }} />
+              <View>
+                <TouchableOpacity style={{ height: 60, flexDirection: 'row' }}>
+                  <Text style={{ fontSize: 18, marginTop: '3.5%' }}>Show Transaction History</Text>
+                  <Text style={{ fontSize: 18, marginTop: '3.5%', marginLeft: '30%' }}> {'>'} </Text>
+                </TouchableOpacity>
+                <View style={{ backgroundColor: '#D8D2D2', height: 1, width: '104%', marginLeft: -14 }} />
+              </View>
             </View>
-          </View>
+          </ScrollView>
         }
       />
+      <TouchableOpacity style={styles.paymentButton}>
+        <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>+ New Payment</Text>
+      </TouchableOpacity>
       {/* <TouchableOpacity
         onPress={async () => {
           try {
@@ -203,7 +220,9 @@ const styles = StyleSheet.create({
     height: 40,
     fontWeight: "bold",
     marginTop: 4,
-    marginLeft: -10
+    marginRight: '17%',
+    marginLeft: '-3.2%'
+    // marginLeft: -10
     // marginBottom: 20,
   },
   header: {
@@ -211,7 +230,7 @@ const styles = StyleSheet.create({
     height: 60,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'flex-end'
   },
   input: {
     borderBottomColor: "#000",
@@ -263,5 +282,21 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     width: '105%',
     // backgroundColor: 'red'
+  },
+  paymentButton: {
+    backgroundColor: "#FCC100",
+    marginTop: '120%',
+    height: 45,
+    borderRadius: 25,
+    marginBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '80%',
+    alignSelf: 'center',
+    shadowColor: 'rgb(0,0,0)', // IOS
+    shadowOffset: { height: 1, width: 1 }, // IOS
+    shadowOpacity: 1, // IOS
+    shadowRadius: 4, //IOS
+    elevation: 7
   }
 });
