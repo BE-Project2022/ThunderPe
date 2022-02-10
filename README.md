@@ -2,7 +2,7 @@
 
 # ThunderPe
 
-ThunderPe is an peer to peer decentralized transaction platform.
+ThunderPe is a peer to peer decentralized transaction platform.
 
 ## Steps to Run
 
