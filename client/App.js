@@ -1,9 +1,17 @@
 // import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Platform, StatusBar, LogBox } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Platform,
+  StatusBar,
+  LogBox,
+} from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
+import userContacts from "./pages/userContacts";
 import { NavigationContainer } from "@react-navigation/native";
 import ForgotPassword from "./pages/ForgotPassword";
 import EnterOTP from "./pages/EnterOTP";
@@ -27,7 +35,7 @@ import SplashScreen from "./pages/SplashScreen";
 export default function App() {
   const Navigate = createStackNavigator();
   LogBox.ignoreLogs([
-    "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
+    "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
   ]);
   // console.log('LoggedIn: ', isLoggedin)
   return (
@@ -38,7 +46,7 @@ export default function App() {
           headerShown: false,
           cardStyle: { backgroundColor: "#fff" },
         }}
-        initialRouteName={'SplashScreen'}
+        initialRouteName={"SplashScreen"}
       >
         <Navigate.Screen name="Login" component={Login} />
         <Navigate.Screen name="SplashScreen" component={SplashScreen} />
@@ -47,6 +55,7 @@ export default function App() {
         <Navigate.Screen name="EnterOTP" component={EnterOTP} />
         <Navigate.Screen name="Dashboard" component={Dashboard} />
         <Navigate.Screen name="Pin" component={Pin} />
+        <Navigate.Screen name="userContacts" component={userContacts} />
       </Navigate.Navigator>
     </NavigationContainer>
   );
