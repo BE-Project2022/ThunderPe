@@ -40,7 +40,7 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(req.body.password, user.password);
     if (isMatch) {
       const token = jwt.sign(
-        { email: user.email, mobile: user.mobile, id: user._id, pin: user.pin },
+        { email: user.email, mobile: user.mobile, id: user._id, pin: user.pin, name: user.fullname },
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
