@@ -10,7 +10,7 @@ const SplashScreen = ({ navigation }) => {
     setTimeout(() => {
       getData().then((res) => {
         value = res;
-        // console.log(value)
+        // console.log('Value: ', value)
         if (value === null) navigation.dispatch(StackActions.replace("Login"));
         else {
           navigation.dispatch(StackActions.replace("Pin", { token: value }));

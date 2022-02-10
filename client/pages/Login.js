@@ -1,4 +1,4 @@
-import React, { createRef, useState } from "react";
+import React, { createRef, useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -29,7 +29,7 @@ const Login = ({ navigation }) => {
   var mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   var passwordFormat =
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
-
+  var usersData = []
   const emailField = createRef();
   const passwordField = createRef();
   const changeEmail = (e) => {
@@ -38,6 +38,23 @@ const Login = ({ navigation }) => {
   const changePassword = (e) => {
     setPassword(e);
   };
+
+  useEffect(() => {
+    axios
+      .get("https://thunderpe.herokuapp.com/auth/getallusers")
+      .then((res) => {
+        res.data.forEach(item => {
+          // console.log(item.fullname)
+          usersData.push(item)
+          // console.log(text)
+        })
+      })
+      .catch((err) => {
+        alert(err.response.data.error);
+        // console.log(err.response);
+        changeSpin(false);
+      });
+  })
 
   const handleLogin = async (e) => {
     if (email === "" && password === "") {
@@ -58,7 +75,7 @@ const Login = ({ navigation }) => {
           storeData(res.data.token);
           const decoded = jwtDecode(res.data.token);
           // console.log(decoded);
-          navigation.dispatch(StackActions.replace("Dashboard", { user: decoded }));
+          navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
         })
         .catch((err) => {
           console.log(err);

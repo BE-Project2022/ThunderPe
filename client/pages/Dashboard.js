@@ -23,6 +23,7 @@ const Dashboard = ({ route, navigation }) => {
   const [screenCover, setScreenCover] = useState("70%");
   const [expanded, setExpanded] = useState(false);
   const [userData, setData] = useState([]);
+  const user = route.params.user
 
   // console.log(route.params.users)
   const changeCover = (e) => {
@@ -251,7 +252,7 @@ const Dashboard = ({ route, navigation }) => {
       <TouchableOpacity
         style={styles.paymentButton}
         onPress={() =>
-          navigation.dispatch(StackActions.replace("userContacts"))
+          navigation.navigate("userContacts", { user: user })
         }
       >
         <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>

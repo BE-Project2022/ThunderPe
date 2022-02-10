@@ -18,6 +18,7 @@ const Pin = ({ route, navigation }) => {
   const [pin, setPin] = useState();
   const user = jwtDecode(route.params.token)
   var usersData = []
+  // console.log('User: ', user)
   // console.log(typeof (user.pin))
   // console.log()
   const changePin = (e) => {
