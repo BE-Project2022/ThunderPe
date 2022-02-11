@@ -202,7 +202,7 @@ const userContacts = ({ route, navigation }) => {
         renderItem={renderItem}
         ListEmptyComponent={() => <Text>No Contacts Found</Text>}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: 395 }}
+        contentContainerStyle={{ paddingBottom: 425 }}
         style={{ marginTop: 0 }}
       />
       <TouchableOpacity
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffc100',
     position: 'absolute',
     right: '5%',
-    top: '80%',
+    top: '60%',
     width: 55,
     height: 55,
     alignItems: 'center',
