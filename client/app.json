@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/Short_Logo_Yellow.png",
+    "userInterfaceStyle": "automatic",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -12,13 +13,14 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "userInterfaceStyle": "automatic"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/Short_Logo_Yellow.png",
-        "backgroundColor": "#000"
-      }
+        "foregroundImage": "./assets/images/Short_Logo_Yellow.png"
+      },
+      "userInterfaceStyle": "automatic"
     },
     "web": {
       "favicon": "./assets/images/Logo_Yel.png"

@@ -14,18 +14,22 @@ import * as Contacts from "expo-contacts";
 import Back from "../assets/images/back.png";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import Dialpad from '../assets/images/dialpad.png'
-
+import axios from "axios";
 
 const userContacts = ({ route, navigation }) => {
   const [userContact, setContact] = useState([]);
+  const [onThunder, setOnThunder] = useState([]);
   const [notOnThunder, setNotOnThunder] = useState([]);
   const [memoryContact, setMemoryContact] = useState([]);
   const [spin, changeSpin] = useState(true);
   const curretUser = route.params.user;
-  // console.log(curretUser)
 
+  // console.log(curretUser)
+  var usersData = []
   useEffect(() => {
+
     (async () => {
+
       const { status } = await Contacts.requestPermissionsAsync();
       if (status === "granted") {
         const { data } = await Contacts.getContactsAsync({
@@ -34,12 +38,45 @@ const userContacts = ({ route, navigation }) => {
 
         if (data.length > 0) {
           const contact = data;
-          changeSpin(false);
           const memory = contact.filter((user) => {
+            if (user.phoneNumbers) {
+              user.phoneNumbers.forEach(item => {
+                item.number = (item.number.replace(/ /g, ""))
+                item.number = (item.number.replace(/-/g, ""))
+                item.number = (item.number.replace("+91", ""))
+                item.number = parseInt(item.number)
+              })
+            }
             return !!user.phoneNumbers;
           });
           setContact(memory);
-          setMemoryContact(memory);
+
+          axios
+            .get("https://thunderpe.herokuapp.com/auth/getallusers")
+            .then((res) => {
+
+              onThunder.splice(0, onThunder.length);
+              res.data.forEach(item => {
+                // console.log(item)
+                usersData.push(item)
+                let obj = memory.find(o => o.phoneNumbers[0].number === item.mobile)
+                if (obj != undefined) {
+                  onThunder.push(obj)
+                }
+              })
+              onThunder.forEach((user) => {
+                // console.log(user.name)
+                var index = memory.indexOf(user)
+                memory.splice(index, 1)
+                setNotOnThunder(memory)
+                // console.log(obj.find((item) => item.name === "Rohit Kulkarni"))
+              })
+              changeSpin(false);
+              setMemoryContact(onThunder);
+              // console.log(notOnThunder)
+            })
+            .catch((err) => {
+            });
 
         }
       }
@@ -74,7 +111,8 @@ const userContacts = ({ route, navigation }) => {
       let searchTermLowerCase = value.toLowerCase();
       return contactLowerCase.indexOf(searchTermLowerCase) > -1;
     });
-    setContact(filteredContacts);
+    setOnThunder(filteredContacts);
+    // setNotOnThunder(filteredContacts)
   };
 
   return (
@@ -92,7 +130,7 @@ const userContacts = ({ route, navigation }) => {
         <Text style={styles.title}>NEW PAYMENT</Text>
       </View>
       <TextInput
-        placeholder="Search"
+        placeholder="Search contacts on ThunderPe"
         onChangeText={(value) => searchContacts(value)}
         style={styles.search}
         selectionColor="#757574"
@@ -115,18 +153,58 @@ const userContacts = ({ route, navigation }) => {
           overlayColor="rgba(255,255,255,0.8)"
         />
       ) : null}
+      <Text style={{
+        fontSize: 15,
+        fontWeight: 'bold',
+        marginTop: 10,
+        marginLeft: 10,
+        color: 'green'
+      }}>
+        Contacts on ThunderPe:
+      </Text>
+      <View
+        style={{
+          backgroundColor: "#D8D2D2",
+          height: 1,
+          width: "104%",
+          marginTop: 10,
+          marginLeft: -14,
+        }}
+      />
       <FlatList
-        data={userContact}
+        data={onThunder}
         renderItem={renderItem}
         ListEmptyComponent={() => <Text>No Contacts Found</Text>}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: 118 }}
+        // contentContainerStyle={{ paddingBottom: 38 }}
+        style={{ marginTop: 0, height: '25%' }}
+      />
+      <Text style={{
+        fontSize: 15,
+        fontWeight: 'bold',
+        marginTop: 20,
+        marginLeft: 10,
+        color: 'red'
+      }}>
+        Contacts Not on ThunderPe:
+      </Text>
+      <View
+        style={{
+          backgroundColor: "#D8D2D2",
+          height: 1,
+          width: "104%",
+          marginTop: 10,
+          marginLeft: -14,
+        }}
+      />
+      <FlatList
+        data={notOnThunder}
+        renderItem={renderItem}
+        ListEmptyComponent={() => <Text>No Contacts Found</Text>}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ paddingBottom: 395 }}
         style={{ marginTop: 0 }}
-      >
-        {/* {userContact.map((contact) => (
-        
-      ))} */}
-      </FlatList>
+      />
       <TouchableOpacity
         style={styles.dialpad}
         onLongPress={() => ToastAndroid.show('Send to number', ToastAndroid.SHORT)}

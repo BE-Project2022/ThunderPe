@@ -6,6 +6,8 @@ import {
   Platform,
   StatusBar,
   LogBox,
+  Appearance,
+  useColorScheme,
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./pages/Login";
@@ -36,6 +38,8 @@ import SendMoneyToNumber from "./pages/SendMoneyToNumber";
 
 export default function App() {
   const Navigate = createStackNavigator();
+  // console.log(useColorScheme())
+
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
   ]);
