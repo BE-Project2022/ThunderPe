@@ -8,13 +8,17 @@ import {
   FlatList,
   TextInput,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import * as Contacts from "expo-contacts";
 import Back from "../assets/images/back.png";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import Dialpad from '../assets/images/dialpad.png'
+
 
 const userContacts = ({ route, navigation }) => {
   const [userContact, setContact] = useState([]);
+  const [notOnThunder, setNotOnThunder] = useState([]);
   const [memoryContact, setMemoryContact] = useState([]);
   const [spin, changeSpin] = useState(true);
   const curretUser = route.params.user;
@@ -31,12 +35,12 @@ const userContacts = ({ route, navigation }) => {
         if (data.length > 0) {
           const contact = data;
           changeSpin(false);
-
           const memory = contact.filter((user) => {
             return !!user.phoneNumbers;
           });
           setContact(memory);
           setMemoryContact(memory);
+
         }
       }
     })();
@@ -74,7 +78,7 @@ const userContacts = ({ route, navigation }) => {
   };
 
   return (
-    <View>
+    <View >
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => (navigation.canGoBack() ? navigation.goBack() : null)}
@@ -116,13 +120,22 @@ const userContacts = ({ route, navigation }) => {
         renderItem={renderItem}
         ListEmptyComponent={() => <Text>No Contacts Found</Text>}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: 48 }}
-        style={{ marginTop: 2 }}
+        contentContainerStyle={{ paddingBottom: 118 }}
+        style={{ marginTop: 0 }}
       >
         {/* {userContact.map((contact) => (
         
       ))} */}
       </FlatList>
+      <TouchableOpacity
+        style={styles.dialpad}
+        onLongPress={() => ToastAndroid.show('Send to number', ToastAndroid.SHORT)}
+        onPress={() => navigation.navigate('SendToNumber', {
+          currentUser: curretUser,
+        })}
+      >
+        <Image source={Dialpad} style={{ height: 35, width: 35 }} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -163,6 +176,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     color: "#757574",
   },
+  dialpad: {
+    backgroundColor: '#ffc100',
+    position: 'absolute',
+    right: '5%',
+    top: '80%',
+    width: 55,
+    height: 55,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 40,
+    shadowColor: "rgb(0,0,0)", // IOS
+    shadowOffset: { height: 10, width: 10 }, // IOS
+    shadowOpacity: 1, // IOS
+    shadowRadius: 4, //IOS
+    elevation: 4,
+
+  }
 });
 
 export default userContacts;

@@ -22,6 +22,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import SplashScreen from "./pages/SplashScreen";
 import EnterAmount from "./pages/EnterAmount";
+import SendMoneyToNumber from "./pages/SendMoneyToNumber";
 
 // const _removeData = async (useName) => {
 //   try {
@@ -58,6 +59,7 @@ export default function App() {
         <Navigate.Screen name="Pin" component={Pin} />
         <Navigate.Screen name="userContacts" component={userContacts} />
         <Navigate.Screen name="EnterAmount" component={EnterAmount} />
+        <Navigate.Screen name="SendToNumber" component={SendMoneyToNumber} />
       </Navigate.Navigator>
     </NavigationContainer>
   );
