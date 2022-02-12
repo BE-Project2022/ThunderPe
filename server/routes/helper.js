@@ -7,6 +7,7 @@ import {
   forgotPassword,
   getVerification,
   verifyOTP,
+  check,
 } from "../controllers/user.js";
 import { UserData } from "../controllers/profileData.js";
 
@@ -23,6 +24,7 @@ router.get("/verifyOTP", verifyOTP);
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/forgotPassword", forgotPassword);
+router.post("/check", check);
 router.post("/userdata", auth, UserData);
 
 export default router;
