@@ -1,9 +1,10 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React, { useEffect } from "react";
-import Logo from "../assets/images/Logo_white.png";
+import Logo from "../assets/images/Final_Logo_White.png";
 import { LinearGradient } from "expo-linear-gradient";
 import { getData } from "../controllers/Data";
 import { StackActions } from "@react-navigation/routers";
+import { light } from "../controllers/Theme";
 const SplashScreen = ({ navigation }) => {
   var value;
   useEffect(() => {
@@ -21,7 +22,7 @@ const SplashScreen = ({ navigation }) => {
 
   return (
     <LinearGradient
-      colors={["#fcc100", "#fce088"]}
+      colors={[light.primary, light.secondary]}
       style={styles.linearGradient}
     >
       <Image source={Logo} style={styles.image} />

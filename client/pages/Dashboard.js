@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
   Button,
+  useColorScheme,
 } from "react-native";
 import { StackActions } from "@react-navigation/routers";
 
@@ -18,12 +19,16 @@ import User from "../assets/images/user.png";
 import More from "../assets/images/more.png";
 import Reward from "../assets/images/reward.png";
 import Next from "../assets/images/next.png";
+import { dark, light } from "../controllers/Theme";
+
 
 const Dashboard = ({ route, navigation }) => {
   const [screenCover, setScreenCover] = useState("70%");
   const [expanded, setExpanded] = useState(false);
   const [userData, setData] = useState([]);
   const user = route.params.user
+  const mode = useColorScheme()
+
 
   // console.log(route.params.users)
   const changeCover = (e) => {
@@ -121,7 +126,7 @@ const Dashboard = ({ route, navigation }) => {
 
   return (
     <View>
-      <View style={styles.header}>
+      <View style={mode == "dark" ? styles.darkHeader : styles.header}>
         <Image source={Logo} style={styles.img} />
         <Text style={styles.title}>THUNDERPE</Text>
         <TouchableOpacity>
@@ -309,8 +314,15 @@ const styles = StyleSheet.create({
     // marginLeft: -10
     // marginBottom: 20,
   },
+  darkHeader: {
+    backgroundColor: dark.primary,
+    height: 60,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
   header: {
-    backgroundColor: "#ffc100",
+    backgroundColor: light.primary,
     height: 60,
     flexDirection: "row",
     alignItems: "center",

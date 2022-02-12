@@ -5,21 +5,30 @@ import {
   StyleSheet,
   Image,
   Text,
+  KeyboardAvoidingView,
   TouchableOpacity,
+  useColorScheme,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import Logo from "../assets/images/Logo_Yel.png";
+import Logo from "../assets/images/Final_Logo_Oran.png";
+import DarkLogo from "../assets/images/Final_Logo_Dark.png";
 import User from "../assets/images/user.png";
+import darkUser from "../assets/images/user_white.png";
 import Key from "../assets/images/key.png";
+import darkKey from "../assets/images/key_white.png";
 import { StackActions } from "@react-navigation/routers";
 import axios from "axios";
 import Back from "../assets/images/back.png";
 import Spinner from "react-native-loading-spinner-overlay";
 import Eye from "../assets/images/eye.png";
 import EyeSlash from "../assets/images/eye-slash.png";
+import darkEye from "../assets/images/eye_white.png";
+import darkEyeSlash from "../assets/images/eye-slash_white.png";
 import { storeData, getData } from "../controllers/Data";
 import jwtDecode from "jwt-decode";
+import { dark, light } from "../controllers/Theme";
+
+
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -32,6 +41,8 @@ const Login = ({ navigation }) => {
   var usersData = []
   const emailField = createRef();
   const passwordField = createRef();
+  const mode = useColorScheme()
+
   const changeEmail = (e) => {
     setEmail(e);
   };
@@ -85,121 +96,152 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <View style={{ backgroundColor: "#fff", height: "100%" }}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={{ width: "12%" }}
-          onPress={() => (navigation.canGoBack() ? navigation.goBack() : null)}
-        >
-          <Image
-            source={navigation.canGoBack() ? Back : null}
-            style={{ left: 12, height: 30, top: 11 }}
-          />
-        </TouchableOpacity>
-        <Text style={styles.title}>LOGIN</Text>
-      </View>
-      <View style={styles.container}>
-        <Image source={Logo} style={styles.img} />
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          {spin ? (
-            <Spinner
-              visible={spin}
-              textContent={"Logging In..."}
-              textStyle={styles.spinnerTextStyle}
-              color="#323133"
-              overlayColor="rgba(255,255,255,0.8)"
-            />
-          ) : null}
-          <TextInput
-            style={styles.input}
-            placeholder="Username (Email Id)"
-            secureTextEntry={false}
-            onChangeText={changeEmail}
-            ref={emailField}
-          />
-          <Image source={User} style={{ position: "absolute", top: 10 }} />
-        </View>
-
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          <Image source={Key} style={{ position: "absolute", top: 10 }} />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry={passwordVisible}
-            onChangeText={changePassword}
-            ref={passwordField}
-          />
+    <KeyboardAvoidingView behavior="position" style={{ flexGrow: 1, height: '100%', backgroundColor: mode === 'dark' ? dark.background : '#fff' }}>
+      <View style={mode === 'dark' ? { backgroundColor: dark.background } : { backgroundColor: light.background }}>
+        <View style={mode === 'dark' ? styles.darkHeader : styles.header}>
           <TouchableOpacity
-            style={{
-              width: 30,
-              height: 35,
-              position: "absolute",
-              top: 2,
-              right: -3,
-            }}
-            onPress={() => showPassword(!passwordVisible)}
+            style={{ width: "12%" }}
+            onPress={() => (navigation.canGoBack() ? navigation.goBack() : null)}
           >
             <Image
-              source={passwordVisible ? EyeSlash : Eye}
-              style={{ position: "absolute", top: 10, right: 5 }}
+              source={navigation.canGoBack() ? Back : null}
+              style={{ left: 12, height: 30, top: 11 }}
             />
           </TouchableOpacity>
+          <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>LOGIN</Text>
         </View>
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text
+        <View style={mode === 'dark' ? styles.darkContainer : styles.container}>
+          <Image source={mode == "dark" ? DarkLogo : Logo} style={styles.img} />
+          <View
             style={{
-              textAlign: "center",
-              marginTop: 8,
-              color: "#fff",
-              fontWeight: "bold",
+              flexDirection: "row",
+              marginTop: '30%'
             }}
           >
-            Login
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.bottomText}>
-          <TouchableOpacity
-            style={{ marginBottom: 10 }}
-            onPress={() => navigation.navigate("ForgotPassword")}
+            {spin ? (
+              <Spinner
+                visible={spin}
+                textContent={"Logging In..."}
+                textStyle={styles.spinnerTextStyle}
+                color="#323133"
+                overlayColor="rgba(255,255,255,0.8)"
+              />
+            ) : null}
+            <TextInput
+              style={mode === 'dark' ? styles.darkInput : styles.input}
+              placeholder="Username (Email Id)"
+              secureTextEntry={false}
+              onChangeText={changeEmail}
+              ref={emailField}
+              placeholderTextColor={mode === 'dark' ? '#c4c2c2' : 'black'}
+            />
+            <Image source={mode === 'dark' ? darkUser : User} style={{ position: "absolute", top: 10 }} />
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+            }}
           >
-            <Text>Forgot Password?</Text>
+            <Image source={mode === 'dark' ? darkKey : Key} style={{ position: "absolute", top: 10 }} />
+            <TextInput
+              style={mode === 'dark' ? styles.darkInput : styles.input}
+              placeholder="Password"
+              secureTextEntry={passwordVisible}
+              onChangeText={changePassword}
+              ref={passwordField}
+              placeholderTextColor={mode === 'dark' ? '#c4c2c2' : 'black'}
+            />
+            <TouchableOpacity
+              style={{
+                width: 30,
+                height: 35,
+                position: "absolute",
+                top: 2,
+                right: -3,
+              }}
+              onPress={() => showPassword(!passwordVisible)}
+            >
+              <Image
+                source={mode === 'dark' ? (passwordVisible ? darkEyeSlash : darkEye) : (passwordVisible ? EyeSlash : Eye)}
+                style={{ position: "absolute", top: 10, right: 5 }}
+              />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={mode == 'dark' ? styles.darkButton : styles.button} onPress={handleLogin}>
+            <Text
+              style={
+                mode == 'dark' ? {
+                  textAlign: "center",
+                  marginTop: 8,
+                  color: "black",
+                  fontWeight: "bold",
+                } :
+                  {
+                    textAlign: "center",
+                    marginTop: 8,
+                    color: "#fff",
+                    fontWeight: "bold",
+                  }}
+            >
+              Login
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.dispatch(StackActions.replace("SignUp"))}
-          >
-            <Text>Not a user? Register</Text>
-          </TouchableOpacity>
+          <View style={styles.bottomText}>
+            <TouchableOpacity
+              style={{ marginBottom: 10 }}
+              onPress={() => navigation.navigate("ForgotPassword")}
+            >
+              <Text style={mode === 'dark' ? { color: 'white' } : { color: 'black' }}>Forgot Password?</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.dispatch(StackActions.replace("SignUp"))}
+            >
+              <Text style={mode === 'dark' ? { color: 'white' } : { color: 'black' }}>Not a user? Register</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: "#ffc100",
+    backgroundColor: light.primary,
+    height: 49,
+    flexDirection: "row",
+  },
+  darkHeader: {
+    backgroundColor: dark.primary,
     height: 49,
     flexDirection: "row",
   },
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: light.background,
+    width: "80%",
+    alignSelf: "center",
+  },
+  darkContainer: {
+    backgroundColor: dark.background,
     width: "80%",
     alignSelf: "center",
   },
   img: {
     alignSelf: "center",
-    width: "120%",
+    // width: "85%",
+    // height: '10%',
+    marginTop: '25%'
   },
   button: {
-    backgroundColor: "#ffc100",
+    backgroundColor: light.primary,
+    marginTop: 10,
+    height: 45,
+    borderRadius: 25,
+    marginBottom: 10,
+  },
+  darkButton: {
+    backgroundColor: dark.primary,
     marginTop: 10,
     height: 45,
     borderRadius: 25,
@@ -208,6 +250,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     color: "white",
+    height: 40,
+    alignSelf: "center",
+    fontWeight: "bold",
+    marginTop: 8,
+    marginBottom: 20,
+    marginLeft: "30%",
+    top: 9,
+  },
+  darkTitle: {
+    fontSize: 20,
+    color: 'black',
     height: 40,
     alignSelf: "center",
     fontWeight: "bold",
@@ -226,6 +279,15 @@ const styles = StyleSheet.create({
     height: 40,
     flex: 1,
     paddingLeft: 30,
+  },
+  darkInput: {
+    borderBottomColor: "white",
+    borderBottomWidth: 1,
+    marginBottom: 25,
+    height: 40,
+    flex: 1,
+    paddingLeft: 30,
+    color: 'white'
   },
   spinnerTextStyle: {
     color: "#000",

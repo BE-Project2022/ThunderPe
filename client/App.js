@@ -8,6 +8,7 @@ import {
   LogBox,
   Appearance,
   useColorScheme,
+  KeyboardAvoidingView
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./pages/Login";
@@ -25,28 +26,29 @@ import { useState } from "react";
 import SplashScreen from "./pages/SplashScreen";
 import EnterAmount from "./pages/EnterAmount";
 import SendMoneyToNumber from "./pages/SendMoneyToNumber";
+import { dark, light } from "./controllers/Theme";
 
-// const _removeData = async (useName) => {
-//   try {
-//     await AsyncStorage.removeItem("@storage_Key");
-//   } catch (error) {
-//     console.log("error", error);
-//   }
-// };
+const _removeData = async (useName) => {
+  try {
+    await AsyncStorage.removeItem("@storage_Key");
+  } catch (error) {
+    console.log("error", error);
+  }
+};
 
-// _removeData();
+_removeData();
 
 export default function App() {
   const Navigate = createStackNavigator();
   // console.log(useColorScheme())
-
+  const mode = useColorScheme()
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
   ]);
   // console.log('LoggedIn: ', isLoggedin)
   return (
     <NavigationContainer>
-      <StatusBar backgroundColor="#ffc100" barStyle="light-content" />
+      <StatusBar backgroundColor={mode === "dark" ? dark.primary : light.primary} barStyle="light-content" />
       <Navigate.Navigator
         screenOptions={{
           headerShown: false,

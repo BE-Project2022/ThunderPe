@@ -5,19 +5,23 @@ import {
   View,
   KeyboardAvoidingView,
   TextInput,
+  useColorScheme,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as LocalAuthentication from "expo-local-authentication";
-import Logo from "../assets/images/Logo_Yel.png";
+import Logo from "../assets/images/Final_Logo_Oran.png";
+import DarkLogo from "../assets/images/Final_Logo_Dark.png";
 import jwtDecode from "jwt-decode";
 import { StackActions } from "@react-navigation/routers";
 import axios from "axios";
+import { dark, light } from "../controllers/Theme";
 
 const Pin = ({ route, navigation }) => {
   const [pin, setPin] = useState();
   const user = jwtDecode(route.params.token)
   var usersData = []
+  const mode = useColorScheme()
   // console.log('User: ', user)
   // console.log(typeof (user.pin))
   // console.log()
@@ -58,28 +62,29 @@ const Pin = ({ route, navigation }) => {
     }
   };
   return (
-    <KeyboardAvoidingView behavior="position">
-      <View style={{ backgroundColor: "#fff" }}>
-        <View style={styles.header}>
-          <Text style={styles.title}>ENTER PIN</Text>
+    <KeyboardAvoidingView behavior="position" style={{ flexGrow: 1, height: '100%', backgroundColor: mode === 'dark' ? dark.background : '#fff' }}>
+      <View style={mode == "dark" ? { backgroundColor: dark.background } : { backgroundColor: "#fff", height: '100%' }}>
+        <View style={mode === 'dark' ? styles.darkHeader : styles.header}>
+          <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>ENTER PIN</Text>
         </View>
-        <Image source={Logo} style={styles.img} />
-        <Text style={{ textAlign: "center", fontSize: 24, fontWeight: "bold" }}>
+        <Image source={mode == "dark" ? DarkLogo : Logo} style={styles.img} />
+        <Text style={mode === 'dark' ? { textAlign: "center", fontSize: 24, fontWeight: "bold", color: 'white', marginTop: '20%' } : { textAlign: "center", fontSize: 24, fontWeight: "bold", marginTop: '20%' }}>
           ENTER PIN
         </Text>
         <View>
           <TextInput
-            style={styles.input}
+            style={mode === 'dark' ? styles.darkInput : styles.input}
             placeholder="Enter Pin"
             maxLength={4}
             keyboardType="numeric"
             secureTextEntry={true}
             onChangeText={changePin}
             onSubmitEditing={checkPin}
+            placeholderTextColor={mode === 'dark' ? '#c4c2c2' : 'black'}
           />
         </View>
-      </View>
-    </KeyboardAvoidingView>
+      </View >
+    </KeyboardAvoidingView >
   );
 };
 
@@ -104,7 +109,7 @@ const styles = StyleSheet.create({
   },
   img: {
     alignSelf: "center",
-    width: "120%",
+    marginTop: '15%'
   },
   title: {
     fontSize: 20,
@@ -116,9 +121,23 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 20,
   },
+  darkTitle: {
+    fontSize: 20,
+    color: "black",
+    // backgroundColor: "#FFC100",
+    height: 40,
+    textAlign: "center",
+    fontWeight: "bold",
+    marginTop: 8,
+    marginBottom: 20,
+  },
   header: {
-    backgroundColor: "#ffc100",
-    height: 49,
+    backgroundColor: light.primary,
+    height: 54,
+  },
+  darkHeader: {
+    backgroundColor: dark.primary,
+    height: 54,
   },
   input: {
     borderBottomColor: "#000",
@@ -129,6 +148,17 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 16,
     width: 110,
+  },
+  darkInput: {
+    borderBottomColor: "#fff",
+    borderBottomWidth: 1,
+    height: 40,
+    marginTop: 20,
+    textAlign: "center",
+    alignSelf: "center",
+    fontSize: 16,
+    width: 110,
+    color: 'white'
   },
   spinnerTextStyle: {
     color: "#000",
