@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import {} from "dotenv/config";
+import { } from "dotenv/config";
 import ThunderUser from "../models/userSchema.js";
 import { sendEmail } from "../services/MailService.js";
 import Verification from "../models/Verification.js";
@@ -94,7 +94,6 @@ export const forgotPassword = async (req, res) => {
     res.status(404).json("Email id not found");
   }
   console.log("done");
-  res.status(200).json({ user });
 };
 
 export const getVerification = async (req, res) => {
