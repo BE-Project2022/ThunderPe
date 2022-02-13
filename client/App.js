@@ -8,7 +8,7 @@ import {
   LogBox,
   Appearance,
   useColorScheme,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./pages/Login";
@@ -41,14 +41,17 @@ _removeData();
 export default function App() {
   const Navigate = createStackNavigator();
   // console.log(useColorScheme())
-  const mode = useColorScheme()
+  const mode = useColorScheme();
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
   ]);
   // console.log('LoggedIn: ', isLoggedin)
   return (
     <NavigationContainer>
-      <StatusBar backgroundColor={mode === "dark" ? dark.primary : light.primary} barStyle="light-content" />
+      <StatusBar
+        backgroundColor={mode === "dark" ? dark.primary : light.primary}
+        barStyle="light-content"
+      />
       <Navigate.Navigator
         screenOptions={{
           headerShown: false,
