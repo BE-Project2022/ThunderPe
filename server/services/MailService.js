@@ -17,15 +17,27 @@ const createTransporter = async () => {
     refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
   });
 
-  const accessToken = await new Promise((resolve, reject) => {
-    oauth2Client.getAccessToken((err, token) => {
-      if (err) {
-        console.log(err);
-        reject("Failed to create access token :(");
-      }
-      resolve(token);
+  const accessToken = oauth2Client
+    .getAccessToken()
+    .then((res) => {
+      console.log(res);
+      return res.credentials.access_token;
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
+
+  // const accessToken = await new Promise((resolve, reject) => {
+  //   oauth2Client.getAccessToken((err, token) => {
+  //     if (err) {
+  //       console.log(err);
+  //       reject("Failed to create access token :(");
+  //     }
+  //     resolve(token);
+  //   });
+  // });
+
+  console.log(accessToken);
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -43,7 +55,7 @@ const createTransporter = async () => {
 };
 
 export const sendEmail = async (emailOptions) => {
-  console.log(process.env.REDIRECT_URI);
+  // console.log(process.env.REDIRECT_URI);
   let emailTransporter = await createTransporter();
   await emailTransporter.sendMail(emailOptions);
 };

@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { } from "dotenv/config";
+import {} from "dotenv/config";
 import ThunderUser from "../models/userSchema.js";
 import { sendEmail } from "../services/MailService.js";
 import Verification from "../models/Verification.js";
@@ -21,7 +21,7 @@ export const signup = async (req, res) => {
     email: email,
     mobile: mobile,
     password: hashedPassword,
-    pin: pin
+    pin: pin,
   });
   try {
     await reactuser.save();
@@ -40,7 +40,13 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(req.body.password, user.password);
     if (isMatch) {
       const token = jwt.sign(
-        { email: user.email, mobile: user.mobile, id: user._id, pin: user.pin, name: user.fullname },
+        {
+          email: user.email,
+          mobile: user.mobile,
+          id: user._id,
+          pin: user.pin,
+          name: user.fullname,
+        },
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
@@ -65,25 +71,29 @@ export const forgotPassword = async (req, res) => {
   const user = await ThunderUser.findOne({
     email: req.body.email,
   });
-  // console.log("HI")
+  // console.log(user);
   if (user) {
     if (user.mobile === req.body.mobile) {
       const OTP = Math.floor(1000 + Math.random() * 9000);
-      console.log(OTP);
+      // console.log(OTP);
       sendEmail({
         subject: "OTP Verification for ThunderPe",
         text: `Hi there, your OTP for verification is ${OTP}`,
         to: user.email,
         from: process.env.GOOGLE_EMAIL,
       });
+
       const veri = await Verification.create({ otp: OTP });
-      res.status(200).send({ user, id: veri._doc._id });
+      res.status(200).json({ user, id: veri._doc._id });
     } else {
-      res.status(401).send("Invalid Mobile Number");
+      console.log("Mobile number not found");
+      res.status(401).json("Invalid Mobile Number");
     }
   } else {
-    res.status(404).send("Email id not found");
+    console.log("Email id not found");
+    res.status(404).json("Email id not found");
   }
+  console.log("done");
   res.status(200).json({ user });
 };
 
