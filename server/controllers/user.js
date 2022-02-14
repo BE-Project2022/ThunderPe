@@ -5,6 +5,7 @@ import { } from "dotenv/config";
 import ThunderUser from "../models/userSchema.js";
 import { sendEmail } from "../services/MailService.js";
 import Verification from "../models/Verification.js";
+import mongoose from "mongoose";
 const router = express.Router();
 
 export const signup = async (req, res) => {
@@ -107,7 +108,9 @@ export const getVerification = async (req, res) => {
 export const verifyOTP = async (req, res) => {
   try {
     const { id, otp } = req.body;
-    const veri = await Verification.findOne({ _id: id });
+    let _id = mongoose.Types.ObjectId(id)
+    console.log(typeof (_id))
+    const veri = await Verification.findOne({ _id });
     console.log(veri);
     if (!veri) {
       return res.status(404).send({ error: "Invalid Verification ID" });
