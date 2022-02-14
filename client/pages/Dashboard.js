@@ -21,14 +21,14 @@ import Reward from "../assets/images/reward.png";
 import Next from "../assets/images/next.png";
 import { dark, light } from "../controllers/Theme";
 
-
 const Dashboard = ({ route, navigation }) => {
   const [screenCover, setScreenCover] = useState("70%");
   const [expanded, setExpanded] = useState(false);
   const [userData, setData] = useState([]);
-  const user = route.params.user
-  const mode = useColorScheme()
+  const [isOnState, setIsOnState] = useState(false);
 
+  const user = route.params.user;
+  const mode = useColorScheme();
 
   // console.log(route.params.users)
   const changeCover = (e) => {
@@ -39,6 +39,10 @@ const Dashboard = ({ route, navigation }) => {
     userData.splice(0, userData.length);
     if (route.params.users.length > 9 && expanded) showAllUsers();
   }, [expanded]);
+
+  const checkVisibility = (e) => {
+    setIsOnState(!isOnState);
+  };
 
   const showAllUsers = () => {
     // console.log('HERE')
@@ -129,13 +133,28 @@ const Dashboard = ({ route, navigation }) => {
       <View style={mode == "dark" ? styles.darkHeader : styles.header}>
         <Image source={Logo} style={styles.img} />
         <Text style={styles.title}>THUNDERPE</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={checkVisibility}>
           <Image
             source={User}
             style={{ marginRight: "4%", height: 35, width: 35 }}
           />
         </TouchableOpacity>
       </View>
+      {isOnState && (
+        <TouchableOpacity
+          style={styles.logout}
+          onPress={async () => {
+            try {
+              await AsyncStorage.removeItem("@storage_Key");
+            } catch (error) {
+              console.log("error", error);
+            }
+            navigation.dispatch(StackActions.replace("Login"));
+          }}
+        >
+          <Text>Logout</Text>
+        </TouchableOpacity>
+      )}
       <View>
         <LinearGradient
           colors={["#FfC100", "#FFD85E"]}
@@ -256,26 +275,12 @@ const Dashboard = ({ route, navigation }) => {
       />
       <TouchableOpacity
         style={styles.paymentButton}
-        onPress={() =>
-          navigation.navigate("userContacts", { user: user })
-        }
+        onPress={() => navigation.navigate("userContacts", { user: user })}
       >
         <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
           + New Payment
         </Text>
       </TouchableOpacity>
-      {/* <TouchableOpacity
-        onPress={async () => {
-          try {
-            await AsyncStorage.removeItem("@storage_Key");
-          } catch (error) {
-            console.log("error", error);
-          }
-          navigation.dispatch(StackActions.replace("Login"));
-        }}
-      >
-        <Text>Logout</Text>
-      </TouchableOpacity> */}
     </View>
   );
 };
@@ -394,5 +399,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 1, // IOS
     shadowRadius: 4, //IOS
     elevation: 7,
+  },
+  logout: {
+    marginLeft: "83%",
+    elevation: 5,
+    position: "absolute",
+    marginTop: "15%",
+    zIndex: 999,
   },
 });

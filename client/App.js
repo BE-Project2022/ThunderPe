@@ -28,15 +28,15 @@ import EnterAmount from "./pages/EnterAmount";
 import SendMoneyToNumber from "./pages/SendMoneyToNumber";
 import { dark, light } from "./controllers/Theme";
 
-const _removeData = async (useName) => {
-  try {
-    await AsyncStorage.removeItem("@storage_Key");
-  } catch (error) {
-    console.log("error", error);
-  }
-};
+// const _removeData = async (useName) => {
+//   try {
+//     await AsyncStorage.removeItem("@storage_Key");
+//   } catch (error) {
+//     console.log("error", error);
+//   }
+// };
 
-_removeData();
+// _removeData();
 
 export default function App() {
   const Navigate = createStackNavigator();
