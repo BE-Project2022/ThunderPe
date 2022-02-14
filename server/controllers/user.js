@@ -125,3 +125,26 @@ export const verifyOTP = async (req, res) => {
     res.status(500).send({ error });
   }
 };
+
+export const changePassword = async (req, res) => {
+  try {
+    const user = await ThunderUser.findOne({
+      email: req.body.email,
+
+    });
+    if (user) {
+      const password = req.body.password
+      const hashedPassword = await bcrypt.hash(password, 12);
+      user.password = hashedPassword
+      await user.save()
+      res.status(200).send({ user })
+    }
+    else {
+      res.status(404).send({ error: 'No user found' })
+    }
+  }
+  catch (error) {
+    logger.error(error);
+    res.status(500).send({ error });
+  }
+}
