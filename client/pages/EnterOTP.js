@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   TextInput,
 } from "react-native";
-import Logo from "../assets/images/Logo_Yel.png";
+import Logo from "../assets/images/Final_Logo_Oran.png";
 import User from "../assets/images/user.png";
 import Email from "../assets/images/email.png";
 import Mobile from "../assets/images/mobile.png";
@@ -23,7 +23,8 @@ import {
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
 import Spinner from "react-native-loading-spinner-overlay/lib";
-
+import { light } from "../controllers/Theme";
+import { StackActions } from "@react-navigation/routers";
 const CELL_COUNT = 4;
 const EnterOTP = ({ route, navigation }) => {
   let email = route.params.email;
@@ -40,28 +41,33 @@ const EnterOTP = ({ route, navigation }) => {
     setValue(e);
     // console.log(e)
   };
+
+
   const getOTP = async () => {
-    console.log(value, route.params.id);
+    // console.log(value, route.params.id);
     if (value === "") {
       alert("Please Enter OTP");
     } else {
       const user = { id: route.params.id, otp: value };
+      console.log(user)
       changeSpin(true)
       await axios
         .post("https://thunderpe.herokuapp.com/auth/verifyOTP", user)
         .then((res) => {
-          console.log(res);
+          if (res.data.isValid) {
+            navigation.dispatch(StackActions.replace('ResetPassword', { email: route.params.email }))
+          }
           changeSpin(false)
         })
         .catch((err) => {
-          console.log(err);
-          alert("Invalid OTP. Try again");
+          console.log(err.response.data.error);
+          alert(err.response.data.error);
           changeSpin(false)
         });
     }
   };
   return (
-    <View style={{ backgroundColor: "#fff", height: "100%" }}>
+    <View style={{ backgroundColor: light.background, height: "100%" }}>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => (navigation.canGoBack() ? navigation.goBack() : null)}
@@ -83,7 +89,7 @@ const EnterOTP = ({ route, navigation }) => {
             height: 40,
             textAlign: "center",
             fontWeight: "bold",
-            marginTop: 8,
+            marginTop: '14%',
           }}
         >
           ENTER OTP
@@ -155,7 +161,7 @@ const styles = StyleSheet.create({
     color: "#282829",
   },
   header: {
-    backgroundColor: "#ffc100",
+    backgroundColor: light.primary,
     height: 49,
     flexDirection: "row",
   },
@@ -166,10 +172,12 @@ const styles = StyleSheet.create({
   },
   img: {
     alignSelf: "center",
-    width: "120%",
+    marginTop: '25%',
+    width: "95%",
+    height: '20%'
   },
   button: {
-    backgroundColor: "#ffc100",
+    backgroundColor: light.primary,
     marginTop: 25,
     height: 45,
     marginBottom: 10,

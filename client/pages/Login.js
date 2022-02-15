@@ -111,7 +111,7 @@ const Login = ({ navigation }) => {
           <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>LOGIN</Text>
         </View>
         <View style={mode === 'dark' ? styles.darkContainer : styles.container}>
-          <Image source={mode == "dark" ? DarkLogo : Logo} style={styles.img} />
+          <Image source={Logo} style={styles.img} />
           <View
             style={{
               flexDirection: "row",
@@ -133,9 +133,9 @@ const Login = ({ navigation }) => {
               secureTextEntry={false}
               onChangeText={changeEmail}
               ref={emailField}
-              placeholderTextColor={mode === 'dark' ? '#c4c2c2' : 'black'}
+              placeholderTextColor={mode === 'dark' ? 'grey' : 'grey'}
             />
-            <Image source={mode === 'dark' ? darkUser : User} style={{ position: "absolute", top: 10 }} />
+            <Image source={User} style={{ position: "absolute", top: 10 }} />
           </View>
 
           <View
@@ -143,14 +143,14 @@ const Login = ({ navigation }) => {
               flexDirection: "row",
             }}
           >
-            <Image source={mode === 'dark' ? darkKey : Key} style={{ position: "absolute", top: 10 }} />
+            <Image source={Key} style={{ position: "absolute", top: 10 }} />
             <TextInput
               style={mode === 'dark' ? styles.darkInput : styles.input}
               placeholder="Password"
               secureTextEntry={passwordVisible}
               onChangeText={changePassword}
               ref={passwordField}
-              placeholderTextColor={mode === 'dark' ? '#c4c2c2' : 'black'}
+              placeholderTextColor={mode === 'dark' ? 'grey' : 'grey'}
             />
             <TouchableOpacity
               style={{
@@ -163,7 +163,7 @@ const Login = ({ navigation }) => {
               onPress={() => showPassword(!passwordVisible)}
             >
               <Image
-                source={mode === 'dark' ? (passwordVisible ? darkEyeSlash : darkEye) : (passwordVisible ? EyeSlash : Eye)}
+                source={(passwordVisible ? EyeSlash : Eye)}
                 style={{ position: "absolute", top: 10, right: 5 }}
               />
             </TouchableOpacity>
@@ -192,12 +192,12 @@ const Login = ({ navigation }) => {
               style={{ marginBottom: 10 }}
               onPress={() => navigation.navigate("ForgotPassword")}
             >
-              <Text style={mode === 'dark' ? { color: 'white' } : { color: 'black' }}>Forgot Password?</Text>
+              <Text style={mode === 'dark' ? { color: 'black' } : { color: 'black' }}>Forgot Password?</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => navigation.dispatch(StackActions.replace("SignUp"))}
             >
-              <Text style={mode === 'dark' ? { color: 'white' } : { color: 'black' }}>Not a user? Register</Text>
+              <Text style={mode === 'dark' ? { color: 'black' } : { color: 'black' }}>Not a user? Register</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -281,13 +281,13 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
   },
   darkInput: {
-    borderBottomColor: "white",
+    borderBottomColor: dark.text,
     borderBottomWidth: 1,
     marginBottom: 25,
     height: 40,
     flex: 1,
     paddingLeft: 30,
-    color: 'white'
+    color: dark.text
   },
   spinnerTextStyle: {
     color: "#000",

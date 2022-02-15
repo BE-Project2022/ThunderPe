@@ -44,16 +44,26 @@ const Dashboard = ({ route, navigation }) => {
     setIsOnState(!isOnState);
   };
 
+  const payUser = (e) => {
+
+    route.params.users[e] = { ...route.params.users[e], phoneNumbers: [{ number: route.params.users[e].mobile }], name: route.params.users[e].fullname }
+    navigation.navigate("EnterAmount", {
+      user: route.params.users[e],
+      currentUser: route.params.user
+    })
+  }
+
   const showAllUsers = () => {
     // console.log('HERE')
     setExpanded(true);
     userData.splice(0, userData.length);
     // console.log(userData.length)
     for (let i = 0; i < route.params.users.length; i++) {
+      const temp = i;
       userData.push(
         <View key={i}>
           <TouchableOpacity
-            onPress={(res) => console.log(route.params.users[i])}
+            onPress={(res) => payUser(temp)}
           >
             <View style={{ marginTop: 14, marginLeft: 20 }}>
               <Image source={User} style={{ height: 55, width: 55 }} />
@@ -70,9 +80,10 @@ const Dashboard = ({ route, navigation }) => {
   const setLessUsers = () => {
     userData.splice(0, userData.length);
     for (let i = 0; i < route.params.users.length; i++) {
+      const temp = i;
       userData.push(
         <View key={i}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={(res) => payUser(temp)}>
             <View style={{ marginTop: 14, marginLeft: 20 }}>
               <Image source={User} style={{ height: 55, width: 55 }} />
               <Text style={{ marginLeft: 10 }}>
@@ -88,9 +99,10 @@ const Dashboard = ({ route, navigation }) => {
     let i = 0;
     userData.splice(0, userData.length);
     for (i = 0; i < 9; i++) {
+      const temp = i;
       userData.push(
         <View key={i}>
-          <TouchableOpacity>
+          <TouchableOpacity key={temp} onPress={(res) => payUser(temp)}>
             <View style={{ marginTop: 14, marginLeft: 20 }}>
               <Image source={User} style={{ height: 55, width: 55 }} />
               <Text style={{ marginLeft: 10 }}>
@@ -157,7 +169,7 @@ const Dashboard = ({ route, navigation }) => {
       )}
       <View>
         <LinearGradient
-          colors={["#FfC100", "#FFD85E"]}
+          colors={[light.primary, light.secondary]}
           style={styles.gradient}
           start={{ x: 0, y: 0.5 }}
           end={{ x: 0.8, y: 0.5 }}
@@ -385,7 +397,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red'
   },
   paymentButton: {
-    backgroundColor: "#FCC100",
+    backgroundColor: light.primary,
     marginTop: "120%",
     height: 45,
     borderRadius: 25,

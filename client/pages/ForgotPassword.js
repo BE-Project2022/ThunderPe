@@ -38,7 +38,9 @@ const ForgotPassword = ({ navigation }) => {
         else if (!mobile.match(mobileFormat))
             alert('Mobile Number must contain 10 digits')
         else {
-            const user = { email: email, mobile: mobile }
+            let mob = parseInt(mobile)
+            // console.log(mob)
+            const user = { email: email, mobile: mob }
             changeSpin(true)
             await axios
                 .post('https://thunderpe.herokuapp.com/auth/forgotPassword', user)
@@ -66,7 +68,7 @@ const ForgotPassword = ({ navigation }) => {
                     <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>FORGOT PASSWORD?</Text>
                 </View>
                 <View style={mode === 'dark' ? styles.darkContainer : styles.container}>
-                    <Image source={mode === 'dark' ? DarkLogo : Logo} style={styles.img} />
+                    <Image source={Logo} style={styles.img} />
                     <Text style={
                         {
                             fontSize: 20,
@@ -91,9 +93,9 @@ const ForgotPassword = ({ navigation }) => {
                             style={mode === 'dark' ? styles.darkInput : styles.input}
                             placeholder="Username (Email Id)"
                             onChangeText={changeEmail}
-                            placeholderTextColor={mode === 'dark' ? '#c4c2c2' : 'black'}
+                            placeholderTextColor={mode === 'dark' ? 'grey' : 'grey'}
                         />
-                        <Image source={mode === 'dark' ? darkUser : User} style={{ position: 'absolute', top: 10, right: 5 }} />
+                        <Image source={User} style={{ position: 'absolute', top: 10, right: 5 }} />
                     </View>
 
                     <View style={{ position: 'relative' }}>
@@ -102,9 +104,9 @@ const ForgotPassword = ({ navigation }) => {
                             keyboardType='numeric'
                             style={mode === 'dark' ? styles.darkInput : styles.input}
                             onChangeText={changeMobile}
-                            placeholderTextColor={mode === 'dark' ? '#c4c2c2' : 'black'}
+                            placeholderTextColor={mode === 'dark' ? 'grey' : 'grey'}
                         />
-                        <Image source={mode === 'dark' ? darkMobile : Mobile} style={{ position: 'absolute', top: 10, right: 5 }} />
+                        <Image source={Mobile} style={{ position: 'absolute', top: 10, right: 5 }} />
                     </View>
                     <TouchableOpacity
                         style={mode === 'dark' ? styles.darkButton : styles.button}
@@ -190,11 +192,11 @@ const styles = StyleSheet.create({
         height: 40,
     },
     darkInput: {
-        borderBottomColor: "#fff",
+        borderBottomColor: dark.text,
         borderBottomWidth: 1,
         marginBottom: 25,
         height: 40,
-        color: 'white'
+        color: dark.text
     },
 });
 export default ForgotPassword;

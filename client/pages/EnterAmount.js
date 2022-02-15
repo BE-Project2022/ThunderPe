@@ -11,7 +11,7 @@ import Back from "../assets/images/back.png";
 import Logo from "../assets/images/Logo_Yel.png";
 import User from "../assets/images/user.png";
 import BottomSheet from "react-native-bottomsheet-reanimated";
-
+import { light, dark } from '../controllers/Theme'
 import * as Speech from "expo-speech";
 const EnterAmount = ({ route, navigation }) => {
   // console.log(route.params.user)
@@ -143,7 +143,7 @@ const EnterAmount = ({ route, navigation }) => {
               </Text>
               <TouchableOpacity
                 style={{
-                  backgroundColor: "#ffc100",
+                  backgroundColor: light.primary,
                   height: 45,
                   borderRadius: 25,
                   marginBottom: 10,
@@ -169,7 +169,7 @@ export default EnterAmount;
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: "#ffc100",
+    backgroundColor: light.primary,
     height: 49,
     flexDirection: "row",
   },

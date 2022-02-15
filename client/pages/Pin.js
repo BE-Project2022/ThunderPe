@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   TextInput,
   useColorScheme,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,12 +17,31 @@ import jwtDecode from "jwt-decode";
 import { StackActions } from "@react-navigation/routers";
 import axios from "axios";
 import { dark, light } from "../controllers/Theme";
+import {
+  CodeField,
+  Cursor,
+  useBlurOnFulfill,
+  useClearByFocusCell,
+} from "react-native-confirmation-code-field";
 
+const CELL_COUNT = 4;
 const Pin = ({ route, navigation }) => {
   const [pin, setPin] = useState();
   const user = jwtDecode(route.params.token)
   var usersData = []
   const mode = useColorScheme()
+  const [value, setValue] = useState("");
+  const [spin, changeSpin] = useState(false)
+
+  const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
+  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+    value,
+    setValue,
+  });
+  const changeValue = (e) => {
+    setValue(e);
+    // console.log(e)
+  };
   // console.log('User: ', user)
   // console.log(typeof (user.pin))
   // console.log()
@@ -55,7 +75,7 @@ const Pin = ({ route, navigation }) => {
     }
   };
   const checkPin = () => {
-    if (parseInt(pin) === user.pin) handleBiometricAuth();
+    if (parseInt(value) === user.pin) handleBiometricAuth();
     else if (pin === "") alert("Please Enter Pin");
     else {
       alert("Please Enter valid Pin");
@@ -67,21 +87,37 @@ const Pin = ({ route, navigation }) => {
         <View style={mode === 'dark' ? styles.darkHeader : styles.header}>
           <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>ENTER PIN</Text>
         </View>
-        <Image source={mode == "dark" ? DarkLogo : Logo} style={styles.img} />
-        <Text style={mode === 'dark' ? { textAlign: "center", fontSize: 24, fontWeight: "bold", color: 'white', marginTop: '20%' } : { textAlign: "center", fontSize: 24, fontWeight: "bold", marginTop: '20%' }}>
+        <Image source={Logo} style={styles.img} />
+        <Text style={mode === 'dark' ? { textAlign: "center", fontSize: 24, fontWeight: "bold", color: 'black', marginTop: '20%' } : { textAlign: "center", fontSize: 24, fontWeight: "bold", marginTop: '20%' }}>
           ENTER PIN
         </Text>
-        <View>
-          <TextInput
-            style={mode === 'dark' ? styles.darkInput : styles.input}
-            placeholder="Enter Pin"
-            maxLength={4}
-            keyboardType="numeric"
-            secureTextEntry={true}
-            onChangeText={changePin}
-            onSubmitEditing={checkPin}
-            placeholderTextColor={mode === 'dark' ? '#c4c2c2' : 'black'}
+        <View style={{ width: '80%', alignSelf: 'center' }}>
+          <CodeField
+            ref={ref}
+            value={value}
+            onChangeText={changeValue}
+            cellCount={CELL_COUNT}
+            rootStyle={styles.codeFieldRoot}
+            keyboardType="number-pad"
+            textContentType="oneTimeCode"
+            renderCell={({ index, symbol, isFocused }) => (
+              <Text
+                key={index}
+                style={[styles.cell, isFocused && styles.focusCell]}
+                onLayout={getCellOnLayoutHandler(index)}
+              >
+                {symbol ? '*' : null || (isFocused ? <Cursor /> : null)}
+              </Text>
+            )}
+
           />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={checkPin}
+          >
+            <Text style={{ textAlign: 'center', color: 'white', fontSize: 18 }}>Next</Text>
+
+          </TouchableOpacity>
         </View>
       </View >
     </KeyboardAvoidingView >
@@ -98,11 +134,12 @@ const styles = StyleSheet.create({
     // height: '100%'
   },
   button: {
-    backgroundColor: "#ffc100",
-    marginTop: 10,
+    backgroundColor: dark.primary,
+    marginTop: '15%',
     height: 45,
     borderRadius: 25,
     marginBottom: 10,
+    justifyContent: 'center'
   },
   bottomText: {
     alignItems: "center",
@@ -150,7 +187,7 @@ const styles = StyleSheet.create({
     width: 110,
   },
   darkInput: {
-    borderBottomColor: "#fff",
+    borderBottomColor: dark.text,
     borderBottomWidth: 1,
     height: 40,
     marginTop: 20,
@@ -158,9 +195,26 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 16,
     width: 110,
-    color: 'white'
+    color: dark.text
   },
   spinnerTextStyle: {
     color: "#000",
+  },
+  root: { flex: 1, padding: 20 },
+  title: { textAlign: "center", fontSize: 30 },
+  codeFieldRoot: { marginTop: 20 },
+  cell: {
+    width: 60,
+    height: 60,
+    lineHeight: 44,
+    color: "#3b3c3d",
+    fontSize: 32,
+    borderWidth: 2,
+    borderColor: "#00000030",
+    textAlign: "center",
+  },
+  focusCell: {
+    borderColor: "#282829",
+    color: "#282829",
   },
 });

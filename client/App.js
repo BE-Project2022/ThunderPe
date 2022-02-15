@@ -8,7 +8,7 @@ import {
   LogBox,
   Appearance,
   useColorScheme,
-  KeyboardAvoidingView,
+
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./pages/Login";
@@ -27,6 +27,7 @@ import SplashScreen from "./pages/SplashScreen";
 import EnterAmount from "./pages/EnterAmount";
 import SendMoneyToNumber from "./pages/SendMoneyToNumber";
 import { dark, light } from "./controllers/Theme";
+import ResetPassword from "./pages/ResetPassword";
 
 // const _removeData = async (useName) => {
 //   try {
@@ -41,17 +42,14 @@ import { dark, light } from "./controllers/Theme";
 export default function App() {
   const Navigate = createStackNavigator();
   // console.log(useColorScheme())
-  const mode = useColorScheme();
+  const mode = useColorScheme()
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
   ]);
   // console.log('LoggedIn: ', isLoggedin)
   return (
     <NavigationContainer>
-      <StatusBar
-        backgroundColor={mode === "dark" ? dark.primary : light.primary}
-        barStyle="light-content"
-      />
+      <StatusBar backgroundColor={mode === "dark" ? dark.primary : light.primary} barStyle="light-content" />
       <Navigate.Navigator
         screenOptions={{
           headerShown: false,
@@ -69,6 +67,7 @@ export default function App() {
         <Navigate.Screen name="userContacts" component={userContacts} />
         <Navigate.Screen name="EnterAmount" component={EnterAmount} />
         <Navigate.Screen name="SendToNumber" component={SendMoneyToNumber} />
+        <Navigate.Screen name="ResetPassword" component={ResetPassword} />
       </Navigate.Navigator>
     </NavigationContainer>
   );
