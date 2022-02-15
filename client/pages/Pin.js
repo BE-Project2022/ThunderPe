@@ -106,7 +106,7 @@ const Pin = ({ route, navigation }) => {
                 style={[styles.cell, isFocused && styles.focusCell]}
                 onLayout={getCellOnLayoutHandler(index)}
               >
-                {symbol ? '*' : null || (isFocused ? <Cursor /> : null)}
+                {symbol ? '•' : null || (isFocused ? <Cursor /> : null)}
               </Text>
             )}
 

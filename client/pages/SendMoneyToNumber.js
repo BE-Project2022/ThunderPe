@@ -4,6 +4,7 @@ import Back from "../assets/images/back.png";
 import Logo from "../assets/images/Logo_Yel.png";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import axios from 'axios';
+import { light } from '../controllers/Theme';
 
 const SendMoneyToNumber = ({ route, navigation }) => {
     const [show, changeShow] = useState(false);
@@ -51,9 +52,9 @@ const SendMoneyToNumber = ({ route, navigation }) => {
             let temp = userData.find(item => item.mobile === number)
             if (temp != undefined) {
                 temp = { ...temp, phoneNumbers: [{ number: temp.mobile }], name: temp.fullname }
-                console.log(temp)
+                // console.log(temp)
                 payee.push(temp)
-                console.log(payee)
+                // console.log(payee)
             }
             changeShow(true)
         }
@@ -110,7 +111,7 @@ const SendMoneyToNumber = ({ route, navigation }) => {
                     placeholder="00000 00000"
                     style={styles.input}
                     keyboardType='number-pad'
-                    selectionColor='#ffc100'
+                    selectionColor={light.primary}
                     maxLength={10}
                     onChangeText={setNumber}
                     onSubmitEditing={showUser}
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
         top: 9,
     },
     header: {
-        backgroundColor: "#ffc100",
+        backgroundColor: light.primary,
         height: 49,
         flexDirection: "row",
     },
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
         marginTop: '10%',
         paddingLeft: 20,
         fontSize: 22,
-        borderColor: '#ffc100',
+        borderColor: light.primary,
         borderWidth: 2
     },
     container: {

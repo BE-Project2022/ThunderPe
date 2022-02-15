@@ -15,6 +15,7 @@ import Back from "../assets/images/back.png";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import Dialpad from '../assets/images/dialpad.png'
 import axios from "axios";
+import { light } from "../controllers/Theme";
 
 const userContacts = ({ route, navigation }) => {
   const [userContact, setContact] = useState([]);
@@ -50,34 +51,8 @@ const userContacts = ({ route, navigation }) => {
             return !!user.phoneNumbers;
           });
           setContact(memory);
-
-          axios
-            .get("https://thunderpe.herokuapp.com/auth/getallusers")
-            .then((res) => {
-
-              onThunder.splice(0, onThunder.length);
-              res.data.forEach(item => {
-                // console.log(item)
-                usersData.push(item)
-                let obj = memory.find(o => o.phoneNumbers[0].number === item.mobile)
-                if (obj != undefined) {
-                  onThunder.push(obj)
-                }
-              })
-              onThunder.forEach((user) => {
-                // console.log(user.name)
-                var index = memory.indexOf(user)
-                memory.splice(index, 1)
-                setNotOnThunder(memory)
-                // console.log(obj.find((item) => item.name === "Rohit Kulkarni"))
-              })
-              changeSpin(false);
-              setMemoryContact(onThunder);
-              // console.log(notOnThunder)
-            })
-            .catch((err) => {
-            });
-
+          setMemoryContact(memory);
+          changeSpin(false)
         }
       }
     })();
@@ -111,7 +86,7 @@ const userContacts = ({ route, navigation }) => {
       let searchTermLowerCase = value.toLowerCase();
       return contactLowerCase.indexOf(searchTermLowerCase) > -1;
     });
-    setOnThunder(filteredContacts);
+    setMemoryContact(filteredContacts);
     // setNotOnThunder(filteredContacts)
   };
 
@@ -160,7 +135,7 @@ const userContacts = ({ route, navigation }) => {
         marginLeft: 10,
         color: 'green'
       }}>
-        Contacts on ThunderPe:
+        Your Contacts:
       </Text>
       <View
         style={{
@@ -172,38 +147,12 @@ const userContacts = ({ route, navigation }) => {
         }}
       />
       <FlatList
-        data={onThunder}
+        data={userContact}
         renderItem={renderItem}
         ListEmptyComponent={() => <Text>No Contacts Found</Text>}
         keyExtractor={(item, index) => index.toString()}
-        // contentContainerStyle={{ paddingBottom: 38 }}
-        style={{ marginTop: 0, height: '25%' }}
-      />
-      <Text style={{
-        fontSize: 15,
-        fontWeight: 'bold',
-        marginTop: 20,
-        marginLeft: 10,
-        color: 'red'
-      }}>
-        Contacts Not on ThunderPe:
-      </Text>
-      <View
-        style={{
-          backgroundColor: "#D8D2D2",
-          height: 1,
-          width: "104%",
-          marginTop: 10,
-          marginLeft: -14,
-        }}
-      />
-      <FlatList
-        data={notOnThunder}
-        renderItem={renderItem}
-        ListEmptyComponent={() => <Text>No Contacts Found</Text>}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: 425 }}
-        style={{ marginTop: 0 }}
+        contentContainerStyle={{ paddingBottom: 158 }}
+      // style={{ marginTop: 0, height: '25%' }}
       />
       <TouchableOpacity
         style={styles.dialpad}
@@ -238,7 +187,7 @@ const styles = StyleSheet.create({
     top: 9,
   },
   header: {
-    backgroundColor: "#ffc100",
+    backgroundColor: light.primary,
     height: 49,
     flexDirection: "row",
   },
@@ -255,10 +204,10 @@ const styles = StyleSheet.create({
     color: "#757574",
   },
   dialpad: {
-    backgroundColor: '#ffc100',
+    backgroundColor: light.primary,
     position: 'absolute',
     right: '5%',
-    top: '60%',
+    top: '75%',
     width: 55,
     height: 55,
     alignItems: 'center',
