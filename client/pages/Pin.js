@@ -24,10 +24,13 @@ import {
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
 
+import QRCode from 'react-native-qrcode-svg'
 const CELL_COUNT = 4;
 const Pin = ({ route, navigation }) => {
   const [pin, setPin] = useState();
   const user = jwtDecode(route.params.token)
+  const { email, mobile, name } = user
+  // console.log(email)
   var usersData = []
   const mode = useColorScheme()
   const [value, setValue] = useState("");
@@ -81,6 +84,7 @@ const Pin = ({ route, navigation }) => {
       alert("Please Enter valid Pin");
     }
   };
+  let base64Logo = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAA..';
   return (
     <KeyboardAvoidingView behavior="position" style={{ flexGrow: 1, height: '100%', backgroundColor: mode === 'dark' ? dark.background : '#fff' }}>
       <View style={mode == "dark" ? { backgroundColor: dark.background } : { backgroundColor: "#fff", height: '100%' }}>
@@ -119,6 +123,14 @@ const Pin = ({ route, navigation }) => {
 
           </TouchableOpacity>
         </View>
+        {/* <View style={{ marginLeft: 20 }}>
+          <QRCode
+            value={`${email},${mobile}`}
+            logo={{ uri: base64Logo }}
+            logoSize={30}
+            logoBackgroundColor='transparent'
+          />
+        </View> */}
       </View >
     </KeyboardAvoidingView >
   );

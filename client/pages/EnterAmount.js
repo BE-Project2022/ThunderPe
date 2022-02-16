@@ -5,6 +5,8 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  ToastAndroid,
+  BackHandler,
 } from "react-native";
 import React, { useState } from "react";
 import Back from "../assets/images/back.png";
@@ -34,6 +36,30 @@ const EnterAmount = ({ route, navigation }) => {
     }
     // console.log(amount)
   };
+
+
+  const backAction = () => {
+    setTimeout(() => {
+      setExitApp(0);
+    }, 2000); // 2 seconds to tap second-time
+
+    if (exitApp === 0) {
+      setExitApp(exitApp + 1);
+
+      ToastAndroid.show('Press back again to go back', ToastAndroid.SHORT);
+    } else if (exitApp === 1) {
+      navigation.goBack()
+    }
+    return true;
+  };
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+    return () => backHandler.remove();
+  });
+
 
   const handlePress = () => {
     Speech.speak(`Paying rupees ${amount} to ${payingTo.name}`);

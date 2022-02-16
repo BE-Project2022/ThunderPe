@@ -28,6 +28,8 @@ import EnterAmount from "./pages/EnterAmount";
 import SendMoneyToNumber from "./pages/SendMoneyToNumber";
 import { dark, light } from "./controllers/Theme";
 import ResetPassword from "./pages/ResetPassword";
+import BarCodeScan from "./pages/BarCodeScan";
+import UserProfile from "./pages/UserProfile";
 
 // const _removeData = async (useName) => {
 //   try {
@@ -68,6 +70,8 @@ export default function App() {
         <Navigate.Screen name="EnterAmount" component={EnterAmount} />
         <Navigate.Screen name="SendToNumber" component={SendMoneyToNumber} />
         <Navigate.Screen name="ResetPassword" component={ResetPassword} />
+        <Navigate.Screen name="BarCodeScan" component={BarCodeScan} />
+
       </Navigate.Navigator>
     </NavigationContainer>
   );

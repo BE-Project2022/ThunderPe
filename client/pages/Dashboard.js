@@ -8,6 +8,7 @@ import {
   ScrollView,
   Button,
   useColorScheme,
+  FlatList
 } from "react-native";
 import { StackActions } from "@react-navigation/routers";
 
@@ -20,6 +21,7 @@ import More from "../assets/images/more.png";
 import Reward from "../assets/images/reward.png";
 import Next from "../assets/images/next.png";
 import { dark, light } from "../controllers/Theme";
+import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu'
 
 const Dashboard = ({ route, navigation }) => {
   const [screenCover, setScreenCover] = useState("70%");
@@ -40,9 +42,10 @@ const Dashboard = ({ route, navigation }) => {
     if (route.params.users.length > 9 && expanded) showAllUsers();
   }, [expanded]);
 
-  const checkVisibility = (e) => {
-    setIsOnState(!isOnState);
-  };
+  const hideMenu = () => setIsOnState(false);
+
+  const showMenu = () => setIsOnState(true);
+
 
   const payUser = (e) => {
 
@@ -145,27 +148,39 @@ const Dashboard = ({ route, navigation }) => {
       <View style={mode == "dark" ? styles.darkHeader : styles.header}>
         <Image source={Logo} style={styles.img} />
         <Text style={styles.title}>THUNDERPE</Text>
-        <TouchableOpacity onPress={checkVisibility}>
-          <Image
+
+        <Menu
+          visible={isOnState}
+          anchor={<TouchableOpacity onPress={showMenu}><Image
             source={User}
             style={{ marginRight: "4%", height: 35, width: 35 }}
-          />
-        </TouchableOpacity>
+
+          /></TouchableOpacity>}
+          onRequestClose={hideMenu}
+          style={{ marginTop: 45, marginLeft: '-7%', width: '50%' }}
+        >
+          <MenuItem onPress={() => navigation.navigate('UserProfile', { currentUser: route.params.user })}>Show Profile</MenuItem>
+          <MenuItem >LogOut</MenuItem>
+        </Menu>
+
+
       </View>
       {isOnState && (
-        <TouchableOpacity
-          style={styles.logout}
-          onPress={async () => {
-            try {
-              await AsyncStorage.removeItem("@storage_Key");
-            } catch (error) {
-              console.log("error", error);
-            }
-            navigation.dispatch(StackActions.replace("Login"));
-          }}
-        >
-          <Text>Logout</Text>
-        </TouchableOpacity>
+        <FlatList>
+          <TouchableOpacity
+            style={styles.logout}
+            onPress={async () => {
+              try {
+                await AsyncStorage.removeItem("@storage_Key");
+              } catch (error) {
+                console.log("error", error);
+              }
+              navigation.dispatch(StackActions.replace("Login"));
+            }}
+          >
+            <Text>Logout</Text>
+          </TouchableOpacity>
+        </FlatList>
       )}
       <View>
         <LinearGradient
