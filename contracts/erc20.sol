@@ -23,7 +23,7 @@ abstract contract ERC20Token {
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
 }
 
-// actual transfer.
+// Defining owner nd ownership.
 contract Owned {
     address public owner; // from
     address public newOwner;  // to
@@ -43,7 +43,6 @@ contract Owned {
         require(msg.sender == newOwner);
         emit OwnershipTransferred(owner, newOwner);
         owner = newOwner;
-        // 
         newOwner = address(0);
     }
 }
@@ -64,7 +63,7 @@ contract Token is ERC20Token, Owned {
         _name = "Token";
         _decimal = 0;
         _totalSupply = 100;
-        _minter = // Enter a public address here!
+        _minter = msg.sender;// Enter a public address here!
 
         balances[_minter] = _totalSupply;
         emit Transfer(address(0), _minter, _totalSupply);
@@ -110,6 +109,7 @@ contract Token is ERC20Token, Owned {
         return 0;
     }
 
+    // expanding totalsupply, minting new coins
     function mint(uint amount) public returns (bool) {
         require(msg.sender == _minter);
         balances[_minter] += amount;
@@ -117,6 +117,7 @@ contract Token is ERC20Token, Owned {
         return true;
     }
 
+    // removing or destroy new currency
     function confiscate(address target, uint amount) public returns (bool) {
         require(msg.sender == _minter);
 
