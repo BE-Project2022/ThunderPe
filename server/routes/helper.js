@@ -8,6 +8,7 @@ import {
   getVerification,
   verifyOTP,
   changePassword,
+  updateUser
 } from "../controllers/user.js";
 import { UserData } from "../controllers/profileData.js";
 
@@ -26,5 +27,7 @@ router.post("/forgotPassword", forgotPassword);
 router.post("/verifyOTP", verifyOTP);
 router.post("/changePassword", changePassword);
 router.post("/userdata", auth, UserData);
+router.post('/updateUser', updateUser)
+
 
 export default router;

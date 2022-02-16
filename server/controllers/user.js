@@ -148,3 +148,33 @@ export const changePassword = async (req, res) => {
     res.status(500).send({ error });
   }
 }
+export const updateUser = async (req, res) => {
+  try {
+    const user = await ThunderUser.findOne({
+      email: req.body.email,
+    });
+    if (user) {
+      const fullname = req.body.fullname
+      const pin = req.body.pin
+      user.fullname = fullname
+      user.pin = pin
+      await user.save()
+      const token = jwt.sign(
+        {
+          email: user.email,
+          mobile: user.mobile,
+          id: user._id,
+          pin: pin,
+          name: fullname,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+      res.status(201).json({ user, token });
+    }
+  }
+  catch (e) {
+    logger.error(e)
+    res.status(500).send({ error })
+  }
+}
