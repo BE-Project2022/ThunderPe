@@ -59,6 +59,8 @@ const Dashboard = ({ route, navigation }) => {
   const showAllUsers = () => {
     // console.log('HERE')
     setExpanded(true);
+    const u = route.params.users[i].fullname.split(' ')
+
     userData.splice(0, userData.length);
     // console.log(userData.length)
     for (let i = 0; i < route.params.users.length; i++) {
@@ -71,7 +73,7 @@ const Dashboard = ({ route, navigation }) => {
             <View style={{ marginTop: 14, marginLeft: 20 }}>
               <Image source={User} style={{ height: 55, width: 55 }} />
               <Text style={{ marginLeft: 4 }}>
-                {route.params.users[i].fullname}
+                {u[0]}
               </Text>
             </View>
           </TouchableOpacity>
@@ -83,6 +85,7 @@ const Dashboard = ({ route, navigation }) => {
   const setLessUsers = () => {
     userData.splice(0, userData.length);
     for (let i = 0; i < route.params.users.length; i++) {
+      const u = route.params.users[i].fullname.split(' ')
       const temp = i;
       userData.push(
         <View key={i}>
@@ -90,7 +93,7 @@ const Dashboard = ({ route, navigation }) => {
             <View style={{ marginTop: 14, marginLeft: 20 }}>
               <Image source={User} style={{ height: 55, width: 55 }} />
               <Text style={{ marginLeft: 10 }}>
-                {route.params.users[i].fullname}
+                {u[0]}
               </Text>
             </View>
           </TouchableOpacity>
@@ -103,13 +106,15 @@ const Dashboard = ({ route, navigation }) => {
     userData.splice(0, userData.length);
     for (i = 0; i < 9; i++) {
       const temp = i;
+      const u = route.params.users[i].fullname.split(' ')
+
       userData.push(
         <View key={i}>
           <TouchableOpacity key={temp} onPress={(res) => payUser(temp)}>
             <View style={{ marginTop: 14, marginLeft: 20 }}>
               <Image source={User} style={{ height: 55, width: 55 }} />
               <Text style={{ marginLeft: 10 }}>
-                {route.params.users[i].fullname}
+                {u[0]}
               </Text>
             </View>
           </TouchableOpacity>

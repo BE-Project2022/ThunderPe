@@ -71,7 +71,7 @@ export default function App() {
         <Navigate.Screen name="SendToNumber" component={SendMoneyToNumber} />
         <Navigate.Screen name="ResetPassword" component={ResetPassword} />
         <Navigate.Screen name="BarCodeScan" component={BarCodeScan} />
-
+        <Navigate.Screen name="UserProfile" component={UserProfile} />
       </Navigate.Navigator>
     </NavigationContainer>
   );

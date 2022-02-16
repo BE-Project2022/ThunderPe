@@ -8,7 +8,7 @@ import {
   ToastAndroid,
   BackHandler,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Back from "../assets/images/back.png";
 import Logo from "../assets/images/Logo_Yel.png";
 import User from "../assets/images/user.png";
@@ -21,7 +21,7 @@ const EnterAmount = ({ route, navigation }) => {
   const payer = route.params.currentUser;
   const [showSheet, setShowSheet] = useState(false);
   const [amount, setAmount] = useState(0);
-
+  const [exitApp, setExitApp] = useState(0);
   const changeAmount = (e) => {
     setAmount(parseInt(e));
   };
@@ -68,15 +68,6 @@ const EnterAmount = ({ route, navigation }) => {
   return (
     <View>
       <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => (navigation.canGoBack() ? navigation.goBack() : null)}
-          style={{ width: "12%" }}
-        >
-          <Image
-            source={navigation.canGoBack() ? Back : null}
-            style={{ left: 12, height: 30, top: 11 }}
-          />
-        </TouchableOpacity>
       </View>
       <View style={{ alignItems: "center" }}>
         <Image source={Logo} style={styles.img} />
