@@ -172,28 +172,18 @@ const Dashboard = ({ route, navigation }) => {
             hideMenu()
             navigation.navigate('UserProfile', { currentUser: route.params.user })
           }}>Show Profile</MenuItem>
-          <MenuItem >LogOut</MenuItem>
+          <MenuItem onPress={async () => {
+            try {
+              await AsyncStorage.removeItem("@storage_Key");
+            } catch (error) {
+              console.log("error", error);
+            }
+            navigation.dispatch(StackActions.replace("Login"));
+          }}>LogOut</MenuItem>
         </Menu>
 
 
       </View>
-      {isOnState && (
-        <FlatList>
-          <TouchableOpacity
-            style={styles.logout}
-            onPress={async () => {
-              try {
-                await AsyncStorage.removeItem("@storage_Key");
-              } catch (error) {
-                console.log("error", error);
-              }
-              navigation.dispatch(StackActions.replace("Login"));
-            }}
-          >
-            <Text>Logout</Text>
-          </TouchableOpacity>
-        </FlatList>
-      )}
       <View>
         <LinearGradient
           colors={[light.primary, light.secondary]}
