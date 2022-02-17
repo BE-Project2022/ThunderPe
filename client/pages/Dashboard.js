@@ -22,7 +22,7 @@ import Reward from "../assets/images/reward.png";
 import Next from "../assets/images/next.png";
 import { dark, light } from "../controllers/Theme";
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu'
-
+import QR from '../assets/images/qr.png'
 const Dashboard = ({ route, navigation }) => {
   const [screenCover, setScreenCover] = useState("70%");
   const [expanded, setExpanded] = useState(false);
@@ -31,6 +31,7 @@ const Dashboard = ({ route, navigation }) => {
 
   const user = route.params.user;
   const mode = useColorScheme();
+  // console.log(route.params.user)
 
   // console.log(route.params.users)
   const changeCover = (e) => {
@@ -151,6 +152,9 @@ const Dashboard = ({ route, navigation }) => {
   return (
     <View>
       <View style={mode == "dark" ? styles.darkHeader : styles.header}>
+        <TouchableOpacity onPress={() => navigation.navigate("BarCodeScan", { currentUser: route.params.user })} style={{ left: -30 }}>
+          <Image source={QR} style={{ width: 40, height: 40 }} />
+        </TouchableOpacity>
         <Image source={Logo} style={styles.img} />
         <Text style={styles.title}>THUNDERPE</Text>
 
@@ -164,7 +168,10 @@ const Dashboard = ({ route, navigation }) => {
           onRequestClose={hideMenu}
           style={{ marginTop: 45, marginLeft: '-7%', width: '50%' }}
         >
-          <MenuItem onPress={() => navigation.navigate('UserProfile', { currentUser: route.params.user })}>Show Profile</MenuItem>
+          <MenuItem onPress={() => {
+            hideMenu()
+            navigation.navigate('UserProfile', { currentUser: route.params.user })
+          }}>Show Profile</MenuItem>
           <MenuItem >LogOut</MenuItem>
         </Menu>
 

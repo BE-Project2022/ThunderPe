@@ -143,20 +143,13 @@ const UserProfile = ({ route, navigation }) => {
                     <LinearGradient
                         colors={[light.primary, light.secondary]}
                         style={styles.linearGradient}
-                        start={{
-                            x: 0,
-                            y: 0
-                        }}
-                        end={{
-                            x: 1,
-                            y: 1
-                        }}
-                        locations={[0.5, 0.8]}
+                        locations={[0.77, 0.95]}
                     >
                     </LinearGradient>
                     <View style={{ alignItems: 'center', marginTop: window.height / 45 }}>
                         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Hello {name}</Text>
                         <Image source={User} style={{ width: 80, height: 80, marginTop: 20 }} />
+                        <Image />
                     </View>
                 </View>
                 {spin ? (
@@ -170,7 +163,7 @@ const UserProfile = ({ route, navigation }) => {
                 ) : null}
                 <View style={{ alignItems: 'center', marginTop: 10 }}>
                     <QRCode
-                        value={`${email},${mobile} ${name}`}
+                        value={`${email},${mobile},${name}`}
                         logo={{ uri: base64Logo }}
                         logoBackgroundColor='transparent'
                     />
