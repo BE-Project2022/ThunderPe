@@ -60,11 +60,12 @@ const Dashboard = ({ route, navigation }) => {
   const showAllUsers = () => {
     // console.log('HERE')
     setExpanded(true);
-    const u = route.params.users[i].fullname.split(' ')
+
 
     userData.splice(0, userData.length);
     // console.log(userData.length)
     for (let i = 0; i < route.params.users.length; i++) {
+      const u = route.params.users[i].fullname.split(' ')
       const temp = i;
       userData.push(
         <View key={i}>
