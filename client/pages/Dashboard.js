@@ -8,7 +8,7 @@ import {
   ScrollView,
   Button,
   useColorScheme,
-  FlatList
+  FlatList,
 } from "react-native";
 import { StackActions } from "@react-navigation/routers";
 
@@ -21,7 +21,7 @@ import More from "../assets/images/more.png";
 import Reward from "../assets/images/reward.png";
 import Next from "../assets/images/next.png";
 import { dark, light } from "../controllers/Theme";
-import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu'
+import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
 
 const Dashboard = ({ route, navigation }) => {
   const [screenCover, setScreenCover] = useState("70%");
@@ -46,20 +46,22 @@ const Dashboard = ({ route, navigation }) => {
 
   const showMenu = () => setIsOnState(true);
 
-
   const payUser = (e) => {
-
-    route.params.users[e] = { ...route.params.users[e], phoneNumbers: [{ number: route.params.users[e].mobile }], name: route.params.users[e].fullname }
+    route.params.users[e] = {
+      ...route.params.users[e],
+      phoneNumbers: [{ number: route.params.users[e].mobile }],
+      name: route.params.users[e].fullname,
+    };
     navigation.navigate("EnterAmount", {
       user: route.params.users[e],
-      currentUser: route.params.user
-    })
-  }
+      currentUser: route.params.user,
+    });
+  };
 
   const showAllUsers = () => {
     // console.log('HERE')
     setExpanded(true);
-    const u = route.params.users[i].fullname.split(' ')
+    const u = route.params.users[i].fullname.split(" ");
 
     userData.splice(0, userData.length);
     // console.log(userData.length)
@@ -67,14 +69,10 @@ const Dashboard = ({ route, navigation }) => {
       const temp = i;
       userData.push(
         <View key={i}>
-          <TouchableOpacity
-            onPress={(res) => payUser(temp)}
-          >
+          <TouchableOpacity onPress={(res) => payUser(temp)}>
             <View style={{ marginTop: 14, marginLeft: 20 }}>
               <Image source={User} style={{ height: 55, width: 55 }} />
-              <Text style={{ marginLeft: 4 }}>
-                {u[0]}
-              </Text>
+              <Text style={{ marginLeft: 4 }}>{u[0]}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -85,16 +83,14 @@ const Dashboard = ({ route, navigation }) => {
   const setLessUsers = () => {
     userData.splice(0, userData.length);
     for (let i = 0; i < route.params.users.length; i++) {
-      const u = route.params.users[i].fullname.split(' ')
+      const u = route.params.users[i].fullname.split(" ");
       const temp = i;
       userData.push(
         <View key={i}>
           <TouchableOpacity onPress={(res) => payUser(temp)}>
             <View style={{ marginTop: 14, marginLeft: 20 }}>
               <Image source={User} style={{ height: 55, width: 55 }} />
-              <Text style={{ marginLeft: 10 }}>
-                {u[0]}
-              </Text>
+              <Text style={{ marginLeft: 10 }}>{u[0]}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -106,16 +102,14 @@ const Dashboard = ({ route, navigation }) => {
     userData.splice(0, userData.length);
     for (i = 0; i < 9; i++) {
       const temp = i;
-      const u = route.params.users[i].fullname.split(' ')
+      const u = route.params.users[i].fullname.split(" ");
 
       userData.push(
         <View key={i}>
           <TouchableOpacity key={temp} onPress={(res) => payUser(temp)}>
             <View style={{ marginTop: 14, marginLeft: 20 }}>
               <Image source={User} style={{ height: 55, width: 55 }} />
-              <Text style={{ marginLeft: 10 }}>
-                {u[0]}
-              </Text>
+              <Text style={{ marginLeft: 10 }}>{u[0]}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -156,24 +150,27 @@ const Dashboard = ({ route, navigation }) => {
 
         <Menu
           visible={isOnState}
-          anchor={<TouchableOpacity onPress={showMenu}><Image
-            source={User}
-            style={{ marginRight: "4%", height: 35, width: 35 }}
-
-          /></TouchableOpacity>}
+          anchor={
+            <TouchableOpacity onPress={showMenu}>
+              <Image
+                source={User}
+                style={{ marginRight: "4%", height: 35, width: 35 }}
+              />
+            </TouchableOpacity>
+          }
           onRequestClose={hideMenu}
-          style={{ marginTop: 45, marginLeft: '-7%', width: '50%' }}
+          style={{ marginTop: 45, marginLeft: "-7%", width: "50%" }}
         >
-          <MenuItem onPress={() => navigation.navigate('UserProfile', { currentUser: route.params.user })}>Show Profile</MenuItem>
-          <MenuItem >LogOut</MenuItem>
-        </Menu>
-
-
-      </View>
-      {isOnState && (
-        <FlatList>
-          <TouchableOpacity
-            style={styles.logout}
+          <MenuItem
+            onPress={() =>
+              navigation.navigate("UserProfile", {
+                currentUser: route.params.user,
+              })
+            }
+          >
+            Show Profile
+          </MenuItem>
+          <MenuItem
             onPress={async () => {
               try {
                 await AsyncStorage.removeItem("@storage_Key");
@@ -183,10 +180,11 @@ const Dashboard = ({ route, navigation }) => {
               navigation.dispatch(StackActions.replace("Login"));
             }}
           >
-            <Text>Logout</Text>
-          </TouchableOpacity>
-        </FlatList>
-      )}
+            LogOut
+          </MenuItem>
+        </Menu>
+      </View>
+
       <View>
         <LinearGradient
           colors={[light.primary, light.secondary]}
