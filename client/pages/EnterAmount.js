@@ -18,6 +18,7 @@ import * as Speech from "expo-speech";
 const EnterAmount = ({ route, navigation }) => {
   // console.log(route.params.user)
   const payingTo = route.params.user;
+  // console.log(payingTo)
   const payer = route.params.currentUser;
   const [showSheet, setShowSheet] = useState(false);
   const [amount, setAmount] = useState(0);
@@ -60,11 +61,8 @@ const EnterAmount = ({ route, navigation }) => {
   });
 
   const handlePress = () => {
-    // Speech.speak(`Paying rupees ${amount} to ${payingTo.name}`);
-    navigation.navigate("Payment", {
-      From: payer,
-      To: payingTo,
-    });
+    Speech.speak(`Paying rupees ${amount} to ${payingTo.name}`);
+    navigation.navigate("Pin", { to: payingTo, from: payer, amount });
   };
 
   return (

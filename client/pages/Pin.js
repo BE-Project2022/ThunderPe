@@ -28,14 +28,30 @@ import QRCode from 'react-native-qrcode-svg'
 const CELL_COUNT = 4;
 const Pin = ({ route, navigation }) => {
   const [pin, setPin] = useState();
-  const user = jwtDecode(route.params.token)
-  const { email, mobile, name } = user
+  let user
+  let payer, payee, amount
+  if (!navigation.canGoBack()) {
+    user = jwtDecode(route.params.token)
+    const { email, mobile, name } = user
+  }
+  else {
+    payer = route.params.from
+    payee = route.params.to
+    amount = route.params.amount
+  }
   // console.log(email)
   var usersData = []
   const mode = useColorScheme()
   const [value, setValue] = useState("");
   const [spin, changeSpin] = useState(false)
-
+  // console.log(route.params)
+  // const payee = route.params.to
+  // if (payee) {
+  //   console.log(payee)
+  // }
+  // const amount = route.params.amount
+  // console.log(navigation.canGoBack())
+  // console.log(payee)
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
@@ -74,14 +90,26 @@ const Pin = ({ route, navigation }) => {
     });
     if (biometricAuth.success) {
       // console.log(usersData.length)
-      navigation.dispatch(StackActions.replace("Dashboard", { user: user, users: usersData }));
+      if (!navigation.canGoBack())
+        navigation.dispatch(StackActions.replace("Dashboard", { user: user, users: usersData }));
+      else
+        navigation.dispatch(StackActions.replace("Payment", { user: user, users: usersData }));
     }
   };
   const checkPin = () => {
-    if (parseInt(value) === user.pin) handleBiometricAuth();
-    else if (pin === "") alert("Please Enter Pin");
+    if (!navigation.canGoBack()) {
+      if (parseInt(value) === user.pin) handleBiometricAuth();
+      else if (pin === "") alert("Please Enter Pin");
+      else {
+        alert("Please Enter valid Pin");
+      }
+    }
     else {
-      alert("Please Enter valid Pin");
+      if (parseInt(value) === payer.pin) handleBiometricAuth();
+      else if (pin === "") alert("Please Enter Pin");
+      else {
+        alert("Please Enter valid Pin");
+      }
     }
   };
   let base64Logo = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAA..';
@@ -89,7 +117,7 @@ const Pin = ({ route, navigation }) => {
     <KeyboardAvoidingView behavior="position" style={{ flexGrow: 1, height: '100%', backgroundColor: mode === 'dark' ? dark.background : '#fff' }}>
       <View style={mode == "dark" ? { backgroundColor: dark.background } : { backgroundColor: "#fff", height: '100%' }}>
         <View style={mode === 'dark' ? styles.darkHeader : styles.header}>
-          <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>ENTER PIN</Text>
+          {!navigation.canGoBack() && <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>ENTER PIN</Text>}
         </View>
         <Image source={Logo} style={styles.img} />
         <Text style={mode === 'dark' ? { textAlign: "center", fontSize: 24, fontWeight: "bold", color: 'black', marginTop: '20%' } : { textAlign: "center", fontSize: 24, fontWeight: "bold", marginTop: '20%' }}>
@@ -110,7 +138,7 @@ const Pin = ({ route, navigation }) => {
                 style={[styles.cell, isFocused && styles.focusCell]}
                 onLayout={getCellOnLayoutHandler(index)}
               >
-                {symbol ? '•' : null || (isFocused ? <Cursor /> : null)}
+                {symbol ? '*' : null || (isFocused ? <Cursor /> : null)}
               </Text>
             )}
 
@@ -123,14 +151,6 @@ const Pin = ({ route, navigation }) => {
 
           </TouchableOpacity>
         </View>
-        {/* <View style={{ marginLeft: 20 }}>
-          <QRCode
-            value={`${email},${mobile}`}
-            logo={{ uri: base64Logo }}
-            logoSize={30}
-            logoBackgroundColor='transparent'
-          />
-        </View> */}
       </View >
     </KeyboardAvoidingView >
   );
@@ -216,14 +236,15 @@ const styles = StyleSheet.create({
   title: { textAlign: "center", fontSize: 30 },
   codeFieldRoot: { marginTop: 20 },
   cell: {
-    width: 60,
-    height: 60,
-    lineHeight: 44,
+    width: 30,
+    height: 30,
+    // lineHeight: 44,
     color: "#3b3c3d",
-    fontSize: 32,
+    fontSize: 24,
     borderWidth: 2,
     borderColor: "#00000030",
     textAlign: "center",
+    borderRadius: 30
   },
   focusCell: {
     borderColor: "#282829",
