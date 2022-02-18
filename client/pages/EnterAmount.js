@@ -60,7 +60,7 @@ const EnterAmount = ({ route, navigation }) => {
   });
 
   const handlePress = () => {
-    Speech.speak(`Paying rupees ${amount} to ${payingTo.name}`);
+    // Speech.speak(`Paying rupees ${amount} to ${payingTo.name}`);
     navigation.navigate("Payment", {
       From: payer,
       To: payingTo,

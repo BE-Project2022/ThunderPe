@@ -19,35 +19,35 @@ const Payment = ({ navigation, route }) => {
     <View>
       {success
         ? [
-            <View>
-              <View style={styles.header}></View>
-              <View style={{ alignItems: "center" }}>
-                <Image source={Logo} style={styles.img} />
-              </View>
-              <LottieView
-                style={styles.success}
-                source={require("../assets/images/success.json")}
-                autoPlay
-                loop
-              />
-              <Text style={styles.bottom}>Payment Successful</Text>
-            </View>,
-          ]
+          <View key={0}>
+            <View style={styles.header}></View>
+            <View style={{ alignItems: "center" }}>
+              <Image source={Logo} style={styles.img} />
+            </View>
+            <LottieView
+              style={styles.success}
+              source={require("../assets/images/success.json")}
+              autoPlay
+              loop
+            />
+            <Text style={styles.bottom}>Payment Successful</Text>
+          </View>,
+        ]
         : [
-            <View>
-              <View style={styles.header}></View>
-              <View style={{ alignItems: "center" }}>
-                <Image source={Logo} style={styles.img} />
-              </View>
-              <LottieView
-                style={styles.success}
-                source={require("../assets/images/failure.json")}
-                autoPlay
-                loop
-              />
-              <Text style={styles.bottom}>Payment Failed</Text>
-            </View>,
-          ]}
+          <View key={1}>
+            <View style={styles.header}></View>
+            <View style={{ alignItems: "center" }}>
+              <Image source={Logo} style={styles.img} />
+            </View>
+            <LottieView
+              style={styles.success}
+              source={require("../assets/images/failure.json")}
+              autoPlay
+              loop
+            />
+            <Text style={styles.bottom}>Payment Failed</Text>
+          </View>,
+        ]}
     </View>
   );
 };
