@@ -10,23 +10,44 @@ const Payment = ({ navigation, route }) => {
   const from = route.params.from;
   const to = route.params.to;
 
+  const success = false;
   // setTimeout(() => {
 
   //   navigation.navigate("Dashboard");
   // }, 5000);
   return (
     <View>
-      <View style={styles.header}></View>
-      <View style={{ alignItems: "center" }}>
-        <Image source={Logo} style={styles.img} />
-      </View>
-      <LottieView
-        style={styles.success}
-        source={require("../assets/images/success.json")}
-        autoPlay
-        loop
-      />
-      <Text style={styles.bottom}>Payment Successful</Text>
+      {success
+        ? [
+            <View>
+              <View style={styles.header}></View>
+              <View style={{ alignItems: "center" }}>
+                <Image source={Logo} style={styles.img} />
+              </View>
+              <LottieView
+                style={styles.success}
+                source={require("../assets/images/success.json")}
+                autoPlay
+                loop
+              />
+              <Text style={styles.bottom}>Payment Successful</Text>
+            </View>,
+          ]
+        : [
+            <View>
+              <View style={styles.header}></View>
+              <View style={{ alignItems: "center" }}>
+                <Image source={Logo} style={styles.img} />
+              </View>
+              <LottieView
+                style={styles.success}
+                source={require("../assets/images/failure.json")}
+                autoPlay
+                loop
+              />
+              <Text style={styles.bottom}>Payment Failed</Text>
+            </View>,
+          ]}
     </View>
   );
 };
