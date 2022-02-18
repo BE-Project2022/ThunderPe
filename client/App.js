@@ -8,7 +8,6 @@ import {
   LogBox,
   Appearance,
   useColorScheme,
-
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./pages/Login";
@@ -17,6 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import userContacts from "./pages/userContacts";
 import { NavigationContainer } from "@react-navigation/native";
 import ForgotPassword from "./pages/ForgotPassword";
+import Payment from "./pages/Payment";
 import EnterOTP from "./pages/EnterOTP";
 import Pin from "./pages/Pin";
 // AsyncStorageLib
@@ -44,14 +44,17 @@ import UserProfile from "./pages/UserProfile";
 export default function App() {
   const Navigate = createStackNavigator();
   // console.log(useColorScheme())
-  const mode = useColorScheme()
+  const mode = useColorScheme();
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
   ]);
   // console.log('LoggedIn: ', isLoggedin)
   return (
     <NavigationContainer>
-      <StatusBar backgroundColor={mode === "dark" ? dark.primary : light.primary} barStyle="light-content" />
+      <StatusBar
+        backgroundColor={mode === "dark" ? dark.primary : light.primary}
+        barStyle="light-content"
+      />
       <Navigate.Navigator
         screenOptions={{
           headerShown: false,
@@ -72,6 +75,7 @@ export default function App() {
         <Navigate.Screen name="ResetPassword" component={ResetPassword} />
         <Navigate.Screen name="BarCodeScan" component={BarCodeScan} />
         <Navigate.Screen name="UserProfile" component={UserProfile} />
+        <Navigate.Screen name="Payment" component={Payment} />
       </Navigate.Navigator>
     </NavigationContainer>
   );

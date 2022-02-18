@@ -13,7 +13,7 @@ import Back from "../assets/images/back.png";
 import Logo from "../assets/images/Logo_Yel.png";
 import User from "../assets/images/user.png";
 import BottomSheet from "react-native-bottomsheet-reanimated";
-import { light, dark } from '../controllers/Theme'
+import { light, dark } from "../controllers/Theme";
 import * as Speech from "expo-speech";
 const EnterAmount = ({ route, navigation }) => {
   // console.log(route.params.user)
@@ -37,7 +37,6 @@ const EnterAmount = ({ route, navigation }) => {
     // console.log(amount)
   };
 
-
   const backAction = () => {
     setTimeout(() => {
       setExitApp(0);
@@ -46,29 +45,31 @@ const EnterAmount = ({ route, navigation }) => {
     if (exitApp === 0) {
       setExitApp(exitApp + 1);
 
-      ToastAndroid.show('Press back again to go back', ToastAndroid.SHORT);
+      ToastAndroid.show("Press back again to go back", ToastAndroid.SHORT);
     } else if (exitApp === 1) {
-      navigation.goBack()
+      navigation.goBack();
     }
     return true;
   };
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
+      "hardwareBackPress",
+      backAction
     );
     return () => backHandler.remove();
   });
 
-
   const handlePress = () => {
     Speech.speak(`Paying rupees ${amount} to ${payingTo.name}`);
+    navigation.navigate("Payment", {
+      From: payer,
+      To: payingTo,
+    });
   };
 
   return (
     <View>
-      <View style={styles.header}>
-      </View>
+      <View style={styles.header}></View>
       <View style={{ alignItems: "center" }}>
         <Image source={Logo} style={styles.img} />
         <Image source={User} style={styles.userImg} />
