@@ -93,7 +93,7 @@ const Pin = ({ route, navigation }) => {
       if (!navigation.canGoBack())
         navigation.dispatch(StackActions.replace("Dashboard", { user: user, users: usersData }));
       else
-        navigation.dispatch(StackActions.replace("Payment", { user: user, users: usersData }));
+        navigation.dispatch(StackActions.replace("Payment", { user: payer, payee, amount, users: usersData }));
     }
   };
   const checkPin = () => {
