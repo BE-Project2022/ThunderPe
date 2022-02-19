@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Animated } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
 import Logo from "../assets/images/Logo_Yel.png";
 import { light, dark } from "../controllers/Theme";
 import LottieView from "lottie-react-native";
@@ -8,16 +8,22 @@ import axios from "axios";
 import { Audio } from "expo-av";
 
 const Payment = ({ navigation, route }) => {
-  const from = route.params.from;
-  const to = route.params.to;
-  var usersData = []
   const success = true
-  setTimeout(() => {
+  const [fadeAnim] = useState(new Animated.Value(1));
 
+  setTimeout(() => {
     navigation.navigate("Dashboard", { user: route.params.user, users: route.params.users });
   }, 3000);
 
   async function playSound() {
+    Animated.timing(
+      fadeAnim,
+      {
+        toValue: 0.5,
+        duration: 3000,
+        useNativeDriver: true
+      }
+    ).start();
     // console.log("Loading Sound");
     if (success) {
       const { sound } = await Audio.Sound.createAsync(
@@ -36,42 +42,45 @@ const Payment = ({ navigation, route }) => {
 
   useEffect(() => {
     playSound();
-  }, []);
+    // console.log(fadeAnim)
+  }, [fadeAnim]);
 
   return (
-    <View>
-      {success
-        ? [
-          <View key={0}>
-            <View style={styles.header}></View>
-            <View style={{ alignItems: "center" }}>
-              <Image source={Logo} style={styles.img} />
-            </View>
-            <LottieView
-              style={styles.success}
-              source={require("../assets/images/success.json")}
-              autoPlay
-              loop
-            />
-            <Text style={styles.bottom}>Payment Successful</Text>
-          </View>,
-        ]
-        : [
-          <View key={1}>
-            <View style={styles.header}></View>
-            <View style={{ alignItems: "center" }}>
-              <Image source={Logo} style={styles.img} />
-            </View>
-            <LottieView
-              style={styles.success}
-              source={require("../assets/images/failure.json")}
-              autoPlay
-              loop
-            />
-            <Text style={styles.bottom}>Payment Failed</Text>
-          </View>,
-        ]}
-    </View>
+    <Animated.View style={{ opacity: fadeAnim }}>
+      <View>
+        {success
+          ? [
+            <View key={0}>
+              <View style={styles.header}></View>
+              <View style={{ alignItems: "center" }}>
+                <Image source={Logo} style={styles.img} />
+              </View>
+              <LottieView
+                style={styles.success}
+                source={require("../assets/images/success.json")}
+                autoPlay
+                loop
+              />
+              <Text style={styles.bottom}>Payment Successful</Text>
+            </View>,
+          ]
+          : [
+            <View key={1}>
+              <View style={styles.header}></View>
+              <View style={{ alignItems: "center" }}>
+                <Image source={Logo} style={styles.img} />
+              </View>
+              <LottieView
+                style={styles.success}
+                source={require("../assets/images/failure.json")}
+                autoPlay
+                loop
+              />
+              <Text style={styles.bottom}>Payment Failed</Text>
+            </View>,
+          ]}
+      </View>
+    </Animated.View>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -9,9 +9,10 @@ import {
   Button,
   useColorScheme,
   FlatList,
+  Animated,
 } from "react-native";
 import { StackActions } from "@react-navigation/routers";
-
+import { useFocusEffect, useIsFocused } from '@react-navigation/native'
 import Logo from "../assets/images/Short_Logo_White.png";
 import { LinearGradient } from "expo-linear-gradient";
 import Rupee from "../assets/images/rupee.png";
@@ -33,16 +34,32 @@ const Dashboard = ({ route, navigation }) => {
   const user = route.params.user; //token
   const mode = useColorScheme();
   // console.log(route.params.user)
-
+  const [fadeAnim, setFadeAnim] = useState(new Animated.Value(0))
   // console.log(route.params.users)
   const changeCover = (e) => {
     setScreenCover(e.value);
   };
+  // console.log(useIsFocused())
   // var userData = [];
+  useFocusEffect(
+    useCallback(() => {
+
+      Animated.timing(
+        fadeAnim,
+        {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true
+        }
+      ).start()
+    }, [fadeAnim])
+  )
   useEffect(() => {
     userData.splice(0, userData.length);
     if (route.params.users.length > 9 && expanded) showAllUsers();
-  }, [expanded]);
+  }, [expanded, fadeAnim]);
+
+
 
   const hideMenu = () => setIsOnState(false);
 
@@ -54,10 +71,12 @@ const Dashboard = ({ route, navigation }) => {
       phoneNumbers: [{ number: route.params.users[e].mobile }],
       name: route.params.users[e].fullname,
     };
+
     navigation.navigate("EnterAmount", {
       user: route.params.users[e],
       currentUser: route.params.user,
     });
+    setFadeAnim(new Animated.Value(0))
   };
 
   const showAllUsers = () => {
@@ -145,185 +164,187 @@ const Dashboard = ({ route, navigation }) => {
   }
 
   return (
-    <View>
-      <View style={mode == "dark" ? styles.darkHeader : styles.header}>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("BarCodeScan", {
-              currentUser: route.params.user,
-            })
-          }
-          style={{ left: -30 }}
-        >
-          <Image source={QR} style={{ width: 40, height: 40 }} />
-        </TouchableOpacity>
-        <Image source={Logo} style={styles.img} />
-        <Text style={styles.title}>THUNDERPE</Text>
-
-        <Menu
-          visible={isOnState}
-          anchor={
-            <TouchableOpacity onPress={showMenu}>
-              <Image
-                source={User}
-                style={{ marginRight: "4%", height: 35, width: 35 }}
-              />
-            </TouchableOpacity>
-          }
-          onRequestClose={hideMenu}
-          style={{ marginTop: 45, marginLeft: "-7%", width: "50%" }}
-        >
-          <MenuItem
-            onPress={() => {
-              hideMenu();
-              navigation.navigate("UserProfile", {
-                currentUser: route.params.user,
-              });
-            }}
-          >
-            Show Profile
-          </MenuItem>
-          <MenuItem
-            onPress={async () => {
-              try {
-                await AsyncStorage.removeItem("@storage_Key");
-              } catch (error) {
-                console.log("error", error);
-              }
-              navigation.dispatch(StackActions.replace("Login"));
-            }}
-          >
-            LogOut
-          </MenuItem>
-        </Menu>
-      </View>
+    <Animated.View style={{ opacity: fadeAnim }} >
       <View>
-        <LinearGradient
-          colors={[light.primary, light.secondary]}
-          style={styles.gradient}
-          start={{ x: 0, y: 0.5 }}
-          end={{ x: 0.8, y: 0.5 }}
-        >
-          <View>
-            <Text style={screenCover != "70%" ? styles.normal : styles.text}>
-              {screenCover === "70%"
-                ? "WALLET BALANCE"
-                : "Balance: \u20B9 150545"}
-            </Text>
-            <Image
-              source={Rupee}
-              style={
-                screenCover === "70%"
-                  ? { top: 50, alignSelf: "center", height: 40, right: 52 }
-                  : null
-              }
-            />
-            <Text
-              style={
-                screenCover === "70%"
-                  ? { left: 70, fontSize: 28, top: 4, fontWeight: "bold" }
-                  : null
-              }
+        <View style={mode == "dark" ? styles.darkHeader : styles.header}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("BarCodeScan", {
+                currentUser: route.params.user,
+              })
+            }
+            style={{ left: -30 }}
+          >
+            <Image source={QR} style={{ width: 40, height: 40 }} />
+          </TouchableOpacity>
+          <Image source={Logo} style={styles.img} />
+          <Text style={styles.title}>THUNDERPE</Text>
+
+          <Menu
+            visible={isOnState}
+            anchor={
+              <TouchableOpacity onPress={showMenu}>
+                <Image
+                  source={User}
+                  style={{ marginRight: "4%", height: 35, width: 35 }}
+                />
+              </TouchableOpacity>
+            }
+            onRequestClose={hideMenu}
+            style={{ marginTop: 45, marginLeft: "-7%", width: "50%" }}
+          >
+            <MenuItem
+              onPress={() => {
+                hideMenu();
+                navigation.navigate("UserProfile", {
+                  currentUser: route.params.user,
+                });
+              }}
             >
-              150545
-            </Text>
-          </View>
-        </LinearGradient>
-      </View>
-      <BottomSheet
-        keyboardAware
-        bottomSheerColor="#FFFFFF"
-        initialPosition={"70%"} //200, 300
-        snapPoints={["70%", "85%"]}
-        isRoundBorderWithTipHeader={true}
-        // backDropColor="red"
-        // isModal
-        // containerStyle={{ backgroundColor: "red" }}
-        tipStyle={{
-          backgroundColor: "black",
-          width: 78,
-          marginTop: 15,
-          height: 3.5,
-        }}
-        tipHeaderRadius={28}
-        // headerStyle={{backgroundColor:"red"}}
-        // bodyStyle={{backgroundColor:"red",flex:1}}
-        onChangeSnap={changeCover}
-        body={
-          <ScrollView>
-            <View style={styles.payments}>
-              <Text style={{ fontSize: 18 }}>Recent Payments</Text>
-              <View style={styles.paymentUsers}>{userData}</View>
-              <View
-                style={{
-                  backgroundColor: "#D8D2D2",
-                  height: 1,
-                  width: "104%",
-                  marginTop: 15,
-                  marginLeft: -14,
-                }}
+              Show Profile
+            </MenuItem>
+            <MenuItem
+              onPress={async () => {
+                try {
+                  await AsyncStorage.removeItem("@storage_Key");
+                } catch (error) {
+                  console.log("error", error);
+                }
+                navigation.dispatch(StackActions.replace("Login"));
+              }}
+            >
+              LogOut
+            </MenuItem>
+          </Menu>
+        </View>
+        <View>
+          <LinearGradient
+            colors={[light.primary, light.secondary]}
+            style={styles.gradient}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 0.8, y: 0.5 }}
+          >
+            <View>
+              <Text style={screenCover != "70%" ? styles.normal : styles.text}>
+                {screenCover === "70%"
+                  ? "WALLET BALANCE"
+                  : "Balance: \u20B9 150545"}
+              </Text>
+              <Image
+                source={Rupee}
+                style={
+                  screenCover === "70%"
+                    ? { top: 50, alignSelf: "center", height: 40, right: 52 }
+                    : null
+                }
               />
-              <View style={{ marginTop: 10 }}>
-                <Text style={{ fontSize: 18 }}>Promotions</Text>
-                <TouchableOpacity style={{ marginTop: 13, width: 59 }}>
-                  <Image
-                    source={Reward}
-                    style={{
-                      backgroundColor: "transparent",
-                      height: 55,
-                      width: 55,
-                    }}
-                  />
-                  <Text style={{ fontSize: 13 }}>Rewards</Text>
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  backgroundColor: "#D8D2D2",
-                  height: 1,
-                  width: "104%",
-                  marginTop: 15,
-                  marginLeft: -14,
-                }}
-              />
-              <View>
-                <TouchableOpacity style={{ height: 60, flexDirection: "row" }}>
-                  <Text style={{ fontSize: 18, marginTop: "3.5%" }}>
-                    Show Transaction History
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      marginTop: "3.5%",
-                      marginLeft: "30%",
-                    }}
-                  >
-                    {" "}
-                    {">"}{" "}
-                  </Text>
-                </TouchableOpacity>
+              <Text
+                style={
+                  screenCover === "70%"
+                    ? { left: 70, fontSize: 28, top: 4, fontWeight: "bold" }
+                    : null
+                }
+              >
+                150545
+              </Text>
+            </View>
+          </LinearGradient>
+        </View>
+        <BottomSheet
+          keyboardAware
+          bottomSheerColor="#FFFFFF"
+          initialPosition={"70%"} //200, 300
+          snapPoints={["70%", "85%"]}
+          isRoundBorderWithTipHeader={true}
+          // backDropColor="red"
+          // isModal
+          // containerStyle={{ backgroundColor: "red" }}
+          tipStyle={{
+            backgroundColor: "black",
+            width: 78,
+            marginTop: 15,
+            height: 3.5,
+          }}
+          tipHeaderRadius={28}
+          // headerStyle={{backgroundColor:"red"}}
+          // bodyStyle={{backgroundColor:"red",flex:1}}
+          onChangeSnap={changeCover}
+          body={
+            <ScrollView>
+              <View style={styles.payments}>
+                <Text style={{ fontSize: 18 }}>Recent Payments</Text>
+                <View style={styles.paymentUsers}>{userData}</View>
                 <View
                   style={{
                     backgroundColor: "#D8D2D2",
                     height: 1,
                     width: "104%",
+                    marginTop: 15,
                     marginLeft: -14,
                   }}
                 />
+                <View style={{ marginTop: 10 }}>
+                  <Text style={{ fontSize: 18 }}>Promotions</Text>
+                  <TouchableOpacity style={{ marginTop: 13, width: 59 }}>
+                    <Image
+                      source={Reward}
+                      style={{
+                        backgroundColor: "transparent",
+                        height: 55,
+                        width: 55,
+                      }}
+                    />
+                    <Text style={{ fontSize: 13 }}>Rewards</Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    backgroundColor: "#D8D2D2",
+                    height: 1,
+                    width: "104%",
+                    marginTop: 15,
+                    marginLeft: -14,
+                  }}
+                />
+                <View>
+                  <TouchableOpacity style={{ height: 60, flexDirection: "row" }}>
+                    <Text style={{ fontSize: 18, marginTop: "3.5%" }}>
+                      Show Transaction History
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        marginTop: "3.5%",
+                        marginLeft: "30%",
+                      }}
+                    >
+                      {" "}
+                      {">"}{" "}
+                    </Text>
+                  </TouchableOpacity>
+                  <View
+                    style={{
+                      backgroundColor: "#D8D2D2",
+                      height: 1,
+                      width: "104%",
+                      marginLeft: -14,
+                    }}
+                  />
+                </View>
               </View>
-            </View>
-          </ScrollView>
-        }
-      />
-      <TouchableOpacity
-        style={styles.paymentButton}
-        onPress={() => navigation.navigate("userContacts", { user: user })}
-      >
-        <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
-          + New Payment
-        </Text>
-      </TouchableOpacity>
-    </View>
+            </ScrollView>
+          }
+        />
+        <TouchableOpacity
+          style={styles.paymentButton}
+          onPress={() => navigation.navigate("userContacts", { user: user })}
+        >
+          <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
+            + New Payment
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </Animated.View>
   );
 };
 
