@@ -11,21 +11,27 @@ const Payment = ({ navigation, route }) => {
   const from = route.params.from;
   const to = route.params.to;
 
-  const success = true;
+  const success = false;
   // setTimeout(() => {
 
   //   navigation.navigate("Dashboard");
   // }, 5000);
 
   async function playSound() {
-    console.log("Loading Sound");
-    const { sound } = await Audio.Sound.createAsync(
-      require("../assets/sounds/thunderpayment.mp3")
-    );
-    // setSound(sound);
+    // console.log("Loading Sound");
+    if (success) {
+      const { sound } = await Audio.Sound.createAsync(
+        require("../assets/sounds/thunderpayment.mp3")
+      );
 
-    console.log("Playing Sound");
-    await sound.playAsync();
+      await sound.playAsync();
+    } else {
+      const { sound } = await Audio.Sound.createAsync(
+        require("../assets/sounds/fail.mp3")
+      );
+
+      await sound.playAsync();
+    }
   }
 
   useEffect(() => {
