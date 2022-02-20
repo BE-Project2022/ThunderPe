@@ -30,7 +30,6 @@ import { dark, light } from "./controllers/Theme";
 import ResetPassword from "./pages/ResetPassword";
 import BarCodeScan from "./pages/BarCodeScan";
 import UserProfile from "./pages/UserProfile";
-import UploadImage from "./pages/UploadImage";
 
 // const _removeData = async (useName) => {
 //   try {
@@ -77,7 +76,6 @@ export default function App() {
         <Navigate.Screen name="BarCodeScan" component={BarCodeScan} />
         <Navigate.Screen name="UserProfile" component={UserProfile} />
         <Navigate.Screen name="Payment" component={Payment} />
-        <Navigate.Screen name="UploadImage" component={UploadImage} />
       </Navigate.Navigator>
     </NavigationContainer>
   );

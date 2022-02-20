@@ -187,7 +187,7 @@ const UserProfile = ({ route, navigation }) => {
                                     console.log(res.data)
                                     const decoded = jwtDecode(res.data.token);
                                     // console.log(decoded);
-                                    navigation.dispatch(StackActions.popToTop());
+                                    navigation.dispatch(StackActions.replace('Dashboard', { user: route.params.currentUser, users: route.params.users }));
                                 })
                                 .catch((e) => console.log(e.response))
                         }
@@ -196,7 +196,7 @@ const UserProfile = ({ route, navigation }) => {
             )
         }
         else {
-            const updateUser = { email, fullname, pin: parseInt(LoginPin), image: url }
+            const updateUser = { email, fullname, pin: parseInt(LoginPin), image }
             changeSpin(true)
             axios
                 .post('https://thunderpe.herokuapp.com/auth/updateUser', updateUser)
@@ -206,7 +206,7 @@ const UserProfile = ({ route, navigation }) => {
                     changeSpin(false)
                     const decoded = jwtDecode(res.data.token);
                     // console.log(decoded);
-                    navigation.dispatch(StackActions.popToTop());
+                    navigation.dispatch(StackActions.replace('Dashboard', { user: route.params.currentUser, users: route.params.users }));
 
                 })
                 .catch((e) => console.log(e))
@@ -240,7 +240,7 @@ const UserProfile = ({ route, navigation }) => {
                     </LinearGradient>
                     <View style={{ alignItems: 'center', marginTop: window.height / 45 }}>
                         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Hello {name}</Text>
-                        <Image source={image ? { uri: image } : { uri: url }} style={{ width: 100, height: 100, marginTop: 18, borderRadius: 50 }} />
+                        <Image source={image ? { uri: image } : { uri: url }} style={{ width: 120, height: 120, marginTop: 10, borderRadius: 60 }} />
                         <Menu
                             visible={isOnState}
                             anchor={<TouchableOpacity

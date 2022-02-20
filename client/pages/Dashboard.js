@@ -265,6 +265,7 @@ const Dashboard = ({ route, navigation }) => {
           initialPosition={"70%"} //200, 300
           snapPoints={["70%", "85%"]}
           isRoundBorderWithTipHeader={true}
+          enabledContentGestureInteraction={true}
           // backDropColor="red"
           // isModal
           // containerStyle={{ backgroundColor: "red" }}
