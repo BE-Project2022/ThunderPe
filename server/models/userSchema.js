@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
   mobile: { type: Number, unique: true },
-  pin: { type: Number, maxlength: 4 }
+  pin: { type: Number, maxlength: 4 },
+  image: { type: String }
 });
 
 const ThunderUser = new mongoose.model("ThunderUser", userSchema);

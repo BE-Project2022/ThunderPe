@@ -8,6 +8,7 @@ import Verification from "../models/Verification.js";
 import mongoose from "mongoose";
 const router = express.Router();
 
+
 export const signup = async (req, res) => {
   const { fullname, email, mobile, password, pin } = req.body;
   const candidate = await ThunderUser.findOne({ mobile });
@@ -156,8 +157,11 @@ export const updateUser = async (req, res) => {
     if (user) {
       const fullname = req.body.fullname
       const pin = req.body.pin
+      const image = req.body.image
+      console.log(image)
       user.fullname = fullname
       user.pin = pin
+      user.image = image
       await user.save()
       const token = jwt.sign(
         {
