@@ -10,7 +10,7 @@ const router = express.Router();
 
 
 export const signup = async (req, res) => {
-  const { fullname, email, mobile, password, pin } = req.body;
+  const { fullname, email, mobile, password, pin, image } = req.body;
   const candidate = await ThunderUser.findOne({ mobile });
   if (candidate) {
     return res.status(400).json({
@@ -24,6 +24,7 @@ export const signup = async (req, res) => {
     mobile: mobile,
     password: hashedPassword,
     pin: pin,
+    image: image
   });
   try {
     await reactuser.save();
