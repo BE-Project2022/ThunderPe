@@ -17,6 +17,7 @@ import jwtDecode from "jwt-decode";
 import { StackActions } from "@react-navigation/routers";
 import axios from "axios";
 import { dark, light } from "../controllers/Theme";
+
 import {
   CodeField,
   Cursor,
@@ -32,7 +33,8 @@ const Pin = ({ route, navigation }) => {
   let payer, payee, amount
   if (!navigation.canGoBack()) {
     user = jwtDecode(route.params.token)
-    const { email, mobile, name } = user
+    console.log(user)
+    const { email, mobile, name, image } = user
   }
   else {
     payer = route.params.from

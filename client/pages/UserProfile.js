@@ -12,11 +12,14 @@ import {
     Dimensions,
     TextInput,
     KeyboardAvoidingView,
-    Alert
+    Alert,
+    LogBox
 } from "react-native";
 import Pin from "../assets/images/pin.png";
 import Mobile from "../assets/images/mobile.png";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
+import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from "expo-linear-gradient";
 import User from "../assets/images/user.png";
 import Email from "../assets/images/email.png";
@@ -28,20 +31,33 @@ import QRCode from "react-native-qrcode-svg";
 import axios from "axios";
 import { storeData } from "../controllers/Data";
 import jwtDecode from "jwt-decode";
+import Camera from '../assets/images/camera.png'
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { storage } from "../controllers/Firebase";
 
 const window = Dimensions.get('window');
 let base64Logo = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAA..';
 const UserProfile = ({ route, navigation }) => {
+    LogBox.ignoreLogs([`Setting a timer for a long period`]);
     const user = route.params.currentUser
     const { name, email, mobile, pin } = user
     const oldName = name
     const oldPin = pin
-
+    let url = 'https://firebasestorage.googleapis.com/v0/b/thunderpe-33b6a.appspot.com/o/files%2Fuser.png?alt=media&token=007a7e33-42d9-4848-a9ff-665b6df3bd7b'
     const [fullname, setFullname] = useState(name);
     const [spin, changeSpin] = useState(false);
     const [LoginPin, setPin] = useState(pin);
+    const [image, setImage] = useState(user.image);
+    const [isOnState, setIsOnState] = useState(false);
+
+
+
+    const hideMenu = () => setIsOnState(false);
+
+    const showMenu = () => setIsOnState(true);
     var usersData = []
     useEffect(() => {
+
         axios
             .get("https://thunderpe.herokuapp.com/auth/getallusers")
             .then((res) => {
@@ -68,7 +84,81 @@ const UserProfile = ({ route, navigation }) => {
         // console.log(typeof (e))
     };
 
+    const takeImage = async () => {
+        (async () => {
+            if (Platform.OS !== 'web') {
+                const { status } = await ImagePicker.requestCameraPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry, Camera roll permissions are required to make this work!');
+                }
+            }
+        })
+        let pickerResult = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+        });
+        setImage(pickerResult.uri)
+    }
+
+
+    const chooseImg = async () => {
+        (async () => {
+            if (Platform.OS !== 'web') {
+                const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry, Camera roll permissions are required to make this work!');
+                }
+            }
+        })
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            aspect: [4, 3],
+            quality: 1,
+            allowsEditing: true,
+        });
+
+        console.log(result);
+
+        if (!result.cancelled) {
+            setImage(result.uri);
+        }
+    };
+
+    const uploadImage = async (file) => {
+        changeSpin(true)
+        if (image != undefined) {
+            const blob = await new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.onload = function () {
+                    resolve(xhr.response);
+                };
+                xhr.onerror = function () {
+                    reject(new TypeError("Network request failed"));
+                };
+                xhr.responseType = "blob";
+                xhr.open("GET", image, true);
+                xhr.send(null);
+            });
+
+            const fileRef = ref(storage, `files/${user.id}`);
+            console.log('Hi')
+
+            const result = await uploadBytes(fileRef, blob)
+            console.log('Hello')
+
+
+            // We're done with the blob, close and release it
+            blob.close();
+
+            await getDownloadURL(fileRef).then((res) => url = res);
+            console.log(url)
+        }
+        updateProfile()
+    }
+
     const updateProfile = async (e) => {
+        let changeURL = url
+        console.log(url)
         if (fullname === "" || pin === "") {
             alert("Please fill in all fields");
         }
@@ -85,14 +175,16 @@ const UserProfile = ({ route, navigation }) => {
                     {
                         text: 'Proceed',
                         onPress: () => {
-                            const updateUser = { email, fullname, pin: parseInt(LoginPin) }
-                            changeSpin(true)
+                            const updateUser = { email, fullname, pin: parseInt(LoginPin), image: url }
+                            console.log(updateUser)
+
                             axios
                                 .post('https://thunderpe.herokuapp.com/auth/updateUser', updateUser)
                                 .then((res) => {
                                     // console.log(res)
                                     storeData(res.data.token)
                                     changeSpin(false)
+                                    console.log(res.data)
                                     const decoded = jwtDecode(res.data.token);
                                     // console.log(decoded);
                                     navigation.dispatch(StackActions.popToTop());
@@ -104,7 +196,7 @@ const UserProfile = ({ route, navigation }) => {
             )
         }
         else {
-            const updateUser = { email, fullname, pin: parseInt(LoginPin) }
+            const updateUser = { email, fullname, pin: parseInt(LoginPin), image: url }
             changeSpin(true)
             axios
                 .post('https://thunderpe.herokuapp.com/auth/updateUser', updateUser)
@@ -148,8 +240,38 @@ const UserProfile = ({ route, navigation }) => {
                     </LinearGradient>
                     <View style={{ alignItems: 'center', marginTop: window.height / 45 }}>
                         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Hello {name}</Text>
-                        <Image source={User} style={{ width: 80, height: 80, marginTop: 20 }} />
-                        <Image />
+                        <Image source={image ? { uri: image } : { uri: url }} style={{ width: 100, height: 100, marginTop: 18, borderRadius: 50 }} />
+                        <Menu
+                            visible={isOnState}
+                            anchor={<TouchableOpacity
+                                onPress={showMenu}
+                                style={{ marginTop: -20 }}
+
+                            >
+                                <Image source={Camera} tintColor='white' style={{ backgroundColor: 'black', height: 30, width: 30 }} />
+                            </TouchableOpacity>}
+                            onRequestClose={hideMenu}
+                            style={{ marginLeft: '7.4%', marginTop: '6.2%' }}
+                        >
+                            <MenuItem
+                                onPress={() => {
+                                    hideMenu();
+                                    takeImage()
+                                }}
+                            >
+                                Open Camera
+                            </MenuItem>
+                            <MenuItem
+                                onPress={() => {
+                                    hideMenu();
+                                    chooseImg()
+                                }}
+                            >
+                                Upload from gallery
+                            </MenuItem>
+
+                        </Menu>
+
                     </View>
                 </View>
                 {spin ? (
@@ -206,7 +328,7 @@ const UserProfile = ({ route, navigation }) => {
                         <Image source={Pin} style={{ position: "absolute", top: 10 }} tintColor="#431652" />
                     </View>
                     <View>
-                        <TouchableOpacity style={styles.button} onPress={updateProfile} >
+                        <TouchableOpacity style={styles.button} onPress={uploadImage} >
                             <Text
                                 style={{
                                     textAlign: "center",
@@ -264,7 +386,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         width: window.width,
         overflow: 'hidden',
-        height: window.width / 2.1,
+        height: window.width / 1.8,
 
     },
     linearGradient: {

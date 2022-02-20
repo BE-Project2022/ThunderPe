@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   TextInput,
+  LogBox
 } from "react-native";
 import React, { useState } from "react";
 import Logo from "../assets/images/Logo_Yel.png";
@@ -19,7 +20,14 @@ import Spinner from "react-native-loading-spinner-overlay/lib";
 import Eye from "../assets/images/eye.png";
 import EyeSlash from "../assets/images/eye-slash.png";
 import Pin from "../assets/images/pin.png";
+import * as ImagePicker from 'expo-image-picker';
+import Camera from '../assets/images/camera.png'
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { storage } from "../controllers/Firebase";
+import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
+import { light } from "../controllers/Theme";
 const SignUp = ({ navigation }) => {
+  LogBox.ignoreLogs([`Setting a timer for a long period`]);
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
@@ -29,6 +37,13 @@ const SignUp = ({ navigation }) => {
   const [passwordVisible, showPassword] = useState(true);
   const [confirmPassVisible, confirmPassShow] = useState(true);
   const [pin, setPin] = useState("");
+  const [image, setImage] = useState(null);
+  const [isOnState, setIsOnState] = useState(false);
+  let url = 'https://firebasestorage.googleapis.com/v0/b/thunderpe-33b6a.appspot.com/o/files%2Fuser.png?alt=media&token=007a7e33-42d9-4848-a9ff-665b6df3bd7b'
+  let savingUser
+  const hideMenu = () => setIsOnState(false);
+
+  const showMenu = () => setIsOnState(true);
 
   var mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   var mobileFormat = /^\d{10}$/;
@@ -59,6 +74,94 @@ const SignUp = ({ navigation }) => {
     setPin(e);
   };
 
+  const takeImage = async () => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, Camera roll permissions are required to make this work!');
+        }
+      }
+    })
+    let pickerResult = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+    setImage(pickerResult.uri)
+  }
+
+
+  const chooseImg = async () => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, Camera roll permissions are required to make this work!');
+        }
+      }
+    })
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      aspect: [4, 3],
+      quality: 1,
+      allowsEditing: true,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
+  const uploadImage = async (user) => {
+    if (image != undefined) {
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function () {
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", image, true);
+        xhr.send(null);
+      });
+
+      const fileRef = ref(storage, `files/${user.user._id}`);
+      console.log('Hi')
+
+      const result = await uploadBytes(fileRef, blob)
+      console.log('Hello')
+
+
+      // We're done with the blob, close and release it
+      blob.close(); await getDownloadURL(fileRef).then((res) => url = res);
+      let temp = {
+        email: user.user.email,
+        fullname: user.user.fullname,
+        pin: user.user.pin,
+        image: url
+      }
+      console.log(temp)
+      console.log(user)
+      axios
+        .post('https://thunderpe.herokuapp.com/auth/updateUser', temp)
+        .then((res) => {
+          console.log(res.data)
+          changeSpin(false)
+          navigation.dispatch(StackActions.replace("Login"));
+        })
+        .catch((e) => console.log(e.response))
+      // changeSpin(false);
+      console.log(url)
+    }
+    // handleSignUp()
+  }
+
+
+
   const handleSignUp = async (e) => {
     if (
       fullname === "" ||
@@ -81,21 +184,27 @@ const SignUp = ({ navigation }) => {
       );
     else {
       let mobileno = parseInt(mobile);
-      let pin = parseInt(pin);
-
+      let pinNum = parseInt(pin);
+      // console.log(pinNum)
       const user = {
         fullname: fullname,
         email: email,
         password: password,
         mobile: mobileno,
-        pin: pin,
+        pin: pinNum,
+        image: url
       };
       changeSpin(true);
       axios
         .post("https://thunderpe.herokuapp.com/auth/signup", user)
         .then((res) => {
-          changeSpin(false);
-          navigation.dispatch(StackActions.replace("Login"));
+          savingUser = res.data
+          if (image != undefined) {
+            uploadImage(savingUser)
+          }
+          else {
+            navigation.dispatch(StackActions.replace("Login"));
+          }
         })
         .catch((err) => {
           alert(err.response.data.error);
@@ -112,7 +221,39 @@ const SignUp = ({ navigation }) => {
           <Text style={styles.title}>SIGN UP</Text>
         </View>
         <View style={styles.container}>
-          <Image source={Logo} style={styles.img} />
+          <View style={{ alignItems: 'center', marginTop: '10%', marginBottom: '8%' }}>
+            <Image source={image ? { uri: image } : { uri: url }} style={{ width: 100, height: 100, marginTop: 18, borderRadius: 50 }} />
+            <Menu
+              visible={isOnState}
+              anchor={<TouchableOpacity
+                onPress={showMenu}
+                style={{ marginTop: -10 }}
+
+              >
+                <Image source={Camera} tintColor='white' style={{ backgroundColor: 'black', height: 30, width: 30 }} />
+              </TouchableOpacity>}
+              onRequestClose={hideMenu}
+              style={{ marginLeft: '7.4%', marginTop: '6.2%' }}
+            >
+              <MenuItem
+                onPress={() => {
+                  hideMenu();
+                  takeImage()
+                }}
+              >
+                Open Camera
+              </MenuItem>
+              <MenuItem
+                onPress={() => {
+                  hideMenu();
+                  chooseImg()
+                }}
+              >
+                Upload from gallery
+              </MenuItem>
+
+            </Menu>
+          </View>
           {spin ? (
             <Spinner
               visible={spin}
@@ -144,6 +285,7 @@ const SignUp = ({ navigation }) => {
               placeholder="Mobile"
               keyboardType="numeric"
               onChangeText={changeMobile}
+              maxLength={10}
             />
             <Image source={Mobile} style={{ position: "absolute", top: 10 }} />
           </View>
@@ -245,7 +387,7 @@ const styles = StyleSheet.create({
     // height: '100%'
   },
   button: {
-    backgroundColor: "#ffc100",
+    backgroundColor: light.primary,
     marginTop: 10,
     height: 45,
     borderRadius: 25,
@@ -269,7 +411,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   header: {
-    backgroundColor: "#ffc100",
+    backgroundColor: light.primary,
     height: 49,
   },
   input: {

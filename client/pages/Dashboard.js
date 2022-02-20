@@ -24,14 +24,18 @@ import Next from "../assets/images/next.png";
 import { dark, light } from "../controllers/Theme";
 import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
 import QR from "../assets/images/qr.png";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Dashboard = ({ route, navigation }) => {
+  let url = 'https://firebasestorage.googleapis.com/v0/b/thunderpe-33b6a.appspot.com/o/files%2Fuser.png?alt=media&token=007a7e33-42d9-4848-a9ff-665b6df3bd7b'
+
   const [screenCover, setScreenCover] = useState("70%");
   const [expanded, setExpanded] = useState(false);
   const [userData, setData] = useState([]);
   const [isOnState, setIsOnState] = useState(false);
 
   const user = route.params.user; //token
+  console.log(user)
   const mode = useColorScheme();
   // console.log(route.params.user)
   const [fadeAnim, setFadeAnim] = useState(new Animated.Value(0))
@@ -92,7 +96,10 @@ const Dashboard = ({ route, navigation }) => {
         <View key={i}>
           <TouchableOpacity onPress={(res) => payUser(temp)}>
             <View style={{ marginTop: 14, marginLeft: 20 }}>
-              <Image source={User} style={{ height: 55, width: 55 }} />
+              <Image
+                source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }}
+                style={{ height: 55, width: 55, borderRadius: 60 }}
+              />
               <Text style={{ marginLeft: 4 }}>{u[0]}</Text>
             </View>
           </TouchableOpacity>
@@ -110,7 +117,7 @@ const Dashboard = ({ route, navigation }) => {
         <View key={i}>
           <TouchableOpacity onPress={(res) => payUser(temp)}>
             <View style={{ marginTop: 14, marginLeft: 20 }}>
-              <Image source={User} style={{ height: 55, width: 55 }} />
+              <Image source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }} style={{ height: 55, width: 55, borderRadius: 60 }} />
               <Text style={{ marginLeft: 10 }}>{u[0]}</Text>
             </View>
           </TouchableOpacity>
@@ -124,12 +131,12 @@ const Dashboard = ({ route, navigation }) => {
     for (i = 0; i < 9; i++) {
       const temp = i;
       const u = route.params.users[i].fullname.split(" ");
-
+      console.log()
       userData.push(
         <View key={i}>
           <TouchableOpacity key={temp} onPress={(res) => payUser(temp)}>
             <View style={{ marginTop: 14, marginLeft: 20 }}>
-              <Image source={User} style={{ height: 55, width: 55 }} />
+              <Image source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }} style={{ height: 55, width: 55, borderRadius: 60 }} />
               <Text style={{ marginLeft: 10 }}>{u[0]}</Text>
             </View>
           </TouchableOpacity>
@@ -185,8 +192,8 @@ const Dashboard = ({ route, navigation }) => {
             anchor={
               <TouchableOpacity onPress={showMenu}>
                 <Image
-                  source={User}
-                  style={{ marginRight: "4%", height: 35, width: 35 }}
+                  source={{ uri: user.image }}
+                  style={{ marginRight: "4%", height: 35, width: 35, borderRadius: 50 }}
                 />
               </TouchableOpacity>
             }
@@ -206,11 +213,13 @@ const Dashboard = ({ route, navigation }) => {
             <MenuItem
               onPress={async () => {
                 try {
+
                   await AsyncStorage.removeItem("@storage_Key");
+                  navigation.dispatch(StackActions.replace("Login"));
                 } catch (error) {
                   console.log("error", error);
                 }
-                navigation.dispatch(StackActions.replace("Login"));
+
               }}
             >
               LogOut
