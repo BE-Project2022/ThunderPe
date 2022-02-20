@@ -27,7 +27,10 @@ export const signup = async (req, res) => {
   });
   try {
     await reactuser.save();
-    res.status(201).json({ reactuser });
+    const user = await ThunderUser.findOne({
+      email: email,
+    });
+    res.status(201).json({ user });
   } catch (err) {
     res.status(500).json(err);
   }
