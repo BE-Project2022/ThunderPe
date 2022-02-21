@@ -151,7 +151,7 @@ const UserProfile = ({ route, navigation }) => {
             blob.close();
 
             await getDownloadURL(fileRef).then((res) => url = res);
-            console.log(url)
+            // console.log(url)
         }
         updateProfile()
     }
@@ -184,7 +184,7 @@ const UserProfile = ({ route, navigation }) => {
                                     // console.log(res)
                                     storeData(res.data.token)
                                     changeSpin(false)
-                                    console.log(res.data)
+                                    // console.log(res.data)
                                     const decoded = jwtDecode(res.data.token);
                                     // console.log(decoded);
                                     navigation.dispatch(StackActions.replace('Dashboard', { user: route.params.currentUser, users: route.params.users }));
@@ -206,7 +206,7 @@ const UserProfile = ({ route, navigation }) => {
                     changeSpin(false)
                     const decoded = jwtDecode(res.data.token);
                     // console.log(decoded);
-                    navigation.dispatch(StackActions.replace('Dashboard', { user: route.params.currentUser, users: route.params.users }));
+                    navigation.dispatch(StackActions.popToTop());
 
                 })
                 .catch((e) => console.log(e))

@@ -33,7 +33,7 @@ const Pin = ({ route, navigation }) => {
   let payer, payee, amount
   if (!navigation.canGoBack()) {
     user = jwtDecode(route.params.token)
-    console.log(user)
+    // console.log(user)
     const { email, mobile, name, image } = user
   }
   else {
