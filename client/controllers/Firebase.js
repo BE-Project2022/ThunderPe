@@ -2,19 +2,17 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBuwyJ33nGzcepfQ7AC9H8reN35hJW4kac",
+  apiKey: process.env.API_KEY,
 
-    authDomain: "thunderpe-33b6a.firebaseapp.com",
+  authDomain: process.env.AUTH_DOMAIN,
 
-    projectId: "thunderpe-33b6a",
+  projectId: process.env.PROJECT_ID,
 
-    storageBucket: "thunderpe-33b6a.appspot.com",
+  storageBucket: process.env.STORAGE_BUCKET,
 
-    messagingSenderId: "248332353592",
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
 
-    appId: "1:248332353592:web:fd726b086becd113f8e6cd"
-
-
+  appId: process.env.APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
