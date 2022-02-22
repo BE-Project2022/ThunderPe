@@ -175,6 +175,7 @@ export const updateUser = async (req, res) => {
           id: user._id,
           pin: pin,
           name: fullname,
+          image: image
         },
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
