@@ -196,7 +196,8 @@ const UserProfile = ({ route, navigation }) => {
             )
         }
         else {
-            const updateUser = { email, fullname, pin: parseInt(LoginPin), image }
+            const updateUser = { email, fullname, pin: parseInt(LoginPin), image: url }
+            console.log('UDPDATED: ', updateUser)
             changeSpin(true)
             axios
                 .post('https://thunderpe.herokuapp.com/auth/updateUser', updateUser)
@@ -205,8 +206,8 @@ const UserProfile = ({ route, navigation }) => {
                     storeData(res.data.token);
                     changeSpin(false)
                     const decoded = jwtDecode(res.data.token);
-                    // console.log(decoded);
-                    navigation.dispatch(StackActions.popToTop());
+                    console.log(decoded);
+                    navigation.dispatch(StackActions.replace('Dashboard', { user: decoded, users: route.params.users }));
 
                 })
                 .catch((e) => console.log(e))

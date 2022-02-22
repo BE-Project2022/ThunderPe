@@ -18,8 +18,10 @@ import * as Speech from "expo-speech";
 const EnterAmount = ({ route, navigation }) => {
   // console.log(route.params.user)
   const payingTo = route.params.user;
+  let url = 'https://firebasestorage.googleapis.com/v0/b/thunderpe-33b6a.appspot.com/o/files%2Fuser.png?alt=media&token=007a7e33-42d9-4848-a9ff-665b6df3bd7b'
   // console.log(payingTo)
   const payer = route.params.currentUser;
+  console.log(payingTo)
   const [showSheet, setShowSheet] = useState(false);
   const [amount, setAmount] = useState(0);
   const [exitApp, setExitApp] = useState(0);
@@ -70,11 +72,12 @@ const EnterAmount = ({ route, navigation }) => {
       <View style={styles.header}></View>
       <View style={{ alignItems: "center" }}>
         <Image source={Logo} style={styles.img} />
-        <Image source={User} style={styles.userImg} />
+        <Image source={payingTo.image ? { uri: payingTo.image } : { uri: url }} style={styles.userImg} />
         <Text
           style={{
-            fontSize: 18,
+            fontSize: 22,
             fontWeight: "bold",
+            marginTop: 10
           }}
         >
           Paying {payingTo.name}
@@ -200,9 +203,10 @@ const styles = StyleSheet.create({
     marginTop: -80,
   },
   userImg: {
-    width: 100,
-    height: 100,
+    width: 150,
+    height: 150,
     alignSelf: "center",
-    marginTop: "-12%",
+    marginTop: "-14%",
+    borderRadius: 110
   },
 });

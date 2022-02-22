@@ -35,7 +35,7 @@ const Dashboard = ({ route, navigation }) => {
   const [isOnState, setIsOnState] = useState(false);
 
   const user = route.params.user; //token
-  console.log(user)
+  // console.log(user)
   const mode = useColorScheme();
   // console.log(route.params.user)
   const [fadeAnim, setFadeAnim] = useState(new Animated.Value(0))
@@ -43,6 +43,7 @@ const Dashboard = ({ route, navigation }) => {
   const changeCover = (e) => {
     setScreenCover(e.value);
   };
+  // console.log(route.params.users)
   // console.log(useIsFocused())
   // var userData = [];
   useFocusEffect(
@@ -70,6 +71,7 @@ const Dashboard = ({ route, navigation }) => {
   const showMenu = () => setIsOnState(true);
 
   const payUser = (e) => {
+    // console.log(route.params.users[e])
     route.params.users[e] = {
       ...route.params.users[e],
       phoneNumbers: [{ number: route.params.users[e].mobile }],
@@ -79,6 +81,7 @@ const Dashboard = ({ route, navigation }) => {
     navigation.navigate("EnterAmount", {
       user: route.params.users[e],
       currentUser: route.params.user,
+      users: route.params.users
     });
     setFadeAnim(new Animated.Value(0))
   };
@@ -90,58 +93,77 @@ const Dashboard = ({ route, navigation }) => {
     userData.splice(0, userData.length);
     // console.log(userData.length)
     for (let i = 0; i < route.params.users.length; i++) {
-      const u = route.params.users[i].fullname.split(" ");
-      const temp = i;
-      userData.push(
-        <View key={i}>
-          <TouchableOpacity onPress={(res) => payUser(temp)}>
-            <View style={{ marginTop: 14, marginLeft: 20 }}>
-              <Image
-                source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }}
-                style={{ height: 55, width: 55, borderRadius: 60 }}
-              />
-              <Text style={{ marginLeft: 4 }}>{u[0]}</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      );
+      if (user.id !== route.params.users[i]._id) {
+
+        const u = route.params.users[i].fullname.split(" ");
+        const temp = i;
+        userData.push(
+          <View key={i}>
+            <TouchableOpacity onPress={(res) => payUser(temp)}>
+              <View style={{ marginTop: 14, marginLeft: 20 }}>
+                <Image
+                  source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }}
+                  style={{ height: 55, width: 55, borderRadius: 60 }}
+                />
+                <Text style={{ marginLeft: 4 }}>{u[0]}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        );
+      }
+      else {
+        route.params.users.splice(i, 1)
+      }
     }
   };
   // console.log("HERE: \n", route.params.users)
   const setLessUsers = () => {
     userData.splice(0, userData.length);
     for (let i = 0; i < route.params.users.length; i++) {
-      const u = route.params.users[i].fullname.split(" ");
-      const temp = i;
-      userData.push(
-        <View key={i}>
-          <TouchableOpacity onPress={(res) => payUser(temp)}>
-            <View style={{ marginTop: 14, marginLeft: 20 }}>
-              <Image source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }} style={{ height: 55, width: 55, borderRadius: 60 }} />
-              <Text style={{ marginLeft: 10 }}>{u[0]}</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      );
+      if (user.id !== route.params.users[i]._id) {
+
+        const u = route.params.users[i].fullname.split(" ");
+        const temp = i;
+        userData.push(
+          <View key={i}>
+            <TouchableOpacity onPress={(res) => payUser(temp)}>
+              <View style={{ marginTop: 14, marginLeft: 20 }}>
+                <Image source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }} style={{ height: 55, width: 55, borderRadius: 60 }} />
+                <Text style={{ marginLeft: 10 }}>{u[0]}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        );
+      }
+      else {
+        route.params.users.splice(i, 1)
+      }
     }
   };
   const setMoreUsers = () => {
     let i = 0;
     userData.splice(0, userData.length);
     for (i = 0; i < 9; i++) {
-      const temp = i;
-      const u = route.params.users[i].fullname.split(" ");
-      console.log()
-      userData.push(
-        <View key={i}>
-          <TouchableOpacity key={temp} onPress={(res) => payUser(temp)}>
-            <View style={{ marginTop: 14, marginLeft: 20 }}>
-              <Image source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }} style={{ height: 55, width: 55, borderRadius: 60 }} />
-              <Text style={{ marginLeft: 10 }}>{u[0]}</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      );
+      if (user.id != route.params.users[i]._id) {
+
+        // console.log(route.params.users[i])
+        const temp = i;
+        const u = route.params.users[i].fullname.split(" ");
+        console.log()
+        userData.push(
+          <View key={i}>
+            <TouchableOpacity key={temp} onPress={(res) => payUser(temp)}>
+              <View style={{ marginTop: 14, marginLeft: 20 }}>
+                <Image source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }} style={{ height: 55, width: 55, borderRadius: 60 }} />
+                <Text style={{ marginLeft: 10 }}>{u[0]}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        );
+      }
+      else {
+        route.params.users.splice(i, 1)
+      }
     }
     userData.push(
       <View
@@ -205,6 +227,7 @@ const Dashboard = ({ route, navigation }) => {
                 hideMenu();
                 navigation.navigate("UserProfile", {
                   currentUser: route.params.user,
+                  users: route.params.users
                 });
               }}
             >
