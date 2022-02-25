@@ -16,6 +16,7 @@ import Spinner from "react-native-loading-spinner-overlay/lib";
 import Dialpad from '../assets/images/dialpad.png'
 import axios from "axios";
 import { light } from "../controllers/Theme";
+let url = 'https://firebasestorage.googleapis.com/v0/b/thunderpe-33b6a.appspot.com/o/files%2Fuser.png?alt=media&token=007a7e33-42d9-4848-a9ff-665b6df3bd7b'
 
 const userContacts = ({ route, navigation }) => {
   const [userContact, setContact] = useState([]);
@@ -46,12 +47,13 @@ const userContacts = ({ route, navigation }) => {
                 item.number = (item.number.replace(/-/g, ""))
                 item.number = (item.number.replace("+91", ""))
                 item.number = parseInt(item.number)
+                item.image = url
               })
             }
             return !!user.phoneNumbers;
           });
           setContact(memory);
-          setMemoryContact(memory);
+          setMemoryContact(contact);
           changeSpin(false)
         }
       }
