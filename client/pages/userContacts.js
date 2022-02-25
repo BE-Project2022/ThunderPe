@@ -53,7 +53,7 @@ const userContacts = ({ route, navigation }) => {
             return !!user.phoneNumbers;
           });
           setContact(memory);
-          setMemoryContact(contact);
+          setMemoryContact(memory);
           changeSpin(false)
         }
       }
@@ -88,7 +88,7 @@ const userContacts = ({ route, navigation }) => {
       let searchTermLowerCase = value.toLowerCase();
       return contactLowerCase.indexOf(searchTermLowerCase) > -1;
     });
-    setMemoryContact(filteredContacts);
+    setContact(filteredContacts);
     // setNotOnThunder(filteredContacts)
   };
 
