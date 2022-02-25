@@ -47,7 +47,6 @@ const userContacts = ({ route, navigation }) => {
                 item.number = (item.number.replace(/-/g, ""))
                 item.number = (item.number.replace("+91", ""))
                 item.number = parseInt(item.number)
-                item.image = url
               })
             }
             return !!user.phoneNumbers;
@@ -65,11 +64,13 @@ const userContacts = ({ route, navigation }) => {
     <View key={item.id} style={styles.container}>
       <TouchableOpacity
         style={{ marginLeft: 12 }}
-        onPress={() =>
+        onPress={() => {
+          // console.log(item)
           navigation.navigate("EnterAmount", {
             user: item,
             currentUser: curretUser,
           })
+        }
         }
       >
         <Text style={{ fontSize: 16 }}>{item.name}</Text>

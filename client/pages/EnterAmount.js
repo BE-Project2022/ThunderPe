@@ -7,6 +7,7 @@ import {
   TextInput,
   ToastAndroid,
   BackHandler,
+  LogBox
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Back from "../assets/images/back.png";
@@ -17,11 +18,12 @@ import { light, dark } from "../controllers/Theme";
 import * as Speech from "expo-speech";
 const EnterAmount = ({ route, navigation }) => {
   // console.log(route.params.user)
+  LogBox.ignoreLogs(['Warning: ...']);
   const payingTo = route.params.user;
   let url = 'https://firebasestorage.googleapis.com/v0/b/thunderpe-33b6a.appspot.com/o/files%2Fuser.png?alt=media&token=007a7e33-42d9-4848-a9ff-665b6df3bd7b'
   // console.log(payingTo)
   const payer = route.params.currentUser;
-  console.log(payingTo)
+  // console.log(payingTo)
   const [showSheet, setShowSheet] = useState(false);
   const [amount, setAmount] = useState(0);
   const [exitApp, setExitApp] = useState(0);
@@ -72,7 +74,7 @@ const EnterAmount = ({ route, navigation }) => {
       <View style={styles.header}></View>
       <View style={{ alignItems: "center" }}>
         <Image source={Logo} style={styles.img} />
-        <Image source={payingTo.image ? { uri: payingTo.image } : { uri: url }} style={styles.userImg} />
+        <Image source={payingTo.image ? { uri: payingTo.image.uri ? payingTo.image.uri : payingTo.image } : { uri: url }} style={styles.userImg} />
         <Text
           style={{
             fontSize: 22,

@@ -24,8 +24,7 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
-
-import QRCode from 'react-native-qrcode-svg'
+import Spinner from "react-native-loading-spinner-overlay";
 const CELL_COUNT = 4;
 const Pin = ({ route, navigation }) => {
   const [pin, setPin] = useState();
@@ -34,7 +33,7 @@ const Pin = ({ route, navigation }) => {
   if (!navigation.canGoBack()) {
     user = jwtDecode(route.params.token)
     // console.log(user)
-    const { email, mobile, name, image } = user
+    const { id, email, mobile, name, image } = user
   }
   else {
     payer = route.params.from
@@ -73,9 +72,14 @@ const Pin = ({ route, navigation }) => {
     axios
       .get("https://thunderpe.herokuapp.com/auth/getallusers")
       .then((res) => {
+        // console.log(user.id)
         res.data.forEach(item => {
+          // console.log(user.id !== item._id)
           // console.log(item.fullname)
-          usersData.push(item)
+          if (user.id !== item._id) {
+            usersData.push(item)
+            // console.log(item)
+          }
           // console.log(text)
         })
       })
@@ -92,8 +96,15 @@ const Pin = ({ route, navigation }) => {
     });
     if (biometricAuth.success) {
       // console.log(usersData.length)
-      if (!navigation.canGoBack())
-        navigation.dispatch(StackActions.replace("Dashboard", { user: user, users: usersData }));
+
+      if (!navigation.canGoBack()) {
+        changeSpin(true)
+        setTimeout(() => {
+          changeSpin(false)
+          navigation.dispatch(StackActions.replace("Dashboard", { user: user, users: usersData }));
+        }, 3000);
+
+      }
       else
         navigation.dispatch(StackActions.replace("Payment", { user: payer, payee, amount, users: usersData }));
     }
@@ -116,45 +127,52 @@ const Pin = ({ route, navigation }) => {
   };
   let base64Logo = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAA..';
   return (
-    <KeyboardAvoidingView behavior="position" style={{ flexGrow: 1, height: '100%', backgroundColor: mode === 'dark' ? dark.background : '#fff' }}>
-      <View style={mode == "dark" ? { backgroundColor: dark.background } : { backgroundColor: "#fff", height: '100%' }}>
-        <View style={mode === 'dark' ? styles.darkHeader : styles.header}>
-          {!navigation.canGoBack() && <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>ENTER PIN</Text>}
-        </View>
-        <Image source={Logo} style={styles.img} />
-        <Text style={mode === 'dark' ? { textAlign: "center", fontSize: 24, fontWeight: "bold", color: 'black', marginTop: '20%' } : { textAlign: "center", fontSize: 24, fontWeight: "bold", marginTop: '20%' }}>
-          ENTER PIN
-        </Text>
-        <View style={{ width: '80%', alignSelf: 'center' }}>
-          <CodeField
-            ref={ref}
-            value={value}
-            onChangeText={changeValue}
-            cellCount={CELL_COUNT}
-            rootStyle={styles.codeFieldRoot}
-            keyboardType="number-pad"
-            textContentType="oneTimeCode"
-            renderCell={({ index, symbol, isFocused }) => (
-              <Text
-                key={index}
-                style={[styles.cell, isFocused && styles.focusCell]}
-                onLayout={getCellOnLayoutHandler(index)}
-              >
-                {symbol ? '*' : null || (isFocused ? <Cursor /> : null)}
-              </Text>
-            )}
+    <View style={mode == "dark" ? { backgroundColor: dark.background } : { backgroundColor: "#fff", height: '100%' }}>
+      <View style={mode === 'dark' ? styles.darkHeader : styles.header}>
+        {!navigation.canGoBack() && <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>ENTER PIN</Text>}
+      </View>
+      <Image source={Logo} style={styles.img} />
+      <Text style={mode === 'dark' ? { textAlign: "center", fontSize: 24, fontWeight: "bold", color: 'black', marginTop: '20%' } : { textAlign: "center", fontSize: 24, fontWeight: "bold", marginTop: '20%' }}>
+        ENTER PIN
+      </Text>
+      {spin ? (
+        <Spinner
+          visible={spin}
+          textContent={"Logging In..."}
+          textStyle={styles.spinnerTextStyle}
+          color="#323133"
+          overlayColor="rgba(255,255,255,0.8)"
+        />
+      ) : null}
+      <View style={{ width: '80%', alignSelf: 'center' }}>
+        <CodeField
+          ref={ref}
+          value={value}
+          onChangeText={changeValue}
+          cellCount={CELL_COUNT}
+          rootStyle={styles.codeFieldRoot}
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          renderCell={({ index, symbol, isFocused }) => (
+            <Text
+              key={index}
+              style={[styles.cell, isFocused && styles.focusCell]}
+              onLayout={getCellOnLayoutHandler(index)}
+            >
+              {symbol ? '*' : null || (isFocused ? <Cursor /> : null)}
+            </Text>
+          )}
 
-          />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={checkPin}
-          >
-            <Text style={{ textAlign: 'center', color: 'white', fontSize: 18 }}>Next</Text>
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={checkPin}
+        >
+          <Text style={{ textAlign: 'center', color: 'white', fontSize: 18 }}>Next</Text>
 
-          </TouchableOpacity>
-        </View>
-      </View >
-    </KeyboardAvoidingView >
+        </TouchableOpacity>
+      </View>
+    </View >
   );
 };
 

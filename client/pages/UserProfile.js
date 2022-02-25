@@ -39,6 +39,7 @@ const window = Dimensions.get('window');
 let base64Logo = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAA..';
 const UserProfile = ({ route, navigation }) => {
     LogBox.ignoreLogs([`Setting a timer for a long period`]);
+    LogBox.ignoreLogs(['Warning: ...']);
     const user = route.params.currentUser
     const { name, email, mobile, pin } = user
     const oldName = name
@@ -244,12 +245,12 @@ const UserProfile = ({ route, navigation }) => {
                         <Image source={image ? { uri: image } : { uri: url }} style={{ width: 120, height: 120, marginTop: 10, borderRadius: 60 }} />
                         <Menu
                             visible={isOnState}
-                            anchor={<TouchableOpacity
-                                onPress={showMenu}
-                                style={{ marginTop: -20 }}
-
-                            >
-                                <Image source={Camera} tintColor='white' style={{ backgroundColor: 'black', height: 30, width: 30 }} />
+                            anchor={<TouchableOpacity onPress={showMenu}>
+                                <Image
+                                    source={Camera}
+                                    style={{ height: 30, width: 30, backgroundColor: 'black' }}
+                                    tintColor='white'
+                                />
                             </TouchableOpacity>}
                             onRequestClose={hideMenu}
                             style={{ marginLeft: '7.4%', marginTop: '6.2%' }}
@@ -286,7 +287,7 @@ const UserProfile = ({ route, navigation }) => {
                 ) : null}
                 <View style={{ alignItems: 'center', marginTop: 10 }}>
                     <QRCode
-                        value={`${email},${mobile},${name}`}
+                        value={`${email},${mobile},${name},${image}`}
                         logo={{ uri: base64Logo }}
                         logoBackgroundColor='transparent'
                     />

@@ -10,6 +10,8 @@ import {
   useColorScheme,
   FlatList,
   Animated,
+  Dimensions,
+  LogBox
 } from "react-native";
 import { StackActions } from "@react-navigation/routers";
 import { useFocusEffect, useIsFocused } from '@react-navigation/native'
@@ -25,10 +27,10 @@ import { dark, light } from "../controllers/Theme";
 import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
 import QR from "../assets/images/qr.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+const window = Dimensions.get('window');
 const Dashboard = ({ route, navigation }) => {
   let url = 'https://firebasestorage.googleapis.com/v0/b/thunderpe-33b6a.appspot.com/o/files%2Fuser.png?alt=media&token=007a7e33-42d9-4848-a9ff-665b6df3bd7b'
-
+  LogBox.ignoreLogs(['Warning: ...']);
   const [screenCover, setScreenCover] = useState("70%");
   const [expanded, setExpanded] = useState(false);
   const [userData, setData] = useState([]);
@@ -93,77 +95,65 @@ const Dashboard = ({ route, navigation }) => {
     userData.splice(0, userData.length);
     // console.log(userData.length)
     for (let i = 0; i < route.params.users.length; i++) {
-      if (user.id !== route.params.users[i]._id) {
 
-        const u = route.params.users[i].fullname.split(" ");
-        const temp = i;
-        userData.push(
-          <View key={i}>
-            <TouchableOpacity onPress={(res) => payUser(temp)}>
-              <View style={{ marginTop: 14, marginLeft: 20 }}>
-                <Image
-                  source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }}
-                  style={{ height: 55, width: 55, borderRadius: 60 }}
-                />
-                <Text style={{ marginLeft: 4 }}>{u[0]}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        );
-      }
-      else {
-        route.params.users.splice(i, 1)
-      }
+      const u = route.params.users[i].fullname.split(" ");
+      const temp = i;
+      userData.push(
+        <View key={i}>
+          <TouchableOpacity onPress={(res) => payUser(temp)}>
+            <View style={{ marginTop: 14, marginLeft: 20 }}>
+              <Image
+                source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }}
+                style={{ height: 55, width: 55, borderRadius: 60 }}
+              />
+              <Text style={{ marginLeft: 4 }}>{u[0]}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      );
+
     }
   };
   // console.log("HERE: \n", route.params.users)
   const setLessUsers = () => {
     userData.splice(0, userData.length);
     for (let i = 0; i < route.params.users.length; i++) {
-      if (user.id !== route.params.users[i]._id) {
 
-        const u = route.params.users[i].fullname.split(" ");
-        const temp = i;
-        userData.push(
-          <View key={i}>
-            <TouchableOpacity onPress={(res) => payUser(temp)}>
-              <View style={{ marginTop: 14, marginLeft: 20 }}>
-                <Image source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }} style={{ height: 55, width: 55, borderRadius: 60 }} />
-                <Text style={{ marginLeft: 10 }}>{u[0]}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        );
-      }
-      else {
-        route.params.users.splice(i, 1)
-      }
+      const u = route.params.users[i].fullname.split(" ");
+      const temp = i;
+      userData.push(
+        <View key={i}>
+          <TouchableOpacity onPress={(res) => payUser(temp)}>
+            <View style={{ marginTop: 14, marginLeft: 20 }}>
+              <Image source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }} style={{ height: 55, width: 55, borderRadius: 60 }} />
+              <Text style={{ marginLeft: 10 }}>{u[0]}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      );
+
     }
   };
   const setMoreUsers = () => {
     let i = 0;
     userData.splice(0, userData.length);
     for (i = 0; i < 9; i++) {
-      if (user.id != route.params.users[i]._id) {
 
-        // console.log(route.params.users[i])
-        const temp = i;
-        const u = route.params.users[i].fullname.split(" ");
-        console.log()
-        userData.push(
-          <View key={i}>
-            <TouchableOpacity key={temp} onPress={(res) => payUser(temp)}>
-              <View style={{ marginTop: 14, marginLeft: 20 }}>
-                <Image source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }} style={{ height: 55, width: 55, borderRadius: 60 }} />
-                <Text style={{ marginLeft: 10 }}>{u[0]}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        );
-      }
-      else {
-        route.params.users.splice(i, 1)
-      }
+      // console.log(route.params.users[i])
+      const temp = i;
+      const u = route.params.users[i].fullname.split(" ");
+      console.log()
+      userData.push(
+        <View key={i}>
+          <TouchableOpacity key={temp} onPress={(res) => payUser(temp)}>
+            <View style={{ marginTop: 14, marginLeft: 20 }}>
+              <Image source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }} style={{ height: 55, width: 55, borderRadius: 60 }} />
+              <Text style={{ marginLeft: 10 }}>{u[0]}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      );
+
     }
     userData.push(
       <View
@@ -202,7 +192,7 @@ const Dashboard = ({ route, navigation }) => {
                 currentUser: route.params.user,
               })
             }
-            style={{ left: -30 }}
+            style={{ left: '-50%' }}
           >
             <Image source={QR} style={{ width: 40, height: 40 }} />
           </TouchableOpacity>
@@ -249,12 +239,11 @@ const Dashboard = ({ route, navigation }) => {
             </MenuItem>
           </Menu>
         </View>
-        <View>
+        <View style={styles.background}>
           <LinearGradient
             colors={[light.primary, light.secondary]}
             style={styles.gradient}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 0.8, y: 0.5 }}
+            locations={[0.1, 0.24]}
           >
             <View>
               <Text style={screenCover != "70%" ? styles.normal : styles.text}>
@@ -273,7 +262,7 @@ const Dashboard = ({ route, navigation }) => {
               <Text
                 style={
                   screenCover === "70%"
-                    ? { left: 70, fontSize: 28, top: 4, fontWeight: "bold" }
+                    ? { top: 5, alignSelf: "center", fontWeight: 'bold', fontSize: 28, right: -14 }
                     : null
                 }
               >
@@ -441,11 +430,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  background: { // this shape is a circle 
+    alignSelf: 'center',
+    width: window.width,
+    overflow: 'hidden',
+    height: window.height / 1.4
+
+  },
   gradient: {
-    padding: 15,
-    width: "100%",
-    alignItems: "center",
-    height: 227,
+    width: window.width * 2,
+    height: window.width * 2,
+    marginLeft: -(window.width / 2),
   },
   text: {
     fontSize: 22,
@@ -462,7 +457,8 @@ const styles = StyleSheet.create({
   normal: {
     height: 550,
     fontSize: 22,
-    left: -75,
+    left: 210,
+    top: 10,
     fontWeight: "bold",
   },
   reduced: {
@@ -482,7 +478,7 @@ const styles = StyleSheet.create({
   },
   paymentButton: {
     backgroundColor: light.primary,
-    marginTop: "120%",
+    marginTop: "27%",
     height: 45,
     borderRadius: 25,
     marginBottom: 10,

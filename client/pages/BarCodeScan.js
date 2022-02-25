@@ -7,7 +7,7 @@ export default function BarCodeScan({ route, navigation }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const currentUser = route.params.currentUser
-    console.log(currentUser)
+    // console.log(currentUser)
     useEffect(() => {
         (async () => {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -25,7 +25,8 @@ export default function BarCodeScan({ route, navigation }) {
                 {
                     "number": userData[1]
                 }
-            ]
+            ],
+            "image": userData[3]
         }
         navigation.dispatch(StackActions.replace('EnterAmount', { user, currentUser }))
         setScanned(false)
