@@ -28,23 +28,22 @@ import Spinner from "react-native-loading-spinner-overlay";
 const CELL_COUNT = 4;
 const Pin = ({ route, navigation }) => {
   const [pin, setPin] = useState();
-  let user
-  let payer, payee, amount
+  let user;
+  let payer, payee, amount;
   if (!navigation.canGoBack()) {
-    user = jwtDecode(route.params.token)
+    user = jwtDecode(route.params.token);
     // console.log(user)
-    const { id, email, mobile, name, image } = user
-  }
-  else {
-    payer = route.params.from
-    payee = route.params.to
-    amount = route.params.amount
+    const { id, email, mobile, name, image } = user;
+  } else {
+    payer = route.params.from;
+    payee = route.params.to;
+    amount = route.params.amount;
   }
   // console.log(email)
-  var usersData = []
-  const mode = useColorScheme()
+  var usersData = [];
+  const mode = useColorScheme();
   const [value, setValue] = useState("");
-  const [spin, changeSpin] = useState(false)
+  const [spin, changeSpin] = useState(false);
   // console.log(route.params)
   // const payee = route.params.to
   // if (payee) {
@@ -100,10 +99,12 @@ const Pin = ({ route, navigation }) => {
       // console.log(usersData.length)
 
       if (!navigation.canGoBack()) {
-        changeSpin(true)
+        changeSpin(true);
         setTimeout(() => {
-          changeSpin(false)
-          navigation.dispatch(StackActions.replace("Dashboard", { user: user, users: usersData }));
+          changeSpin(false);
+          navigation.dispatch(
+            StackActions.replace("Dashboard", { user: user, users: usersData })
+          );
         }, 3000);
 
       }
@@ -118,8 +119,7 @@ const Pin = ({ route, navigation }) => {
       else {
         alert("Please Enter valid Pin");
       }
-    }
-    else {
+    } else {
       if (parseInt(value) === payer.pin) handleBiometricAuth();
       else if (pin === "") alert("Please Enter Pin");
       else {
@@ -127,14 +127,41 @@ const Pin = ({ route, navigation }) => {
       }
     }
   };
-  let base64Logo = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAA..';
+  let base64Logo = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAA..";
   return (
-    <View style={mode == "dark" ? { backgroundColor: dark.background } : { backgroundColor: "#fff", height: '100%' }}>
-      <View style={mode === 'dark' ? styles.darkHeader : styles.header}>
-        {!navigation.canGoBack() && <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>ENTER PIN</Text>}
+    <View
+      style={
+        mode == "dark"
+          ? { backgroundColor: dark.background }
+          : { backgroundColor: "#fff", height: "100%" }
+      }
+    >
+      <View style={mode === "dark" ? styles.darkHeader : styles.header}>
+        {!navigation.canGoBack() && (
+          <Text style={mode === "dark" ? styles.darkTitle : styles.title}>
+            ENTER PIN
+          </Text>
+        )}
       </View>
       <Image source={Logo} style={styles.img} />
-      <Text style={mode === 'dark' ? { textAlign: "center", fontSize: 24, fontWeight: "bold", color: 'black', marginTop: '20%' } : { textAlign: "center", fontSize: 24, fontWeight: "bold", marginTop: '20%' }}>
+      <Text
+        style={
+          mode === "dark"
+            ? {
+              textAlign: "center",
+              fontSize: 24,
+              fontWeight: "bold",
+              color: "black",
+              marginTop: "20%",
+            }
+            : {
+              textAlign: "center",
+              fontSize: 24,
+              fontWeight: "bold",
+              marginTop: "20%",
+            }
+        }
+      >
         ENTER PIN
       </Text>
       {spin ? (
@@ -146,11 +173,12 @@ const Pin = ({ route, navigation }) => {
           overlayColor="rgba(255,255,255,0.8)"
         />
       ) : null}
-      <View style={{ width: '80%', alignSelf: 'center' }}>
+      <View style={{ width: "80%", alignSelf: "center" }}>
         <CodeField
           ref={ref}
           value={value}
           onChangeText={changeValue}
+          autoFocus={true}
           cellCount={CELL_COUNT}
           rootStyle={styles.codeFieldRoot}
           keyboardType="number-pad"
@@ -161,20 +189,17 @@ const Pin = ({ route, navigation }) => {
               style={[styles.cell, isFocused && styles.focusCell]}
               onLayout={getCellOnLayoutHandler(index)}
             >
-              {symbol ? '*' : null || (isFocused ? <Cursor /> : null)}
+              {symbol ? "*" : null || (isFocused ? <Cursor /> : null)}
             </Text>
           )}
-
         />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={checkPin}
-        >
-          <Text style={{ textAlign: 'center', color: 'white', fontSize: 18 }}>Next</Text>
-
+        <TouchableOpacity style={styles.button} onPress={checkPin}>
+          <Text style={{ textAlign: "center", color: "white", fontSize: 18 }}>
+            Next
+          </Text>
         </TouchableOpacity>
       </View>
-    </View >
+    </View>
   );
 };
 
@@ -189,18 +214,18 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: dark.primary,
-    marginTop: '15%',
+    marginTop: "15%",
     height: 45,
     borderRadius: 25,
     marginBottom: 10,
-    justifyContent: 'center'
+    justifyContent: "center",
   },
   bottomText: {
     alignItems: "center",
   },
   img: {
     alignSelf: "center",
-    marginTop: '15%'
+    marginTop: "15%",
   },
   title: {
     fontSize: 20,
@@ -249,7 +274,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 16,
     width: 110,
-    color: dark.text
+    color: dark.text,
   },
   spinnerTextStyle: {
     color: "#000",
@@ -266,7 +291,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#00000030",
     textAlign: "center",
-    borderRadius: 30
+    borderRadius: 30,
   },
   focusCell: {
     borderColor: "#282829",
