@@ -66,7 +66,7 @@ const EnterAmount = ({ route, navigation }) => {
 
   const handlePress = () => {
     Speech.speak(`Paying rupees ${amount} to ${payingTo.name}`);
-    navigation.navigate("Pin", { to: payingTo, from: payer, amount });
+    navigation.navigate("Pin", { to: payingTo, from: payer, amount, users: route.params.users });
   };
 
   return (

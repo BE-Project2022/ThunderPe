@@ -69,25 +69,27 @@ const Pin = ({ route, navigation }) => {
     setPin(e);
   };
   useEffect(() => {
-    axios
-      .get("https://thunderpe.herokuapp.com/auth/getallusers")
-      .then((res) => {
-        // console.log(user.id)
-        res.data.forEach(item => {
-          // console.log(user.id !== item._id)
-          // console.log(item.fullname)
-          if (user.id !== item._id) {
-            usersData.push(item)
-            // console.log(item)
-          }
-          // console.log(text)
+    if (!navigation.canGoBack()) {
+      axios
+        .get("https://thunderpe.herokuapp.com/auth/getallusers")
+        .then((res) => {
+          // console.log(user.id)
+          res.data.forEach(item => {
+            // console.log(user.id !== item._id)
+            // console.log(item.fullname)
+            if (user.id !== item._id) {
+              usersData.push(item)
+              // console.log(item)
+            }
+            // console.log(text)
+          })
         })
-      })
-      .catch((err) => {
-        alert(err.response.data.error);
-        // console.log(err.response);
-        changeSpin(false);
-      });
+        .catch((err) => {
+          alert(err.response.data.error);
+          // console.log(err.response);
+          changeSpin(false);
+        });
+    }
   })
 
   const handleBiometricAuth = async () => {
@@ -106,7 +108,7 @@ const Pin = ({ route, navigation }) => {
 
       }
       else
-        navigation.dispatch(StackActions.replace("Payment", { user: payer, payee, amount, users: usersData }));
+        navigation.dispatch(StackActions.replace("Payment", { user: payer, payee, amount, users: route.params.users }));
     }
   };
   const checkPin = () => {

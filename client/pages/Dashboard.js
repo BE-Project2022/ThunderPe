@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  ScrollView,
   Button,
   useColorScheme,
   FlatList,
@@ -13,13 +12,14 @@ import {
   Dimensions,
   LogBox
 } from "react-native";
+import { ScrollView } from 'react-native-gesture-handler'
 import { StackActions } from "@react-navigation/routers";
 import { useFocusEffect, useIsFocused } from '@react-navigation/native'
 import Logo from "../assets/images/Short_Logo_White.png";
 import { LinearGradient } from "expo-linear-gradient";
 import Rupee from "../assets/images/rupee.png";
 import BottomSheet from "react-native-bottomsheet-reanimated";
-import User from "../assets/images/user.png";
+import Less from "../assets/images/less.png";
 import More from "../assets/images/more.png";
 import Reward from "../assets/images/reward.png";
 import Next from "../assets/images/next.png";
@@ -93,8 +93,9 @@ const Dashboard = ({ route, navigation }) => {
     setExpanded(true);
 
     userData.splice(0, userData.length);
+    let i = 0
     // console.log(userData.length)
-    for (let i = 0; i < route.params.users.length; i++) {
+    for (i = 0; i < route.params.users.length; i++) {
 
       const u = route.params.users[i].fullname.split(" ");
       const temp = i;
@@ -111,8 +112,29 @@ const Dashboard = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
       );
-
     }
+    userData.push(
+      <View
+        key={i}
+        style={{
+          width: 48,
+          height: 48,
+          borderRadius: 44,
+          borderColor: "black",
+          borderWidth: 1.5,
+          marginTop: 20,
+          marginLeft: 24,
+        }}
+      >
+        <TouchableOpacity onPress={() => {
+          console.log('hi')
+          setExpanded(false)
+        }}>
+          <Image source={Less} style={{ alignSelf: "center", marginTop: 10 }} />
+          <Text style={{ marginTop: 14, marginLeft: 3 }}>Less</Text>
+        </TouchableOpacity>
+      </View>
+    );
   };
   // console.log("HERE: \n", route.params.users)
   const setLessUsers = () => {
@@ -277,7 +299,9 @@ const Dashboard = ({ route, navigation }) => {
           initialPosition={"70%"} //200, 300
           snapPoints={["70%", "85%"]}
           isRoundBorderWithTipHeader={true}
+          enabledInnerScrolling={true}
           enabledContentGestureInteraction={true}
+          enabledContentTapInteraction={false}
           // backDropColor="red"
           // isModal
           // containerStyle={{ backgroundColor: "red" }}
@@ -292,8 +316,8 @@ const Dashboard = ({ route, navigation }) => {
           // bodyStyle={{backgroundColor:"red",flex:1}}
           onChangeSnap={changeCover}
           body={
-            <ScrollView>
-              <View style={styles.payments}>
+            <ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.payments} nestedScrollEnabled={true}>
+              <View>
                 <Text style={{ fontSize: 18 }}>Recent Payments</Text>
                 <View style={styles.paymentUsers}>{userData}</View>
                 <View
@@ -301,8 +325,8 @@ const Dashboard = ({ route, navigation }) => {
                     backgroundColor: "#D8D2D2",
                     height: 1,
                     width: "104%",
-                    marginTop: 15,
-                    marginLeft: -14,
+                    marginTop: '10%',
+                    marginLeft: -20,
                   }}
                 />
                 <View style={{ marginTop: 10 }}>
@@ -325,7 +349,7 @@ const Dashboard = ({ route, navigation }) => {
                     height: 1,
                     width: "104%",
                     marginTop: 15,
-                    marginLeft: -14,
+                    marginLeft: -20,
                   }}
                 />
                 <View>
@@ -349,12 +373,12 @@ const Dashboard = ({ route, navigation }) => {
                       backgroundColor: "#D8D2D2",
                       height: 1,
                       width: "104%",
-                      marginLeft: -14,
+                      marginLeft: -20,
                     }}
                   />
                 </View>
               </View>
-            </ScrollView>
+            </ScrollView >
           }
         />
         <TouchableOpacity
@@ -467,6 +491,8 @@ const styles = StyleSheet.create({
   payments: {
     marginTop: 18,
     marginLeft: 14,
+    zIndex: 3,
+
   },
   paymentUsers: {
     flexDirection: "row",
