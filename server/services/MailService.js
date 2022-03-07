@@ -1,7 +1,7 @@
 // require('dotenv').config();
 import nodemailer from "nodemailer";
 import googleapis from "googleapis";
-import {} from "dotenv/config";
+import { } from "dotenv/config";
 
 const { google } = googleapis;
 const OAuth2 = google.auth.OAuth2;
@@ -17,25 +17,25 @@ const createTransporter = async () => {
     refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
   });
 
-  const accessToken = oauth2Client
-    .getAccessToken()
-    .then((res) => {
-      console.log(res);
-      return res.credentials.access_token;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-
-  // const accessToken = await new Promise((resolve, reject) => {
-  //   oauth2Client.getAccessToken((err, token) => {
-  //     if (err) {
-  //       console.log(err);
-  //       reject("Failed to create access token :(");
-  //     }
-  //     resolve(token);
+  // const accessToken = oauth2Client
+  //   .getAccessToken()
+  //   .then((res) => {
+  //     console.log(res);
+  //     return res.credentials.access_token;
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
   //   });
-  // });
+
+  const accessToken = await new Promise((resolve, reject) => {
+    oauth2Client.getAccessToken((err, token) => {
+      if (err) {
+        console.log(err);
+        reject("Failed to create access token :(");
+      }
+      resolve(token);
+    });
+  });
 
   console.log(accessToken);
 
