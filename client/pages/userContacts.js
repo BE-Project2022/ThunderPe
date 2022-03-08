@@ -24,7 +24,7 @@ const userContacts = ({ route, navigation }) => {
   const [notOnThunder, setNotOnThunder] = useState([]);
   const [memoryContact, setMemoryContact] = useState([]);
   const [spin, changeSpin] = useState(true);
-  const curretUser = route.params.user;
+  const curretUser = route.params.currentUser;
 
   // console.log(curretUser)
   var usersData = []
@@ -69,6 +69,7 @@ const userContacts = ({ route, navigation }) => {
           navigation.navigate("EnterAmount", {
             user: item,
             currentUser: curretUser,
+            users: route.params.users
           })
         }
         }

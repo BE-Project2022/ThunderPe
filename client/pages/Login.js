@@ -85,7 +85,12 @@ const Login = ({ navigation }) => {
           changeSpin(false);
           storeData(res.data.token);
           const decoded = jwtDecode(res.data.token);
-          // console.log(decoded);
+          usersData.find((item, i) => {
+            if (item.email === decoded.email) {
+              usersData.splice(i, 1)
+              return true
+            }
+          })
           navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
         })
         .catch((err) => {
@@ -96,113 +101,113 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView behavior="position" style={{ flexGrow: 1, height: '100%', backgroundColor: mode === 'dark' ? dark.background : '#fff' }}>
-      <View style={mode === 'dark' ? { backgroundColor: dark.background } : { backgroundColor: light.background }}>
-        <View style={mode === 'dark' ? styles.darkHeader : styles.header}>
+    // <KeyboardAvoidingView behavior="position" style={{ flexGrow: 1, height: '100%', backgroundColor: mode === 'dark' ? dark.background : '#fff' }}>
+    <View style={mode === 'dark' ? { backgroundColor: dark.background } : { backgroundColor: light.background }}>
+      <View style={mode === 'dark' ? styles.darkHeader : styles.header}>
+        <TouchableOpacity
+          style={{ width: "12%" }}
+          onPress={() => (navigation.canGoBack() ? navigation.goBack() : null)}
+        >
+          <Image
+            source={navigation.canGoBack() ? Back : null}
+            style={{ left: 12, height: 30, top: 11 }}
+          />
+        </TouchableOpacity>
+        <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>LOGIN</Text>
+      </View>
+      <View style={mode === 'dark' ? styles.darkContainer : styles.container}>
+        <Image source={Logo} style={styles.img} />
+        <View
+          style={{
+            flexDirection: "row",
+            marginTop: '30%'
+          }}
+        >
+          {spin ? (
+            <Spinner
+              visible={spin}
+              textContent={"Logging In..."}
+              textStyle={styles.spinnerTextStyle}
+              color="#323133"
+              overlayColor="rgba(255,255,255,0.8)"
+            />
+          ) : null}
+          <TextInput
+            style={mode === 'dark' ? styles.darkInput : styles.input}
+            placeholder="Username (Email Id)"
+            secureTextEntry={false}
+            onChangeText={changeEmail}
+            ref={emailField}
+            placeholderTextColor={mode === 'dark' ? 'grey' : 'grey'}
+          />
+          <Image source={User} style={{ position: "absolute", top: 10 }} />
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <Image source={Key} style={{ position: "absolute", top: 10 }} />
+          <TextInput
+            style={mode === 'dark' ? styles.darkInput : styles.input}
+            placeholder="Password"
+            secureTextEntry={passwordVisible}
+            onChangeText={changePassword}
+            ref={passwordField}
+            placeholderTextColor={mode === 'dark' ? 'grey' : 'grey'}
+          />
           <TouchableOpacity
-            style={{ width: "12%" }}
-            onPress={() => (navigation.canGoBack() ? navigation.goBack() : null)}
+            style={{
+              width: 30,
+              height: 35,
+              position: "absolute",
+              top: 2,
+              right: -3,
+            }}
+            onPress={() => showPassword(!passwordVisible)}
           >
             <Image
-              source={navigation.canGoBack() ? Back : null}
-              style={{ left: 12, height: 30, top: 11 }}
+              source={(passwordVisible ? EyeSlash : Eye)}
+              style={{ position: "absolute", top: 10, right: 5 }}
             />
           </TouchableOpacity>
-          <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>LOGIN</Text>
         </View>
-        <View style={mode === 'dark' ? styles.darkContainer : styles.container}>
-          <Image source={Logo} style={styles.img} />
-          <View
-            style={{
-              flexDirection: "row",
-              marginTop: '30%'
-            }}
-          >
-            {spin ? (
-              <Spinner
-                visible={spin}
-                textContent={"Logging In..."}
-                textStyle={styles.spinnerTextStyle}
-                color="#323133"
-                overlayColor="rgba(255,255,255,0.8)"
-              />
-            ) : null}
-            <TextInput
-              style={mode === 'dark' ? styles.darkInput : styles.input}
-              placeholder="Username (Email Id)"
-              secureTextEntry={false}
-              onChangeText={changeEmail}
-              ref={emailField}
-              placeholderTextColor={mode === 'dark' ? 'grey' : 'grey'}
-            />
-            <Image source={User} style={{ position: "absolute", top: 10 }} />
-          </View>
-
-          <View
-            style={{
-              flexDirection: "row",
-            }}
-          >
-            <Image source={Key} style={{ position: "absolute", top: 10 }} />
-            <TextInput
-              style={mode === 'dark' ? styles.darkInput : styles.input}
-              placeholder="Password"
-              secureTextEntry={passwordVisible}
-              onChangeText={changePassword}
-              ref={passwordField}
-              placeholderTextColor={mode === 'dark' ? 'grey' : 'grey'}
-            />
-            <TouchableOpacity
-              style={{
-                width: 30,
-                height: 35,
-                position: "absolute",
-                top: 2,
-                right: -3,
-              }}
-              onPress={() => showPassword(!passwordVisible)}
-            >
-              <Image
-                source={(passwordVisible ? EyeSlash : Eye)}
-                style={{ position: "absolute", top: 10, right: 5 }}
-              />
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity style={mode == 'dark' ? styles.darkButton : styles.button} onPress={handleLogin}>
-            <Text
-              style={
-                mode == 'dark' ? {
+        <TouchableOpacity style={mode == 'dark' ? styles.darkButton : styles.button} onPress={handleLogin}>
+          <Text
+            style={
+              mode == 'dark' ? {
+                textAlign: "center",
+                marginTop: 8,
+                color: "black",
+                fontWeight: "bold",
+              } :
+                {
                   textAlign: "center",
                   marginTop: 8,
-                  color: "black",
+                  color: "#fff",
                   fontWeight: "bold",
-                } :
-                  {
-                    textAlign: "center",
-                    marginTop: 8,
-                    color: "#fff",
-                    fontWeight: "bold",
-                  }}
-            >
-              Login
-            </Text>
+                }}
+          >
+            Login
+          </Text>
+        </TouchableOpacity>
+        <View style={styles.bottomText}>
+          <TouchableOpacity
+            style={{ marginBottom: 10 }}
+            onPress={() => navigation.navigate("ForgotPassword")}
+          >
+            <Text style={mode === 'dark' ? { color: 'black' } : { color: 'black' }}>Forgot Password?</Text>
           </TouchableOpacity>
-          <View style={styles.bottomText}>
-            <TouchableOpacity
-              style={{ marginBottom: 10 }}
-              onPress={() => navigation.navigate("ForgotPassword")}
-            >
-              <Text style={mode === 'dark' ? { color: 'black' } : { color: 'black' }}>Forgot Password?</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.dispatch(StackActions.replace("SignUp"))}
-            >
-              <Text style={mode === 'dark' ? { color: 'black' } : { color: 'black' }}>Not a user? Register</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => navigation.dispatch(StackActions.replace("SignUp"))}
+          >
+            <Text style={mode === 'dark' ? { color: 'black' } : { color: 'black' }}>Not a user? Register</Text>
+          </TouchableOpacity>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </View>
+    // </KeyboardAvoidingView>
   );
 };
 
@@ -229,9 +234,9 @@ const styles = StyleSheet.create({
   },
   img: {
     alignSelf: "center",
-    // width: "85%",
-    // height: '10%',
-    marginTop: '25%'
+    width: "70%",
+    height: '18%',
+    marginTop: '18%'
   },
   button: {
     backgroundColor: light.primary,

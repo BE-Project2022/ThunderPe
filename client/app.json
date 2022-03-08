@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "client",
+    "name": "ThunderPe",
     "slug": "client",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,7 +20,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/Short_Logo_Yellow.png"
       },
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "package": "com.beproject18.client"
     },
     "web": {
       "favicon": "./assets/images/Logo_Yel.png"

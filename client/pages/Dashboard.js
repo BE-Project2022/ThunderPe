@@ -383,7 +383,7 @@ const Dashboard = ({ route, navigation }) => {
         />
         <TouchableOpacity
           style={styles.paymentButton}
-          onPress={() => navigation.navigate("userContacts", { user: user })}
+          onPress={() => navigation.navigate("userContacts", { currentUser: user, users: route.params.users })}
         >
           <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
             + New Payment
