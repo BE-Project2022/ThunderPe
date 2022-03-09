@@ -28,7 +28,7 @@ export default function BarCodeScan({ route, navigation }) {
             ],
             "image": userData[3]
         }
-        navigation.dispatch(StackActions.replace('EnterAmount', { user, currentUser }))
+        navigation.dispatch(StackActions.replace('EnterAmount', { user, currentUser, users: route.params.users }))
         setScanned(false)
         console.log(userData)
     };

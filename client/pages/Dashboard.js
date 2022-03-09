@@ -212,6 +212,7 @@ const Dashboard = ({ route, navigation }) => {
             onPress={() =>
               navigation.navigate("BarCodeScan", {
                 currentUser: route.params.user,
+                users: route.params.users
               })
             }
             style={{ left: '-50%' }}

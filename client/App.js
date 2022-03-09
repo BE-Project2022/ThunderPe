@@ -47,6 +47,7 @@ export default function App() {
   const mode = useColorScheme();
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
+    "Warning: Can't perform a React state update on an unmounted component"
   ]);
   // console.log('LoggedIn: ', isLoggedin)
   return (
