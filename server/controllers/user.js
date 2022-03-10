@@ -43,6 +43,10 @@ export const login = async (req, res) => {
   });
   // console.log(user)
   if (user) {
+    if (user.token) {
+      return res.status(401).send({ error: 'Already Logged in User' })
+    }
+
     const isMatch = await bcrypt.compare(req.body.password, user.password);
     if (isMatch) {
       const token = jwt.sign(
