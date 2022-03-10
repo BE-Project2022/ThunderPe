@@ -77,7 +77,7 @@ export const checkToken = async (req, res) => {
       res.status(200).send({ result: true })
     }
     else {
-      res.status(404).send({ result: false })
+      res.status(201).send({ result: false })
     }
   }
   catch (error) {
