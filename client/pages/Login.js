@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   useColorScheme,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Logo from "../assets/images/Final_Logo_Oran.png";
@@ -79,23 +80,126 @@ const Login = ({ navigation }) => {
       const user = { email: email, password: password };
       changeSpin(true);
       await axios
-        .post("https://thunderpe.herokuapp.com/auth/login", user)
+        .post("https://thunderpe.herokuapp.com/auth/isLoggedIn", user)
         .then((res) => {
-          alert("Login Successful");
+          // alert("Login Successful");
+          // console.log(res.data)
+          if (res.data.result) {
+            Alert.alert(
+              'Already Logged in User',
+              'You are logged in from other device also. Do you want to logout from other device?',
+              [
+                {
+                  text: 'Yes',
+                  onPress: async () => {
+                    changeSpin(true)
+                    await axios
+                      .post("https://thunderpe.herokuapp.com/auth/login", user)
+                      .then((res) => {
+                        alert("Login Successful");
+                        changeSpin(false);
+                        storeData(res.data.token);
+                        const decoded = jwtDecode(res.data.token);
+                        usersData.find((item, i) => {
+                          if (item.email === decoded.email) {
+                            usersData.splice(i, 1)
+                            return true
+                          }
+                        })
+                        changeSpin(false)
+                        navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
+                      })
+                      .catch((err) => {
+                        alert(err.response.data.error)
+                      })
+                  }
+                },
+                {
+                  text: 'No',
+                  style: 'cancel'
+                }
+              ]
+            )
+          }
+          else {
+            (async () => {
+              changeSpin(true)
+              await axios
+                .post("https://thunderpe.herokuapp.com/auth/login", user)
+                .then((res) => {
+                  alert("Login Successful");
+                  changeSpin(false);
+                  storeData(res.data.token);
+                  const decoded = jwtDecode(res.data.token);
+                  usersData.find((item, i) => {
+                    if (item.email === decoded.email) {
+                      usersData.splice(i, 1)
+                      return true
+                    }
+                  })
+                  changeSpin(false)
+                  navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
+                })
+                .catch((err) => {
+                  alert(err.response.data.error)
+                })
+
+            })
+
+          }
           changeSpin(false);
-          storeData(res.data.token);
-          const decoded = jwtDecode(res.data.token);
-          usersData.find((item, i) => {
-            if (item.email === decoded.email) {
-              usersData.splice(i, 1)
-              return true
-            }
-          })
-          navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
+          // storeData(res.data.token);
+          // const decoded = jwtDecode(res.data.token);
+          // usersData.find((item, i) => {
+          //   if (item.email === decoded.email) {
+          //     usersData.splice(i, 1)
+          //     return true
+          //   }
+          // })
+          // navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
         })
         .catch((err) => {
-          console.log(err);
-          changeSpin(false);
+          alert(err.response.data.error);
+          changeSpin(false)
+          // if (err.response.data.error == 'Already Logged in User') {
+          //   // alert(err.response.data.error)
+          //   Alert.alert(
+          //     err.response.data.error,
+          //     'You are logged in from other device also. Do you want to logout from other device?',
+          //     [
+          //       {
+          //         text: 'Yes',
+          //         onPress: async () => {
+          //           changeSpin(true)
+          //           await axios
+          //             .post("https://thunderpe.herokuapp.com/auth/login", user)
+          //             .then((res) => {
+          //               alert("Login Successful");
+          //               changeSpin(false);
+          //               storeData(res.data.token);
+          //               const decoded = jwtDecode(res.data.token);
+          //               usersData.find((item, i) => {
+          //                 if (item.email === decoded.email) {
+          //                   usersData.splice(i, 1)
+          //                   return true
+          //                 }
+          //               })
+          //               changeSpin(false)
+          //               navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
+          //             })
+          //             .catch((err) => {
+          //               alert(err.response.data.error)
+          //             })
+          //         }
+          //       },
+          //       {
+          //         text: 'No',
+          //         style: 'cancel'
+          //       }
+          //     ]
+          //   )
+          // }
+          // changeSpin(false);
         });
     }
   };
