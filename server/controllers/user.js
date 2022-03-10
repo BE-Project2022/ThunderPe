@@ -43,10 +43,6 @@ export const login = async (req, res) => {
   });
   // console.log(user)
   if (user) {
-    if (user.token) {
-      return res.status(401).send({ error: 'Already Logged in User' })
-    }
-
     const isMatch = await bcrypt.compare(req.body.password, user.password);
     if (isMatch) {
       const token = jwt.sign(
@@ -71,6 +67,23 @@ export const login = async (req, res) => {
     res.status(404).send({ error: "Email id not found" });
   }
 };
+
+export const isLoggedIn = async (req, res) => {
+  const user = await ThunderUser.findOne({
+    email: req.body.email
+  })
+  if (user) {
+    if (user.token) {
+      return res.status(201).send({ result: true })
+    }
+    else {
+      res.status(201).send({ result: false })
+    }
+  }
+  else {
+    res.status(404).send({ error: "Email id not found" });
+  }
+}
 
 export const checkToken = async (req, res) => {
   try {
