@@ -57,6 +57,8 @@ export const login = async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
+      user.token = token
+      await user.save()
       res.status(201).json({ user, token });
     } else {
       res.status(401).send({ error: "Password invalid" });
@@ -65,6 +67,24 @@ export const login = async (req, res) => {
     res.status(404).send({ error: "Email id not found" });
   }
 };
+
+export const checkToken = async (req, res) => {
+  try {
+    const token = await ThunderUser.findOne({
+      token: req.body.token
+    })
+    if (token) {
+      res.status(200).send({ result: true })
+    }
+    else {
+      res.status(404).send({ result: false })
+    }
+  }
+  catch (error) {
+    res.status(501).send({ error })
+  }
+}
+
 
 export const getUser = async (req, res) => {
   const user = await ThunderUser.find({});

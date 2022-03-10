@@ -6,7 +6,8 @@ const userSchema = new mongoose.Schema({
   password: String,
   mobile: { type: Number, unique: true },
   pin: { type: Number, maxlength: 4 },
-  image: { type: String }
+  image: { type: String },
+  token: { type: String }
 });
 
 const ThunderUser = new mongoose.model("ThunderUser", userSchema);

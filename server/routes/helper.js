@@ -8,7 +8,8 @@ import {
   getVerification,
   verifyOTP,
   changePassword,
-  updateUser
+  updateUser,
+  checkToken
 } from "../controllers/user.js";
 import { UserData } from "../controllers/profileData.js";
 
@@ -20,6 +21,7 @@ const router = express.Router();
 router.get("/getallusers", getUser);
 router.get("/getallotp", getVerification);
 
+
 //post methods
 router.post("/signup", signup);
 router.post("/login", login);
@@ -28,6 +30,7 @@ router.post("/verifyOTP", verifyOTP);
 router.post("/changePassword", changePassword);
 router.post("/userdata", auth, UserData);
 router.post('/updateUser', updateUser)
+router.post('/checkToken', checkToken)
 
 
 export default router;
