@@ -35,4 +35,5 @@ router.post('/updateUser', updateUser)
 router.post('/checkToken', checkToken)
 router.post('/isLoggedIn', isLoggedIn)
 router.post('/verifyEmail', verifyEmail)
+
 export default router;

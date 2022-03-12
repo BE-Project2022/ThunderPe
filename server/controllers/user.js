@@ -178,6 +178,7 @@ export const verifyOTP = async (req, res) => {
       return res.status(404).send({ error: "Invalid Verification ID" });
     }
     if (veri.otp !== otp) {
+
       return res.status(404).send({ error: "Incorrect OTP" });
     }
     await Verification.deleteOne({ _id: id });
