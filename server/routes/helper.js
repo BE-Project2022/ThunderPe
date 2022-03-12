@@ -10,7 +10,8 @@ import {
   changePassword,
   updateUser,
   checkToken,
-  isLoggedIn
+  isLoggedIn,
+  verifyEmail
 } from "../controllers/user.js";
 import { UserData } from "../controllers/profileData.js";
 
@@ -33,5 +34,5 @@ router.post("/userdata", auth, UserData);
 router.post('/updateUser', updateUser)
 router.post('/checkToken', checkToken)
 router.post('/isLoggedIn', isLoggedIn)
-
+router.post('/verifyEmail', verifyEmail)
 export default router;
