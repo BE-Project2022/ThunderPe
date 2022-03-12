@@ -17,6 +17,7 @@ import {
   PhoneAuthProvider,
   signInWithCredential,
 } from "firebase/auth";
+import { log } from "react-native-reanimated";
 
 const app = getApp();
 const auth = getAuth();
@@ -54,8 +55,11 @@ const MobileAuth = () => {
         onPress={async () => {
           try {
             const phoneProvider = new PhoneAuthProvider(auth);
+            let temp = "+91" + phoneNumber;
+            // let abc = parseInt(temp);
+            console.log(typeof phoneNumber);
             const verificationId = await phoneProvider.verifyPhoneNumber(
-              phoneNumber,
+              temp,
               recaptchaVerifier.current
             );
             setVerificationId(verificationId);
