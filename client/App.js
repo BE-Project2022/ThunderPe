@@ -30,6 +30,7 @@ import { dark, light } from "./controllers/Theme";
 import ResetPassword from "./pages/ResetPassword";
 import BarCodeScan from "./pages/BarCodeScan";
 import UserProfile from "./pages/UserProfile";
+import MobileAuth from "./pages/MobileAuth";
 
 // const _removeData = async (useName) => {
 //   try {
@@ -47,7 +48,8 @@ export default function App() {
   const mode = useColorScheme();
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
-    "Warning: Can't perform a React state update on an unmounted component"
+    "Warning: Can't perform a React state update on an unmounted component",
+    "AsyncStorage has been extracted from react-native core and will be removed in a future release"
   ]);
   // console.log('LoggedIn: ', isLoggedin)
   return (
@@ -77,6 +79,7 @@ export default function App() {
         <Navigate.Screen name="BarCodeScan" component={BarCodeScan} />
         <Navigate.Screen name="UserProfile" component={UserProfile} />
         <Navigate.Screen name="Payment" component={Payment} />
+        <Navigate.Screen name="MobileAuth" component={MobileAuth} />
       </Navigate.Navigator>
     </NavigationContainer>
   );
