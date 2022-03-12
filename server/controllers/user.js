@@ -113,7 +113,7 @@ export const getUser = async (req, res) => {
 
 export const verifyEmail = async (req, res) => {
   try {
-    const OTP = Math.floor(1000 + Math.random() * 9000);
+    const OTP = Math.floor(100000 + Math.random() * 900000);
     sendEmail({
       subject: "OTP Verification for ThunderPe",
       text: `Hi there, your OTP for verification is ${OTP}`,
