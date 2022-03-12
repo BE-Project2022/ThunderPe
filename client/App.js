@@ -19,6 +19,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Payment from "./pages/Payment";
 import EnterOTP from "./pages/EnterOTP";
 import Pin from "./pages/Pin";
+import MobileAuth from "./pages/MobileAuth";
 // AsyncStorageLib
 import { storeData, getData } from "./controllers/Data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -47,7 +48,7 @@ export default function App() {
   const mode = useColorScheme();
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
-    "Warning: Can't perform a React state update on an unmounted component"
+    "Warning: Can't perform a React state update on an unmounted component",
   ]);
   // console.log('LoggedIn: ', isLoggedin)
   return (
@@ -77,6 +78,7 @@ export default function App() {
         <Navigate.Screen name="BarCodeScan" component={BarCodeScan} />
         <Navigate.Screen name="UserProfile" component={UserProfile} />
         <Navigate.Screen name="Payment" component={Payment} />
+        <Navigate.Screen name="MobileAuth" component={MobileAuth} />
       </Navigate.Navigator>
     </NavigationContainer>
   );
