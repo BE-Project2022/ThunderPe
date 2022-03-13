@@ -68,6 +68,31 @@ const Login = ({ navigation }) => {
       });
   })
 
+  const login = async (user) => {
+    changeSpin(true)
+    await axios
+      .post("https://thunderpe.herokuapp.com/auth/login", user)
+      .then((res) => {
+        console.log('Here')
+        alert("Login Successful");
+        changeSpin(false);
+        storeData(res.data.token);
+        const decoded = jwtDecode(res.data.token);
+        usersData.find((item, i) => {
+          if (item.email === decoded.email) {
+            usersData.splice(i, 1)
+            return true
+          }
+        })
+        changeSpin(false)
+        navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
+      })
+      .catch((err) => {
+        changeSpin(false)
+        alert(err.response.data.error)
+      })
+
+  }
   const handleLogin = async (e) => {
     if (email === "" && password === "") {
       alert("Please fill all the fields");
@@ -79,12 +104,15 @@ const Login = ({ navigation }) => {
     else {
       const user = { email: email, password: password };
       changeSpin(true);
+
       await axios
         .post("https://thunderpe.herokuapp.com/auth/isLoggedIn", user)
         .then((res) => {
           // alert("Login Successful");
-          // console.log(res.data)
+          console.log(res.data)
           if (res.data.result) {
+            console.log('alert')
+            changeSpin(false)
             Alert.alert(
               'Already Logged in User',
               'You are logged in from other device also. Do you want to logout from other device?',
@@ -110,6 +138,7 @@ const Login = ({ navigation }) => {
                         navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
                       })
                       .catch((err) => {
+                        changeSpin(false)
                         alert(err.response.data.error)
                       })
                   }
@@ -122,85 +151,13 @@ const Login = ({ navigation }) => {
             )
           }
           else {
-            (async () => {
-              changeSpin(true)
-              await axios
-                .post("https://thunderpe.herokuapp.com/auth/login", user)
-                .then((res) => {
-                  alert("Login Successful");
-                  changeSpin(false);
-                  storeData(res.data.token);
-                  const decoded = jwtDecode(res.data.token);
-                  usersData.find((item, i) => {
-                    if (item.email === decoded.email) {
-                      usersData.splice(i, 1)
-                      return true
-                    }
-                  })
-                  changeSpin(false)
-                  navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
-                })
-                .catch((err) => {
-                  alert(err.response.data.error)
-                })
-
-            })
-
+            login(user)
           }
-          changeSpin(false);
-          // storeData(res.data.token);
-          // const decoded = jwtDecode(res.data.token);
-          // usersData.find((item, i) => {
-          //   if (item.email === decoded.email) {
-          //     usersData.splice(i, 1)
-          //     return true
-          //   }
-          // })
-          // navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
         })
         .catch((err) => {
-          alert(err.response.data.error);
+          alert(err.response.data.error)
           changeSpin(false)
-          // if (err.response.data.error == 'Already Logged in User') {
-          //   // alert(err.response.data.error)
-          //   Alert.alert(
-          //     err.response.data.error,
-          //     'You are logged in from other device also. Do you want to logout from other device?',
-          //     [
-          //       {
-          //         text: 'Yes',
-          //         onPress: async () => {
-          //           changeSpin(true)
-          //           await axios
-          //             .post("https://thunderpe.herokuapp.com/auth/login", user)
-          //             .then((res) => {
-          //               alert("Login Successful");
-          //               changeSpin(false);
-          //               storeData(res.data.token);
-          //               const decoded = jwtDecode(res.data.token);
-          //               usersData.find((item, i) => {
-          //                 if (item.email === decoded.email) {
-          //                   usersData.splice(i, 1)
-          //                   return true
-          //                 }
-          //               })
-          //               changeSpin(false)
-          //               navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
-          //             })
-          //             .catch((err) => {
-          //               alert(err.response.data.error)
-          //             })
-          //         }
-          //       },
-          //       {
-          //         text: 'No',
-          //         style: 'cancel'
-          //       }
-          //     ]
-          //   )
-          // }
-          // changeSpin(false);
-        });
+        })
     }
   };
 

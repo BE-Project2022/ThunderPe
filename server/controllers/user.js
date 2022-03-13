@@ -111,6 +111,25 @@ export const getUser = async (req, res) => {
   res.status(200).json(user);
 };
 
+export const verifyEmail = async (req, res) => {
+  try {
+    const OTP = Math.floor(100000 + Math.random() * 900000);
+    sendEmail({
+      subject: "OTP Verification for ThunderPe",
+      text: `Hi there, your OTP for verification is ${OTP}`,
+      to: req.body.email,
+      from: process.env.GOOGLE_EMAIL,
+    });
+    const veri = await Verification.create({ otp: OTP });
+    res.status(200).json({ id: veri._doc._id });
+  }
+  catch (error) {
+    res.status(501).send({ error })
+  }
+
+}
+
+
 export const forgotPassword = async (req, res) => {
   const user = await ThunderUser.findOne({
     email: req.body.email,
@@ -152,13 +171,14 @@ export const verifyOTP = async (req, res) => {
   try {
     const { id, otp } = req.body;
     let _id = mongoose.Types.ObjectId(id)
-    console.log(typeof (_id))
+    // console.log(typeof (_id))
     const veri = await Verification.findOne({ _id });
-    console.log(veri);
+    // console.log(veri);
     if (!veri) {
       return res.status(404).send({ error: "Invalid Verification ID" });
     }
     if (veri.otp !== otp) {
+
       return res.status(404).send({ error: "Incorrect OTP" });
     }
     await Verification.deleteOne({ _id: id });
