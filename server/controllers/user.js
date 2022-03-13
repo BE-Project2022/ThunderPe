@@ -31,6 +31,20 @@ export const signup = async (req, res) => {
     const user = await ThunderUser.findOne({
       email: email,
     });
+    const token = jwt.sign(
+      {
+        email: email,
+        mobile: mobile,
+        id: user._id,
+        pin: pin,
+        name: fullname,
+        image: image
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    user.token = token
+    await user.save()
     res.status(201).json({ user });
   } catch (err) {
     res.status(500).json(err);
@@ -237,6 +251,8 @@ export const updateUser = async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
+      user.token = token
+      await user.save()
       res.status(201).json({ user, token });
     }
   }
