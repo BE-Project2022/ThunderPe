@@ -16,7 +16,7 @@ const SplashScreen = ({ navigation }) => {
         // console.log(typeof (value))
         // console.log('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InByYXRpazAzMTJAZ21haWwuY29tIiwibW9iaWxlIjo5NDA0NzgzNTE2LCJpZCI6IjYxZmEyOWQ0ZDYyMDMyMzgwYmQxYWQyZCIsInBpbiI6MTIzNCwibmFtZSI6IlByYXRpayBBZ2Fyd2FsIiwiaW1hZ2UiOiJodHRwczovL2ZpcmViYXNlc3RvcmFnZS5nb29nbGVhcGlzLmNvbS92MC9iL3RodW5kZXJwZS0zM2I2YS5hcHBzcG90LmNvbS9vL2ZpbGVzJTJGNjFmYTI5ZDRkNjIwMzIzODBiZDFhZDJkP2FsdD1tZWRpYSZ0b2tlbj00YjU5OTg5Zi01M2RjLTQyMjUtYmQ1Yy1mNjc0OGEzNzU4M2EiLCJpYXQiOjE2NDY5MjM5MDQsImV4cCI6MTY0NjkyNzUwNH0.tTbHWc9AYQdAgUkFcDsrRx6-x9P6BxmWBhBOOwqOQWw' == 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InByYXRpazAzMTJAZ21haWwuY29tIiwibW9iaWxlIjo5NDA0NzgzNTE2LCJpZCI6IjYxZmEyOWQ0ZDYyMDMyMzgwYmQxYWQyZCIsInBpbiI6MTIzNCwibmFtZSI6IlByYXRpayBBZ2Fyd2FsIiwiaW1hZ2UiOiJodHRwczovL2ZpcmViYXNlc3RvcmFnZS5nb29nbGVhcGlzLmNvbS92MC9iL3RodW5kZXJwZS0zM2I2YS5hcHBzcG90LmNvbS9vL2ZpbGVzJTJGNjFmYTI5ZDRkNjIwMzIzODBiZDFhZDJkP2FsdD1tZWRpYSZ0b2tlbj00YjU5OTg5Zi01M2RjLTQyMjUtYmQ1Yy1mNjc0OGEzNzU4M2EiLCJpYXQiOjE2NDY5MjM5MDQsImV4cCI6MTY0NjkyNzUwNH0.tTbHWc9AYQdAgUkFcDsrRx6-x9P6BxmWBhBOOwqOQWw')
         if (value === null)
-          navigation.dispatch(StackActions.replace("MobileAuth"));
+          navigation.dispatch(StackActions.replace("Login"));
         else {
           const user = {
             token: value,

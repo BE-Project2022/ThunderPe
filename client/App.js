@@ -31,7 +31,6 @@ import { dark, light } from "./controllers/Theme";
 import ResetPassword from "./pages/ResetPassword";
 import BarCodeScan from "./pages/BarCodeScan";
 import UserProfile from "./pages/UserProfile";
-import MobileAuth from "./pages/MobileAuth";
 import Verification from "./pages/Verification";
 
 // const _removeData = async (useName) => {
