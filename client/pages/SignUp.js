@@ -13,6 +13,16 @@ import Logo from "../assets/images/Logo_Yel.png";
 import User from "../assets/images/user.png";
 import Email from "../assets/images/email.png";
 import Mobile from "../assets/images/mobile.png";
+import {
+  FirebaseRecaptchaVerifierModal,
+  FirebaseRecaptchaBanner,
+} from "expo-firebase-recaptcha";
+import { initializeApp, getApp } from "firebase/app";
+import {
+  getAuth,
+  PhoneAuthProvider,
+  signInWithCredential,
+} from "firebase/auth";
 import Key from "../assets/images/key.png";
 import { StackActions } from "@react-navigation/native";
 import axios from "axios";
@@ -26,6 +36,10 @@ import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { storage } from "../controllers/Firebase";
 import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
 import { light } from "../controllers/Theme";
+import { ScrollView } from "react-native-gesture-handler";
+
+const app = getApp();
+const auth = getAuth();
 const SignUp = ({ navigation }) => {
   LogBox.ignoreLogs([`Setting a timer for a long period`]);
   const [fullname, setFullname] = useState("");
@@ -39,6 +53,11 @@ const SignUp = ({ navigation }) => {
   const [pin, setPin] = useState("");
   const [image, setImage] = useState(null);
   const [isOnState, setIsOnState] = useState(false);
+  const recaptchaVerifier = React.useRef(null);
+  const [verificationId, setVerificationId] = React.useState();
+  const [verificationCode, setVerificationCode] = React.useState();
+
+  const firebaseConfig = app ? app.options : undefined;
   let url = 'https://firebasestorage.googleapis.com/v0/b/thunderpe-33b6a.appspot.com/o/files%2Fuser.png?alt=media&token=007a7e33-42d9-4848-a9ff-665b6df3bd7b'
   let savingUser
   const hideMenu = () => setIsOnState(false);
@@ -114,52 +133,6 @@ const SignUp = ({ navigation }) => {
     }
   };
 
-  const uploadImage = async (user) => {
-    if (image != undefined) {
-      const blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-          resolve(xhr.response);
-        };
-        xhr.onerror = function () {
-          reject(new TypeError("Network request failed"));
-        };
-        xhr.responseType = "blob";
-        xhr.open("GET", image, true);
-        xhr.send(null);
-      });
-
-      const fileRef = ref(storage, `files/${user.user._id}`);
-      console.log('Hi')
-
-      const result = await uploadBytes(fileRef, blob)
-      console.log('Hello')
-
-
-      // We're done with the blob, close and release it
-      blob.close(); await getDownloadURL(fileRef).then((res) => url = res);
-      let temp = {
-        email: user.user.email,
-        fullname: user.user.fullname,
-        pin: user.user.pin,
-        image: url
-      }
-      console.log(temp)
-      console.log(user)
-      axios
-        .post('https://thunderpe.herokuapp.com/auth/updateUser', temp)
-        .then((res) => {
-          console.log(res.data)
-          changeSpin(false)
-          navigation.dispatch(StackActions.replace("Login"));
-        })
-        .catch((e) => console.log(e.response))
-      // changeSpin(false);
-      console.log(url)
-    }
-    // handleSignUp()
-  }
-
 
 
   const handleSignUp = async (e) => {
@@ -194,25 +167,72 @@ const SignUp = ({ navigation }) => {
         pin: pinNum,
         image: url
       };
-      changeSpin(true);
-      axios
-        .post("https://thunderpe.herokuapp.com/auth/signup", user)
-        .then((res) => {
-          savingUser = res.data
-          if (image != undefined) {
-            uploadImage(savingUser)
-          }
-          else {
-            navigation.dispatch(StackActions.replace("Login"));
-          }
-        })
-        .catch((err) => {
-          alert(err.response.data.error);
-          // console.log(err.response);
-          changeSpin(false);
-        });
+      try {
+        const phoneProvider = new PhoneAuthProvider(auth);
+        let temp = "+91" + mobile;
+        // console.log(typeof mobile)
+        console.log(typeof temp)
+        // let abc = parseInt(temp);
+        changeSpin(true)
+        const verificationId = await phoneProvider.verifyPhoneNumber(
+          temp,
+          recaptchaVerifier.current
+        );
+        setVerificationId(verificationId);
+        console.log("Verification code has been sent to your mobile number.")
+        let mob = parseInt(mobile)
+        // console.log(mob)
+        const user2 = { email: email, mobile: mob }
+
+        await axios
+          .post('https://thunderpe.herokuapp.com/auth/verifyEmail', user2)
+          .then((res) => {
+            console.log('Authenticated')
+            changeSpin(false)
+            let temp = "+91" + mobile;
+            navigation.dispatch(StackActions.replace("Verification", {
+              verificationId, mobile: temp, email, id: res.data.id, fullname: fullname,
+              email: email,
+              password: password,
+              mobile: mobileno,
+              pin: pinNum,
+              image: url
+            }))
+            // navigation.dispatch(StackActions.replace('EnterOTP', { id: res.data.id, email: res.data.user.email }))
+          })
+          .catch((err) => {
+            console.log(err)
+            alert("Invalid Mobile or Email")
+            changeSpin(false)
+          })
+        // showMessage({
+        //   text: "Verification code has been sent to your mobile number.",
+        // });
+      } catch (err) {
+        console.log(err)
+        // showMessage({ text: `Error: ${err.message}`, color: "red" });
+      }
+
+      //   changeSpin(true);
+      //   axios
+      //     .post("https://thunderpe.herokuapp.com/auth/signup", user)
+      //     .then((res) => {
+      //       savingUser = res.data
+      //       if (image != undefined) {
+      //         uploadImage(savingUser)
+      //       }
+      //       else {
+      //         navigation.dispatch(StackActions.replace("Login"));
+      //       }
+      //     })
+      //     .catch((err) => {
+      //       alert(err.response.data.error);
+      //       // console.log(err.response);
+      //       changeSpin(false);
+      //     });
+      // }
     }
-  };
+  }
 
   return (
     <KeyboardAvoidingView behavior="position">
@@ -271,6 +291,11 @@ const SignUp = ({ navigation }) => {
             />
             <Image source={User} style={{ position: "absolute", top: 10 }} />
           </View>
+          <FirebaseRecaptchaVerifierModal
+            ref={recaptchaVerifier}
+            firebaseConfig={app.options}
+          // attemptInvisibleVerification
+          />
           <View style={{ flexDirection: "row" }}>
             <TextInput
               style={styles.input}
