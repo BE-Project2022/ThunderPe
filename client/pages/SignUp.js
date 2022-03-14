@@ -158,21 +158,18 @@ const SignUp = ({ navigation }) => {
     else {
       let mobileno = parseInt(mobile);
       let pinNum = parseInt(pin);
-      // console.log(pinNum)
       const user = {
         fullname: fullname,
         email: email,
         password: password,
         mobile: mobileno,
         pin: pinNum,
-        image: url
+        image: image
       };
       try {
         const phoneProvider = new PhoneAuthProvider(auth);
         let temp = "+91" + mobile;
-        // console.log(typeof mobile)
-        console.log(typeof temp)
-        // let abc = parseInt(temp);
+        // console.log(typeof temp)
         changeSpin(true)
         const verificationId = await phoneProvider.verifyPhoneNumber(
           temp,
@@ -181,7 +178,6 @@ const SignUp = ({ navigation }) => {
         setVerificationId(verificationId);
         console.log("Verification code has been sent to your mobile number.")
         let mob = parseInt(mobile)
-        // console.log(mob)
         const user2 = { email: email, mobile: mob }
 
         await axios
@@ -196,41 +192,17 @@ const SignUp = ({ navigation }) => {
               password: password,
               mobile: mobileno,
               pin: pinNum,
-              image: url
+              image: image
             }))
-            // navigation.dispatch(StackActions.replace('EnterOTP', { id: res.data.id, email: res.data.user.email }))
           })
           .catch((err) => {
             console.log(err)
             alert("Invalid Mobile or Email")
             changeSpin(false)
           })
-        // showMessage({
-        //   text: "Verification code has been sent to your mobile number.",
-        // });
       } catch (err) {
         console.log(err)
-        // showMessage({ text: `Error: ${err.message}`, color: "red" });
       }
-
-      //   changeSpin(true);
-      //   axios
-      //     .post("https://thunderpe.herokuapp.com/auth/signup", user)
-      //     .then((res) => {
-      //       savingUser = res.data
-      //       if (image != undefined) {
-      //         uploadImage(savingUser)
-      //       }
-      //       else {
-      //         navigation.dispatch(StackActions.replace("Login"));
-      //       }
-      //     })
-      //     .catch((err) => {
-      //       alert(err.response.data.error);
-      //       // console.log(err.response);
-      //       changeSpin(false);
-      //     });
-      // }
     }
   }
 

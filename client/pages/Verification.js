@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Text,
     View,
@@ -24,6 +24,8 @@ import {
     PhoneAuthProvider,
     signInWithCredential,
 } from "firebase/auth";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { storage } from "../controllers/Firebase";
 import {
     CodeField,
     Cursor,
@@ -34,6 +36,8 @@ import Spinner from "react-native-loading-spinner-overlay/lib";
 import { light, dark } from "../controllers/Theme";
 import axios from "axios";
 import { StackActions } from "@react-navigation/routers";
+import { storeData } from "../controllers/Data";
+import jwtDecode from "jwt-decode";
 
 const CELL_COUNT_MOBILE = 6;
 
@@ -50,6 +54,8 @@ const Verification = ({ route, navigation }) => {
     for (var i = 0; i < length - 5; i++) {
         email = email + '*'
     }
+    var usersData = []
+
     // mobile = mobile.slice(0, 7) + "******"
     const [phoneNumber, setPhoneNumber] = React.useState();
     const [mobileVerificationCode, setMobileVerificationCode] = React.useState();
@@ -64,13 +70,15 @@ const Verification = ({ route, navigation }) => {
         password: route.params.password,
         mobile: route.params.mobile,
         pin: route.params.pin,
-        image: route.params.image
+        image: url
     }
+    const checkImage = route.params.image
     console.log("USER: ", user)
+    console.log('CHECKIM: ', checkImage)
     const [value, setValue] = useState("");
     const [spin, changeSpin] = useState(false)
 
-    const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT_MOBILE });
+    const refer = useBlurOnFulfill({ value, cellCount: CELL_COUNT_MOBILE });
     const [props, getCellOnLayoutHandler] = useClearByFocusCell({
         value,
         setValue,
@@ -79,8 +87,27 @@ const Verification = ({ route, navigation }) => {
         setValue(e);
         // console.log(e)
     };
+
+    useEffect(() => {
+        axios
+            .get("https://thunderpe.herokuapp.com/auth/getallusers")
+            .then((res) => {
+                res.data.forEach(item => {
+                    // console.log(item.fullname)
+                    usersData.push(item)
+                    // console.log(text)
+                })
+            })
+            .catch((err) => {
+                alert(err.response.data.error);
+                // console.log(err.response);
+                changeSpin(false);
+            });
+    })
+
     const uploadImage = async (user) => {
-        if (user.image != undefined) {
+        console.log('HERERERERER')
+        if (checkImage != null) {
             const blob = await new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
                 xhr.onload = function () {
@@ -90,7 +117,7 @@ const Verification = ({ route, navigation }) => {
                     reject(new TypeError("Network request failed"));
                 };
                 xhr.responseType = "blob";
-                xhr.open("GET", image, true);
+                xhr.open("GET", checkImage, true);
                 xhr.send(null);
             });
 
@@ -115,9 +142,16 @@ const Verification = ({ route, navigation }) => {
                 .post('https://thunderpe.herokuapp.com/auth/updateUser', temp)
                 .then((res) => {
                     console.log("DATA: ", res.data)
+                    storeData(res.data.user.token)
+                    const decoded = jwtDecode(res.data.user.token)
+                    usersData.find((item, i) => {
+                        if (item.email === decoded.email) {
+                            usersData.splice(i, 1)
+                            return true
+                        }
+                    })
                     changeSpin(false)
-                    console.log('Here')
-                    navigation.dispatch(StackActions.replace("Login"));
+                    navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
                 })
                 .catch((e) => console.log(e.response))
             // changeSpin(false);
@@ -128,17 +162,26 @@ const Verification = ({ route, navigation }) => {
 
     const signUp = async () => {
         changeSpin(true);
+
         await axios
             .post("https://thunderpe.herokuapp.com/auth/signup", user)
             .then((res) => {
                 let savingUser = res.data
-                if (user.image != url) {
+                console.log(savingUser)
+                if (checkImage != null) {
                     uploadImage(savingUser)
                 }
                 else {
-                    console.log("IN ELSE")
+                    storeData(res.data.user.token)
+                    const decoded = jwtDecode(res.data.user.token)
+                    usersData.find((item, i) => {
+                        if (item.email === decoded.email) {
+                            usersData.splice(i, 1)
+                            return true
+                        }
+                    })
                     changeSpin(false)
-                    navigation.dispatch(StackActions.replace("Login"));
+                    navigation.dispatch(StackActions.replace("Dashboard", { user: decoded, users: usersData }));
                 }
             })
             .catch((err) => {
@@ -148,6 +191,7 @@ const Verification = ({ route, navigation }) => {
     }
     const verify = async () => {
         try {
+            changeSpin(true)
             const credential = PhoneAuthProvider.credential(
                 verificationId,
                 mobileVerificationCode
@@ -164,14 +208,17 @@ const Verification = ({ route, navigation }) => {
                         signUp()
                     }
                     else {
+                        changeSpin(false)
                         alert(`Invalid OTP`)
                     }
                 })
                 .catch((err) => {
+                    changeSpin(false)
                     alert(err.response.data.error)
                 })
         }
         catch (err) {
+            changeSpin(false)
             showMessage({ text: `Error: ${err.message}`, color: "red" });
             alert(`ERROR: ${err.message}`)
         }
@@ -207,7 +254,7 @@ const Verification = ({ route, navigation }) => {
 
 
             <CodeField
-                ref={ref}
+                ref={refer}
                 value={mobileVerificationCode}
                 onChangeText={setMobileVerificationCode}
                 cellCount={CELL_COUNT_MOBILE}
@@ -228,7 +275,7 @@ const Verification = ({ route, navigation }) => {
 
 
             <CodeField
-                ref={ref}
+                ref={refer}
                 value={emailVerificationCode}
                 onChangeText={setEmailVerificationCode}
                 cellCount={CELL_COUNT_MOBILE}

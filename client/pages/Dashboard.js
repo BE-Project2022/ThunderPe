@@ -45,9 +45,6 @@ const Dashboard = ({ route, navigation }) => {
   const changeCover = (e) => {
     setScreenCover(e.value);
   };
-  // console.log(route.params.users)
-  // console.log(useIsFocused())
-  // var userData = [];
   useFocusEffect(
     useCallback(() => {
 
@@ -127,7 +124,7 @@ const Dashboard = ({ route, navigation }) => {
         }}
       >
         <TouchableOpacity onPress={() => {
-          console.log('hi')
+          // console.log('hi')
           setExpanded(false)
         }}>
           <Image source={Less} style={{ alignSelf: "center", marginTop: 10 }} />
@@ -160,8 +157,6 @@ const Dashboard = ({ route, navigation }) => {
     let i = 0;
     userData.splice(0, userData.length);
     for (i = 0; i < 9; i++) {
-
-      // console.log(route.params.users[i])
       const temp = i;
       const u = route.params.users[i].fullname.split(" ");
       console.log()
@@ -170,7 +165,7 @@ const Dashboard = ({ route, navigation }) => {
           <TouchableOpacity key={temp} onPress={(res) => payUser(temp)}>
             <View style={{ marginTop: 14, marginLeft: 20 }}>
               <Image source={route.params.users[i].image != null ? { uri: route.params.users[i].image } : { uri: url }} style={{ height: 55, width: 55, borderRadius: 60 }} />
-              <Text style={{ marginLeft: 10 }}>{u[0]}</Text>
+              <Text style={{ textAlign: 'center' }}>{u[0]}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -187,12 +182,12 @@ const Dashboard = ({ route, navigation }) => {
           borderColor: "black",
           borderWidth: 1.5,
           marginTop: 20,
-          marginLeft: 24,
+          marginLeft: 18,
         }}
       >
         <TouchableOpacity onPress={showAllUsers}>
           <Image source={More} style={{ alignSelf: "center", marginTop: 10 }} />
-          <Text style={{ marginTop: 14, marginLeft: 3 }}>More</Text>
+          <Text style={{ marginTop: 14, textAlign: 'center' }}>More</Text>
         </TouchableOpacity>
       </View>
     );
@@ -303,9 +298,6 @@ const Dashboard = ({ route, navigation }) => {
           enabledInnerScrolling={true}
           enabledContentGestureInteraction={true}
           enabledContentTapInteraction={false}
-          // backDropColor="red"
-          // isModal
-          // containerStyle={{ backgroundColor: "red" }}
           tipStyle={{
             backgroundColor: "black",
             width: 78,
@@ -313,8 +305,6 @@ const Dashboard = ({ route, navigation }) => {
             height: 3.5,
           }}
           tipHeaderRadius={28}
-          // headerStyle={{backgroundColor:"red"}}
-          // bodyStyle={{backgroundColor:"red",flex:1}}
           onChangeSnap={changeCover}
           body={
             <ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.payments} nestedScrollEnabled={true}>
@@ -401,7 +391,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     width: "80%",
     alignSelf: "center",
-    // height: '100%'
   },
   button: {
     backgroundColor: "#ffc100",
@@ -414,20 +403,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   img: {
-    // top: 5,
     height: 55,
   },
   title: {
     fontSize: 20,
     color: "white",
-    // backgroundColor: "#FFC100",
     height: 40,
     fontWeight: "bold",
     marginTop: 4,
     marginRight: "17%",
     marginLeft: "-3.2%",
-    // marginLeft: -10
-    // marginBottom: 20,
   },
   darkHeader: {
     backgroundColor: dark.primary,
@@ -455,7 +440,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
-  background: { // this shape is a circle 
+  background: {
     alignSelf: 'center',
     width: window.width,
     overflow: 'hidden',
@@ -501,7 +486,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexWrap: "wrap",
     width: "105%",
-    // backgroundColor: 'red'
   },
   paymentButton: {
     backgroundColor: light.primary,
@@ -513,10 +497,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: "80%",
     alignSelf: "center",
-    shadowColor: "rgb(0,0,0)", // IOS
-    shadowOffset: { height: 1, width: 1 }, // IOS
-    shadowOpacity: 1, // IOS
-    shadowRadius: 4, //IOS
+    shadowColor: "rgb(0,0,0)",
+    shadowOffset: { height: 1, width: 1 },
+    shadowOpacity: 1,
+    shadowRadius: 4,
     elevation: 7,
   },
   logout: {
