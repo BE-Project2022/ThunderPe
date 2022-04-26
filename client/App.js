@@ -33,6 +33,8 @@ import BarCodeScan from "./pages/BarCodeScan";
 import UserProfile from "./pages/UserProfile";
 import Verification from "./pages/Verification";
 
+import "./global";
+
 // const _removeData = async (useName) => {
 //   try {
 //     await AsyncStorage.removeItem("@storage_Key");
@@ -50,7 +52,7 @@ export default function App() {
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
     "Warning: Can't perform a React state update on an unmounted component",
-    "AsyncStorage has been extracted from react-native core and will be removed in a future release"
+    "AsyncStorage has been extracted from react-native core and will be removed in a future release",
   ]);
   // console.log('LoggedIn: ', isLoggedin)
   return (
