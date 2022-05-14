@@ -1,51 +1,7 @@
 pragma solidity 0.8.6;
+import "./erc.sol";
+import "./owned.sol";
 
-// erc20 standards
-
-abstract contract ERC20Token {
-    function name() virtual public view returns (string memory);
-    function symbol() virtual public view returns (string memory);
-    function decimals() virtual public view returns (uint8);
-    // total no of tokens in circulation
-    function totalSupply() virtual public view returns (uint256);
-    // token balance of owner
-    function balanceOf(address _owner) virtual public view returns (uint256 balance);
-    
-    function transfer(address _to, uint256 _value) virtual public returns (bool success);
-    function transferFrom(address _from, address _to, uint256 _value) virtual public returns (bool success);
-
-    // approve transfer from spender
-    function approve(address _spender, uint256 _value) virtual public returns (bool success);
-    // how much money you can take out of owners acc.
-    function allowance(address _owner, address _spender) virtual public view returns (uint256 remaining);
-    
-    event Transfer(address indexed _from, address indexed _to, uint256 _value);
-    event Approval(address indexed _owner, address indexed _spender, uint256 _value);
-}
-
-// Defining owner nd ownership.
-contract Owned {
-    address public owner; // from
-    address public newOwner;  // to
-
-    event OwnershipTransferred(address indexed _from, address indexed _to);
-
-    constructor() {
-        owner = msg.sender;
-    }
-
-    function transferOwnership(address _to) public {
-        require(msg.sender == owner);
-        newOwner = _to;
-    }
-
-    function acceptOwnership() public {
-        require(msg.sender == newOwner);
-        emit OwnershipTransferred(owner, newOwner);
-        owner = newOwner;
-        newOwner = address(0);
-    }
-}
 
 contract Token is ERC20Token, Owned {
 
@@ -63,7 +19,7 @@ contract Token is ERC20Token, Owned {
         _name = "Token";
         _decimal = 0;
         _totalSupply = 100;
-        _minter = msg.sender;// Enter a public address here!
+        _minter = msg.sender;// 
 
         balances[_minter] = _totalSupply;
         emit Transfer(address(0), _minter, _totalSupply);
@@ -90,7 +46,7 @@ contract Token is ERC20Token, Owned {
     }
 
     function transferFrom(address _from, address _to, uint256 _value) public override returns (bool success) {
-        require(balances[_from] >= _value);
+        require(balances[_from] >= _value, "Insufficient Balance");
         balances[_from] -= _value; // balances[_from] = balances[_from] - _value
         balances[_to] += _value;
         emit Transfer(_from, _to, _value);
@@ -114,6 +70,7 @@ contract Token is ERC20Token, Owned {
         require(msg.sender == _minter);
         balances[_minter] += amount;
         _totalSupply += amount;
+       //  emit Transfer(address(0), _minter, amount);
         return true;
     }
 
