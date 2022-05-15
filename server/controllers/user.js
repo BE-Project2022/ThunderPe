@@ -120,9 +120,9 @@ export const checkToken = async (req, res) => {
     const token = await ThunderUser.findOne({
       email: req.body.email
     })
-    console.log(token)
+    console.log(token.token === req.body.token)
     // console.log(req.body.token)
-    if (token) {
+    if (token.token === req.body.token) {
       res.status(200).send({ result: true })
     }
     else {
