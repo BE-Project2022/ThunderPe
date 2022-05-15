@@ -117,7 +117,7 @@ export const isLoggedIn = async (req, res) => {
 export const checkToken = async (req, res) => {
   try {
     const token = await ThunderUser.findOne({
-      token: req.body.token
+      token: req.body.email
     })
     console.log(token)
     console.log(req.body.token)
