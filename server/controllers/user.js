@@ -119,6 +119,7 @@ export const checkToken = async (req, res) => {
     const token = await ThunderUser.findOne({
       token: req.body.token
     })
+    console.log(token)
     console.log(req.body.token)
     if (token) {
       res.status(200).send({ result: true })
