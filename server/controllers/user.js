@@ -116,11 +116,12 @@ export const isLoggedIn = async (req, res) => {
 
 export const checkToken = async (req, res) => {
   try {
+    console.log(req.body.email)
     const token = await ThunderUser.findOne({
-      token: req.body.email
+      email: req.body.email
     })
     console.log(token)
-    console.log(req.body.token)
+    // console.log(req.body.token)
     if (token) {
       res.status(200).send({ result: true })
     }
