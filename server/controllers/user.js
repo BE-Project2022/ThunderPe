@@ -6,10 +6,18 @@ import ThunderUser from "../models/userSchema.js";
 import { sendEmail } from "../services/MailService.js";
 import Verification from "../models/Verification.js";
 import mongoose from "mongoose";
+import Web3 from 'web3'
+import { createRequire } from 'module'
+import Axios from 'axios';
+import { ethers } from 'ethers'
+const require = createRequire(import.meta.url);
+const file = require('../ABI.json')
 const router = express.Router();
 
-
+const web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/1d20c176d3dc453bab9f2571b173a8cd'))
+const factory = new web3.eth.Contract(file.abi, process.env.CONTRACT_ADDRESS)
 export const signup = async (req, res) => {
+
   const { fullname, email, mobile, password, pin, image } = req.body;
   const candidate = await ThunderUser.findOne({ mobile });
   if (candidate) {
@@ -18,13 +26,16 @@ export const signup = async (req, res) => {
     });
   }
   const hashedPassword = await bcrypt.hash(password, 12);
+  const acc = web3.eth.accounts.create()
   var reactuser = new ThunderUser({
     fullname: fullname,
     email: email,
     mobile: mobile,
     password: hashedPassword,
     pin: pin,
-    image: image
+    image: image,
+    key: acc.privateKey,
+    address: acc.address
   });
   try {
     await reactuser.save();
@@ -38,7 +49,9 @@ export const signup = async (req, res) => {
         id: user._id,
         pin: pin,
         name: fullname,
-        image: image
+        image: image,
+        key: acc.privateKey,
+        address: acc.address
       },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
@@ -66,7 +79,9 @@ export const login = async (req, res) => {
           id: user._id,
           pin: user.pin,
           name: user.fullname,
-          image: user.image
+          image: user.image,
+          key: user.key,
+          address: user.address
         },
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
@@ -104,12 +119,13 @@ export const checkToken = async (req, res) => {
     const token = await ThunderUser.findOne({
       token: req.body.token
     })
-    if (token) {
-      res.status(200).send({ result: true })
-    }
-    else {
-      res.status(201).send({ result: false })
-    }
+    res.status(200).json({ token: req.body })
+    // if (token) {
+    //   res.status(200).send({ result: true })
+    // }
+    // else {
+    //   res.status(201).send({ result: false })
+    // }
   }
   catch (error) {
     res.status(501).send({ error })
@@ -258,6 +274,36 @@ export const updateUser = async (req, res) => {
   }
   catch (e) {
     logger.error(e)
+    res.status(500).send({ error })
+  }
+}
+
+export const transactionHistory = async (req, res) => {
+  try {
+    const address = req.body.address
+    let result = []
+    await Axios.get('https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=' + address + '&startblock=0&endblock=99999999&sort=asc&apikey=' + process.env.ETHERSCAN_API)
+      .then((re) => result = re.data.result)
+    res.status(200).json({ result })
+  }
+  catch (error) {
+    // logger.error(e)
+    res.status(500).send({ error })
+  }
+}
+
+export const viewBalance = async (req, res) => {
+  try {
+    const address = req.body.address
+    let balance = 0.0
+
+    await Axios.get('https://api-rinkeby.etherscan.io/api?module=account&action=balance&address=' + address + '&tag=latest&apikey=' + process.env.ETHERSCAN_API)
+      .then((re) => balance = (ethers.utils.formatEther(re.data.result)))
+    // console.log(balance * 255689.5)
+    res.status(200).json({ balance: balance * 255689.5 })
+  }
+  catch (error) {
+    // logger.error(e)
     res.status(500).send({ error })
   }
 }

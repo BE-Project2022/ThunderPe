@@ -11,7 +11,9 @@ import {
   updateUser,
   checkToken,
   isLoggedIn,
-  verifyEmail
+  verifyEmail,
+  transactionHistory,
+  viewBalance
 } from "../controllers/user.js";
 import { UserData } from "../controllers/profileData.js";
 
@@ -35,5 +37,7 @@ router.post('/updateUser', updateUser)
 router.post('/checkToken', checkToken)
 router.post('/isLoggedIn', isLoggedIn)
 router.post('/verifyEmail', verifyEmail)
+router.post('/transactionHistory', transactionHistory)
+router.post('/viewBalance', viewBalance)
 
 export default router;
