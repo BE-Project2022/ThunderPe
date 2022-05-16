@@ -13,7 +13,8 @@ import {
   isLoggedIn,
   verifyEmail,
   transactionHistory,
-  viewBalance
+  viewBalance,
+  transaction,
 } from "../controllers/user.js";
 import { UserData } from "../controllers/profileData.js";
 
@@ -24,7 +25,6 @@ const router = express.Router();
 //get methods
 router.get("/getallusers", getUser);
 router.get("/getallotp", getVerification);
-
 
 //post methods
 router.post("/signup", signup);
@@ -39,5 +39,6 @@ router.post('/isLoggedIn', isLoggedIn)
 router.post('/verifyEmail', verifyEmail)
 router.post('/transactionHistory', transactionHistory)
 router.post('/viewBalance', viewBalance)
+router.post('/transaction', transaction)
 
 export default router;

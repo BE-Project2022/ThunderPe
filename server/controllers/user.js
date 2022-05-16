@@ -6,16 +6,18 @@ import ThunderUser from "../models/userSchema.js";
 import { sendEmail } from "../services/MailService.js";
 import Verification from "../models/Verification.js";
 import mongoose from "mongoose";
+import { Buffer } from "buffer";
 import Web3 from 'web3'
 import { createRequire } from 'module'
 import Axios from 'axios';
 import { ethers } from 'ethers'
 const require = createRequire(import.meta.url);
 const file = require('../ABI.json')
+var Tx = require('ethereumjs-tx').Transaction
 const router = express.Router();
 
 const web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/1d20c176d3dc453bab9f2571b173a8cd'))
-const factory = new web3.eth.Contract(file.abi, process.env.CONTRACT_ADDRESS)
+const contract = new web3.eth.Contract(file.abi, process.env.CONTRACT_ADDRESS)
 export const signup = async (req, res) => {
 
   const { fullname, email, mobile, password, pin, image } = req.body;
@@ -284,7 +286,7 @@ export const transactionHistory = async (req, res) => {
   try {
     const address = req.body.address
     let result = []
-    await Axios.get('https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=' + address + '&startblock=0&endblock=99999999&sort=asc&apikey=' + process.env.ETHERSCAN_API)
+    await Axios.get('http://api-rinkeby.etherscan.io/api?module=account&action=tokentx&address=' + address + '&startblock=0&endblock=999999999&sort=desc&apikey=' + process.env.ETHERSCAN_API)
       .then((re) => result = re.data.result)
     res.status(200).json({ result })
   }
@@ -297,15 +299,48 @@ export const transactionHistory = async (req, res) => {
 export const viewBalance = async (req, res) => {
   try {
     const address = req.body.address
-    let balance = 0.0
+    var balance = await contract.methods.balanceOf(address).call()
 
-    await Axios.get('https://api-rinkeby.etherscan.io/api?module=account&action=balance&address=' + address + '&tag=latest&apikey=' + process.env.ETHERSCAN_API)
-      .then((re) => balance = (ethers.utils.formatEther(re.data.result)))
-    // console.log(balance * 255689.5)
-    res.status(200).json({ balance: balance * 255689.5 })
+    res.status(200).json({ balance })
   }
   catch (error) {
     // logger.error(e)
     res.status(500).send({ error })
   }
+}
+
+export const transaction = async (req, res) => {
+  try {
+    const key = req.body.key
+    // const from = req.body.from
+    const toAddress = req.body.to
+    const tokenAddress = process.env.CONTRACT_ADDRESS
+    const fromAddress = req.body.from
+    var transferAmount = req.body.amount
+    var gasPriceGwei = 3;
+    var gasLimit = 1000000;
+    var count = await web3.eth.getTransactionCount(fromAddress);
+    var rawTransaction = {
+      "from": fromAddress,
+      "to": tokenAddress,
+      "nonce": "0x" + count.toString(16),
+      "gasPrice": web3.utils.toHex(gasPriceGwei * 1e9),
+      "gasLimit": web3.utils.toHex(gasLimit),
+      "value": "0x0",
+      "data": contract.methods.transfer(toAddress, transferAmount).encodeABI(),
+    };
+    var privKey = new Buffer.from(key, 'hex');
+    var tx = new Tx(rawTransaction, { chain: 'rinkeby' })
+    tx.sign(privKey);
+    var serializedTx = tx.serialize();
+    var receipt = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'));
+    console.log(`Receipt info: \n${JSON.stringify(receipt, null, '\t')}\n------------------------`);
+    res.status(200).json({ result: true })
+
+  }
+  catch (error) {
+    // logger.error(e)
+    res.status(500).send({ error })
+  }
+  // 4715.15
 }
