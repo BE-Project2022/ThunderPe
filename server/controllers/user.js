@@ -29,6 +29,20 @@ export const signup = async (req, res) => {
   }
   const hashedPassword = await bcrypt.hash(password, 12);
   const acc = web3.eth.accounts.create()
+  let network = 'rinkeby'
+  let provider = ethers.getDefaultProvider(network)
+  // console.log(provider)
+  let wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
+  // console.log(wallet)
+  let amountInEther = '0.04'
+  let tx = {
+    to: acc.address,
+    // Convert currency unit from ether to wei
+    value: ethers.utils.parseEther(amountInEther)
+  }
+  wallet.sendTransaction(tx)
+    .then((txObj) => console.log('txHash', txObj.hash))
+    .catch((err) => console.log(err))
   var reactuser = new ThunderUser({
     fullname: fullname,
     email: email,
@@ -335,14 +349,17 @@ export const transaction = async (req, res) => {
     var tx = new Tx(rawTransaction, { chain: 'rinkeby' })
     tx.sign(privKey);
     var serializedTx = tx.serialize();
-    var receipt = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'));
-    console.log(`Receipt info: \n${JSON.stringify(receipt, null, '\t')}\n------------------------`);
-    res.status(200).json({ result: receipt })
+    web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex')).then((res) => console.log(res))
+      .catch((err) => console.log(err))
+    // console.log(receipt)
+    // console.log(`Receipt info: \n${JSON.stringify(receipt, null, '\t')}\n------------------------`);
+    // res.status(200).json({ result: receipt })
+    res.status(200).send()
 
   }
   catch (error) {
     // logger.error(e)
-    res.status(500).send({ error })
+    res.status(500).json({ error })
   }
   // 4715.15
 }
