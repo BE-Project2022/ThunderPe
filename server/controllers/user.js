@@ -266,7 +266,9 @@ export const updateUser = async (req, res) => {
           id: user._id,
           pin: pin,
           name: fullname,
-          image: image
+          image: image,
+          key: user.key,
+          address: user.address
         },
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
@@ -349,7 +351,8 @@ export const getOneUser = async (req, res) => {
     const user = await ThunderUser.findOne({
       address: req.body.address
     })
-    // console.log(user)
+    user.address = user.address.toUpperCase()
+    console.log(user)
     if (user)
       res.status(200).json({ user })
     else
