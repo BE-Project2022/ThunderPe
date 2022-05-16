@@ -335,7 +335,7 @@ export const transaction = async (req, res) => {
     var serializedTx = tx.serialize();
     var receipt = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'));
     console.log(`Receipt info: \n${JSON.stringify(receipt, null, '\t')}\n------------------------`);
-    res.status(200).json({ result: true })
+    res.status(200).json({ result: receipt })
 
   }
   catch (error) {
