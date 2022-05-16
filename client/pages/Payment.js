@@ -8,7 +8,7 @@ import axios from "axios";
 import { Audio } from "expo-av";
 
 const Payment = ({ navigation, route }) => {
-  const success = true
+  const success = route.params.result
   const [fadeAnim] = useState(new Animated.Value(1));
 
   setTimeout(() => {

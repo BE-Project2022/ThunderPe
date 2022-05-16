@@ -41,7 +41,8 @@ const UserProfile = ({ route, navigation }) => {
     LogBox.ignoreLogs([`Setting a timer for a long period`]);
     LogBox.ignoreLogs(['Warning: ...']);
     const user = route.params.currentUser
-    const { name, email, mobile, pin } = user
+    const { name, email, mobile, pin, address } = user
+    console.log(address)
     const oldName = name
     const oldPin = pin
     let url = 'https://firebasestorage.googleapis.com/v0/b/thunderpe-33b6a.appspot.com/o/files%2Fuser.png?alt=media&token=007a7e33-42d9-4848-a9ff-665b6df3bd7b'
@@ -287,7 +288,7 @@ const UserProfile = ({ route, navigation }) => {
                 ) : null}
                 <View style={{ alignItems: 'center', marginTop: 10 }}>
                     <QRCode
-                        value={`${email},${mobile},${name},${image}`}
+                        value={`${email},${mobile},${name},${image},${address}`}
                         logo={{ uri: base64Logo }}
                         logoBackgroundColor='transparent'
                     />

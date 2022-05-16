@@ -27,6 +27,7 @@ import { dark, light } from "../controllers/Theme";
 import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
 import QR from "../assets/images/qr.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios, { Axios } from "axios";
 const window = Dimensions.get('window');
 const Dashboard = ({ route, navigation }) => {
   let url = 'https://firebasestorage.googleapis.com/v0/b/thunderpe-33b6a.appspot.com/o/files%2Fuser.png?alt=media&token=007a7e33-42d9-4848-a9ff-665b6df3bd7b'
@@ -42,6 +43,20 @@ const Dashboard = ({ route, navigation }) => {
   // console.log(route.params.user)
   const [fadeAnim, setFadeAnim] = useState(new Animated.Value(0))
   // console.log(route.params.users)
+  const [balance, setBalance] = useState(0.0)
+
+
+  const updateBalance = async () => {
+    // console.log(user)
+    const data = { address: user.address }
+    console.log(user.address)
+    // console.log(data)
+    await axios.post('https://thunderpe.herokuapp.com/auth/viewBalance', data)
+      .then((res) => setBalance(res.data.balance))
+    // console.log(balance.toPrecision(6))
+
+  }
+
   const changeCover = (e) => {
     setScreenCover(e.value);
   };
@@ -76,11 +91,12 @@ const Dashboard = ({ route, navigation }) => {
       phoneNumbers: [{ number: route.params.users[e].mobile }],
       name: route.params.users[e].fullname,
     };
-
+    console.log(route.params.users[e])
     navigation.navigate("EnterAmount", {
       user: route.params.users[e],
       currentUser: route.params.user,
-      users: route.params.users
+      users: route.params.users,
+      balance: balance
     });
     setFadeAnim(new Animated.Value(0))
   };
@@ -198,7 +214,7 @@ const Dashboard = ({ route, navigation }) => {
   } else if (route.params.users.length < 9) {
     setLessUsers();
   }
-
+  updateBalance()
   return (
     <Animated.View style={{ opacity: fadeAnim }} >
       <View>
@@ -207,7 +223,8 @@ const Dashboard = ({ route, navigation }) => {
             onPress={() =>
               navigation.navigate("BarCodeScan", {
                 currentUser: route.params.user,
-                users: route.params.users
+                users: route.params.users,
+                balance: balance
               })
             }
             style={{ left: '-50%' }}
@@ -235,7 +252,8 @@ const Dashboard = ({ route, navigation }) => {
                 hideMenu();
                 navigation.navigate("UserProfile", {
                   currentUser: route.params.user,
-                  users: route.params.users
+                  users: route.params.users,
+                  balance: balance
                 });
               }}
             >
@@ -267,7 +285,7 @@ const Dashboard = ({ route, navigation }) => {
               <Text style={screenCover != "70%" ? styles.normal : styles.text}>
                 {screenCover === "70%"
                   ? "WALLET BALANCE"
-                  : "Balance: \u20B9 150545"}
+                  : "Balance: \u20B9 " + balance.toString()}
               </Text>
               <Image
                 source={Rupee}
@@ -280,11 +298,11 @@ const Dashboard = ({ route, navigation }) => {
               <Text
                 style={
                   screenCover === "70%"
-                    ? { top: 5, alignSelf: "center", fontWeight: 'bold', fontSize: 28, right: -14 }
+                    ? { top: 1, alignSelf: "center", fontWeight: 'bold', fontSize: 32, }
                     : null
                 }
               >
-                150545
+                {balance.toString()}
               </Text>
             </View>
           </LinearGradient>
@@ -344,7 +362,7 @@ const Dashboard = ({ route, navigation }) => {
                   }}
                 />
                 <View>
-                  <TouchableOpacity style={{ height: 60, flexDirection: "row" }}>
+                  <TouchableOpacity style={{ height: 60, flexDirection: "row" }} onPress={() => navigation.navigate('TransactionHistory', { user: route.params.user })}>
                     <Text style={{ fontSize: 18, marginTop: "3.5%" }}>
                       Show Transaction History
                     </Text>
@@ -374,7 +392,7 @@ const Dashboard = ({ route, navigation }) => {
         />
         <TouchableOpacity
           style={styles.paymentButton}
-          onPress={() => navigation.navigate("userContacts", { currentUser: user, users: route.params.users })}
+          onPress={() => navigation.navigate("userContacts", { currentUser: user, users: route.params.users, balance: balance })}
         >
           <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
             + New Payment

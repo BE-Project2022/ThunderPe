@@ -20,6 +20,8 @@ const EnterAmount = ({ route, navigation }) => {
   // console.log(route.params.user)
   LogBox.ignoreLogs(['Warning: ...']);
   const payingTo = route.params.user;
+  const balance = route.params.balance
+  console.log(balance)
   let url = 'https://firebasestorage.googleapis.com/v0/b/thunderpe-33b6a.appspot.com/o/files%2Fuser.png?alt=media&token=007a7e33-42d9-4848-a9ff-665b6df3bd7b'
   // console.log(payingTo)
   const payer = route.params.currentUser;
@@ -29,6 +31,7 @@ const EnterAmount = ({ route, navigation }) => {
   const [exitApp, setExitApp] = useState(0);
   const changeAmount = (e) => {
     setAmount(parseInt(e));
+    // console.log(amount)
   };
   const changeSheet = () => {
     setShowSheet(false);
@@ -36,7 +39,11 @@ const EnterAmount = ({ route, navigation }) => {
   const sendMoney = () => {
     if (amount === 0) {
       alert("Please enter atleast 1 rupee");
-    } else {
+    }
+    else if (amount > balance) {
+      alert('Your available balance is: ' + balance)
+    }
+    else {
       setShowSheet(true);
     }
     // console.log(amount)

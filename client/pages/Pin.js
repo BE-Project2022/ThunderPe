@@ -33,11 +33,12 @@ const Pin = ({ route, navigation }) => {
   if (!navigation.canGoBack()) {
     user = jwtDecode(route.params.token);
     // console.log(user)
-    const { id, email, mobile, name, image } = user;
+    const { id, email, mobile, name, image, key, address } = user;
   } else {
     payer = route.params.from;
     payee = route.params.to;
     amount = route.params.amount;
+    // console.log(payer)
   }
   // console.log(email)
   var usersData = [];
@@ -76,7 +77,7 @@ const Pin = ({ route, navigation }) => {
           res.data.forEach(item => {
             // console.log(user.id !== item._id)
             // console.log(item.fullname)
-            if (user.id !== item._id) {
+            if (user.id !== item._id && item.fullname !== 'ThunderPe') {
               usersData.push(item)
               // console.log(item)
             }
@@ -108,8 +109,30 @@ const Pin = ({ route, navigation }) => {
         }, 3000);
 
       }
-      else
-        navigation.dispatch(StackActions.replace("Payment", { user: payer, payee, amount, users: route.params.users }));
+      else {
+        const data = {
+          key: payer.key,
+          to: payee.address,
+          from: payer.address,
+          amount
+        }
+        console.log(data)
+        changeSpin(true)
+        axios.post('https://thunderpe.herokuapp.com/auth/transaction', data)
+          .then((res) => {
+            console.log(res.data.result.status)
+            if (res.data.result.status)
+              navigation.dispatch(StackActions.replace("Payment", { user: payer, payee, amount, users: route.params.users, result: res.data.result.status }));
+          })
+          .catch((err) => {
+            console.log(err.response)
+            if (!err.response.data.error.receipt.status)
+              navigation.dispatch(StackActions.replace("Payment", { user: payer, payee, amount, users: route.params.users, result: false }));
+          })
+        // console.log(result)
+        // changeSpin(false)
+        // navigation.dispatch(StackActions.replace("Payment", { user: payer, payee, amount, users: route.params.users, result: result.data.result }));
+      }
     }
   };
   const checkPin = () => {
@@ -167,7 +190,7 @@ const Pin = ({ route, navigation }) => {
       {spin ? (
         <Spinner
           visible={spin}
-          textContent={"Logging In..."}
+          textContent={"Working on it..."}
           textStyle={styles.spinnerTextStyle}
           color="#323133"
           overlayColor="rgba(255,255,255,0.8)"

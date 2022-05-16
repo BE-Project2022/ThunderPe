@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import {
   Button,
   Text,
@@ -28,6 +28,7 @@ const userContacts = ({ route, navigation }) => {
 
   // console.log(curretUser)
   var usersData = []
+  const users = route.params.users
   useEffect(() => {
 
     (async () => {
@@ -41,18 +42,38 @@ const userContacts = ({ route, navigation }) => {
         if (data.length > 0) {
           const contact = data;
           const memory = contact.filter((user) => {
+            // console.log(user)
             if (user.phoneNumbers) {
               user.phoneNumbers.forEach(item => {
                 item.number = (item.number.replace(/ /g, ""))
                 item.number = (item.number.replace(/-/g, ""))
                 item.number = (item.number.replace("+91", ""))
                 item.number = parseInt(item.number)
+                // const person = users.find(elem => {
+                //   if (elem.mobile == item.number)
+                //     return true
+                //   return false
+                // })
+                // if (person != undefined)
+                // console.log(person)
               })
             }
+            // console.log(user.phoneNumbers)
             return !!user.phoneNumbers;
           });
           setContact(memory);
           setMemoryContact(memory);
+          onThunder.splice(0, onThunder.length);
+          users.forEach(item => {
+            let obj = memory.find(o => o.phoneNumbers[0].number == item.mobile)
+            if (obj != undefined) {
+              onThunder.push(obj)
+            }
+
+          })
+          setMemoryContact(onThunder)
+
+
           changeSpin(false)
         }
       }
@@ -65,12 +86,24 @@ const userContacts = ({ route, navigation }) => {
       <TouchableOpacity
         style={{ marginLeft: 12 }}
         onPress={() => {
-          // console.log(item)
-          navigation.navigate("EnterAmount", {
-            user: item,
-            currentUser: curretUser,
-            users: route.params.users
-          })
+          console.log(item.phoneNumbers[0].number)
+          let receiver = users.find(elem => elem.mobile == item.phoneNumbers[0].number)
+          if (receiver != undefined) {
+            // console.log(receiver)
+            receiver = {
+              ...receiver,
+              phoneNumbers: [{ number: receiver.mobile }],
+              name: receiver.mobile.fullname
+            }
+            // console.log(route.params.balance)
+            navigation.navigate("EnterAmount", {
+              user: receiver,
+              currentUser: curretUser,
+              users: route.params.users,
+              balance: route.params.balance
+            })
+          }
+
         }
         }
       >
@@ -91,7 +124,7 @@ const userContacts = ({ route, navigation }) => {
       return contactLowerCase.indexOf(searchTermLowerCase) > -1;
     });
     setContact(filteredContacts);
-    // setNotOnThunder(filteredContacts)
+    setOnThunder(filteredContacts)
   };
 
   return (
@@ -139,7 +172,7 @@ const userContacts = ({ route, navigation }) => {
         marginLeft: 10,
         color: 'green'
       }}>
-        Your Contacts:
+        Your Contacts on ThunderPe:
       </Text>
       <View
         style={{
@@ -151,7 +184,7 @@ const userContacts = ({ route, navigation }) => {
         }}
       />
       <FlatList
-        data={userContact}
+        data={onThunder}
         renderItem={renderItem}
         ListEmptyComponent={() => <Text>No Contacts Found</Text>}
         keyExtractor={(item, index) => index.toString()}

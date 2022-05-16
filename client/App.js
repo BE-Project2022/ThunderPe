@@ -32,6 +32,7 @@ import ResetPassword from "./pages/ResetPassword";
 import BarCodeScan from "./pages/BarCodeScan";
 import UserProfile from "./pages/UserProfile";
 import Verification from "./pages/Verification";
+import TransactionHistory from "./pages/TransactionHistory";
 
 // const _removeData = async (useName) => {
 //   try {
@@ -82,6 +83,7 @@ export default function App() {
         <Navigate.Screen name="Payment" component={Payment} />
         <Navigate.Screen name="MobileAuth" component={MobileAuth} />
         <Navigate.Screen name="Verification" component={Verification} />
+        <Navigate.Screen name="TransactionHistory" component={TransactionHistory} />
       </Navigate.Navigator>
     </NavigationContainer>
   );
