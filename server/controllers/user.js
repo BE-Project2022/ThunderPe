@@ -344,3 +344,18 @@ export const transaction = async (req, res) => {
   }
   // 4715.15
 }
+export const getOneUser = async (req, res) => {
+  try {
+    const user = await ThunderUser.findOne({
+      address: req.body.address
+    })
+    // console.log(user)
+    if (user)
+      res.status(200).json({ user })
+    else
+      res.status(404).send('User not Found')
+  }
+  catch (err) {
+    res.status(500).json(err);
+  }
+}
