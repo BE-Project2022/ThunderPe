@@ -110,8 +110,14 @@ const Pin = ({ route, navigation }) => {
 
       }
       else {
+        let k = payer.key
+        if (k[0] == '0' && k[1] == 'x') {
+          // console.log('YES')
+          k = k.slice(2)
+          // console.log(k)
+        }
         const data = {
-          key: payer.key,
+          key: k,
           to: payee.address,
           from: payer.address,
           amount
@@ -125,7 +131,7 @@ const Pin = ({ route, navigation }) => {
               navigation.dispatch(StackActions.replace("Payment", { user: payer, payee, amount, users: route.params.users, result: res.data.result.status }));
           })
           .catch((err) => {
-            console.log(err.response)
+            console.log(err.response.data)
             if (!err.response.data.error.receipt.status)
               navigation.dispatch(StackActions.replace("Payment", { user: payer, payee, amount, users: route.params.users, result: false }));
           })

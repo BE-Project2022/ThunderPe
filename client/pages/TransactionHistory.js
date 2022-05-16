@@ -33,12 +33,13 @@ const TransactionHistory = ({ navigation, route }) => {
     // check()
 
     const updateHistory = async () => {
-        // console.log('HIs')
-
+        console.log('HIs')
+        console.log(user.address.toLowerCase())
         history.splice(0, history.length)
         let temp = []
         for (var i = 0; i < data.length; i++) {
             if (data[i].from === user.address.toLowerCase()) {
+                console.log('HERE')
                 const to = data[i].to.toLowerCase()
                 // console.log(to)
                 const toAddr = { address: to }
@@ -72,7 +73,8 @@ const TransactionHistory = ({ navigation, route }) => {
                 } catch (err) { }
             }
             else {
-                const from = data[i].from.toUpperCase()
+                const from = data[i].from.toLowerCase()
+                // console.log(from)
                 const fromAddr = { address: from }
                 try {
                     const receiver = await axios.post('https://thunderpe.herokuapp.com/auth/oneUser', fromAddr)
