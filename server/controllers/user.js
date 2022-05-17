@@ -349,12 +349,11 @@ export const transaction = async (req, res) => {
     var tx = new Tx(rawTransaction, { chain: 'rinkeby' })
     tx.sign(privKey);
     var serializedTx = tx.serialize();
-    web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex')).then((res) => console.log(res))
-      .catch((err) => console.log(err))
-    // console.log(receipt)
-    // console.log(`Receipt info: \n${JSON.stringify(receipt, null, '\t')}\n------------------------`);
-    // res.status(200).json({ result: receipt })
-    res.status(200).send()
+    const receipt = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+    console.log(receipt)
+    console.log(`Receipt info: \n${JSON.stringify(receipt, null, '\t')}\n------------------------`);
+    res.status(200).json({ result: receipt })
+    // res.status(200).send()
 
   }
   catch (error) {
