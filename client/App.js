@@ -33,6 +33,7 @@ import BarCodeScan from "./pages/BarCodeScan";
 import UserProfile from "./pages/UserProfile";
 import Verification from "./pages/Verification";
 import TransactionHistory from "./pages/TransactionHistory";
+import AddMoney from "./pages/AddMoney";
 
 // const _removeData = async (useName) => {
 //   try {
@@ -65,7 +66,7 @@ export default function App() {
           headerShown: false,
           cardStyle: { backgroundColor: "#fff" },
         }}
-        initialRouteName={"SplashScreen"}
+        initialRouteName={"AddMoney"}
       >
         <Navigate.Screen name="Login" component={Login} />
         <Navigate.Screen name="SplashScreen" component={SplashScreen} />
@@ -84,6 +85,7 @@ export default function App() {
         <Navigate.Screen name="MobileAuth" component={MobileAuth} />
         <Navigate.Screen name="Verification" component={Verification} />
         <Navigate.Screen name="TransactionHistory" component={TransactionHistory} />
+        <Navigate.Screen name="AddMoney" component={AddMoney} />
       </Navigate.Navigator>
     </NavigationContainer>
   );
