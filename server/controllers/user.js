@@ -28,7 +28,21 @@ export const signup = async (req, res) => {
     });
   }
   const hashedPassword = await bcrypt.hash(password, 12);
-
+  const acc = web3.eth.accounts.create()
+  let network = 'rinkeby'
+  let provider = ethers.getDefaultProvider(network)
+  // console.log(provider)
+  let wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
+  // console.log(wallet)
+  let amountInEther = '0.04'
+  let tx = {
+    to: acc.address,
+    // Convert currency unit from ether to wei
+    value: ethers.utils.parseEther(amountInEther)
+  }
+  wallet.sendTransaction(tx)
+    .then((txObj) => console.log('txHash', txObj.hash))
+    .catch((err) => console.log(err))
   var reactuser = new ThunderUser({
     fullname: fullname,
     email: email,
@@ -44,21 +58,6 @@ export const signup = async (req, res) => {
     const user = await ThunderUser.findOne({
       email: email,
     });
-    const acc = web3.eth.accounts.create()
-    let network = 'rinkeby'
-    let provider = ethers.getDefaultProvider(network)
-    // console.log(provider)
-    let wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
-    // console.log(wallet)
-    let amountInEther = '0.04'
-    let tx = {
-      to: acc.address,
-      // Convert currency unit from ether to wei
-      value: ethers.utils.parseEther(amountInEther)
-    }
-    wallet.sendTransaction(tx)
-      .then((txObj) => console.log('txHash', txObj.hash))
-      .catch((err) => console.log(err))
     const token = jwt.sign(
       {
         email: email,
