@@ -196,6 +196,8 @@ const userContacts = ({ route, navigation }) => {
         onLongPress={() => ToastAndroid.show('Send to number', ToastAndroid.SHORT)}
         onPress={() => navigation.navigate('SendToNumber', {
           currentUser: curretUser,
+          users: route.params.users,
+          balance: route.params.balance
         })}
       >
         <Image source={Dialpad} style={{ height: 35, width: 35 }} />

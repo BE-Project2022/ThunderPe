@@ -72,6 +72,8 @@ const SendMoneyToNumber = ({ route, navigation }) => {
                     navigation.navigate("EnterAmount", {
                         user: item,
                         currentUser: currentUser,
+                        users: route.params.users,
+                        balance: route.params.balance
                     })
                 }
             >

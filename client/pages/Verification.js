@@ -94,7 +94,8 @@ const Verification = ({ route, navigation }) => {
             .then((res) => {
                 res.data.forEach(item => {
                     // console.log(item.fullname)
-                    usersData.push(item)
+                    if (item.fullname !== 'ThunderPe')
+                        usersData.push(item)
                     // console.log(text)
                 })
             })

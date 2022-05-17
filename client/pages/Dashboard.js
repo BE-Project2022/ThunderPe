@@ -250,6 +250,18 @@ const Dashboard = ({ route, navigation }) => {
             <MenuItem
               onPress={() => {
                 hideMenu();
+                navigation.navigate("AddMoney", {
+                  currentUser: route.params.user,
+                  users: route.params.users,
+                  balance: balance
+                });
+              }}
+            >
+              Add Money to Wallet
+            </MenuItem>
+            <MenuItem
+              onPress={() => {
+                hideMenu();
                 navigation.navigate("UserProfile", {
                   currentUser: route.params.user,
                   users: route.params.users,

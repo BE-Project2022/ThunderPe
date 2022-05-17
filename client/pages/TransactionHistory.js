@@ -49,7 +49,7 @@ const TransactionHistory = ({ navigation, route }) => {
             if (data[i].from === user.address.toLowerCase()) {
                 // console.log('HERE')
                 const to = data[i].to.toLowerCase()
-                console.log(to)
+                // console.log(to)
                 const toAddr = { address: to }
                 try {
                     const receiver = await axios.post('https://thunderpe.herokuapp.com/auth/oneUser', toAddr)
@@ -211,7 +211,8 @@ const styles = StyleSheet.create({
         backgroundColor: dark.primary,
         height: 49,
         flexDirection: "row",
-    }, title: {
+    },
+    title: {
         fontSize: 20,
         color: "white",
         height: 40,
