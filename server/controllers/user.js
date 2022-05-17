@@ -15,6 +15,10 @@ const require = createRequire(import.meta.url);
 const file = require('../ABI.json')
 var Tx = require('ethereumjs-tx').Transaction
 const router = express.Router();
+const Stripe = require("stripe");
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+
+
 
 const web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/1d20c176d3dc453bab9f2571b173a8cd'))
 const contract = new web3.eth.Contract(file.abi, process.env.CONTRACT_ADDRESS)
@@ -378,3 +382,26 @@ export const getOneUser = async (req, res) => {
     res.status(500).json(err);
   }
 }
+export const send = async (req, res) => {
+  try {
+    // Getting data from client
+    let { amount, name } = req.body;
+    // Simple validation
+    amount = parseInt(amount);
+    // Initiate payment
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(amount * 100),
+      currency: "INR",
+      payment_method_types: ["card"],
+      metadata: { name },
+    });
+    // Extracting the client secret 
+    const clientSecret = paymentIntent.client_secret;
+    // Sending the client secret as response
+    res.status(200).json({ clientSecret });
+  } catch (err) {
+    // Catch any error and send error 500 to client
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
