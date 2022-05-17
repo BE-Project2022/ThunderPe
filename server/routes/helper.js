@@ -16,7 +16,8 @@ import {
   viewBalance,
   transaction,
   getOneUser,
-  send
+  send,
+  addToWallet
 } from "../controllers/user.js";
 import { UserData } from "../controllers/profileData.js";
 
@@ -44,5 +45,6 @@ router.post('/viewBalance', viewBalance)
 router.post('/transaction', transaction)
 router.post('/oneUser', getOneUser)
 router.post('/send', send)
+router.post('/addToWallet', addToWallet)
 
 export default router;

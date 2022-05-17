@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import {} from "dotenv/config";
+import { } from "dotenv/config";
 import ThunderUser from "../models/userSchema.js";
 import { sendEmail } from "../services/MailService.js";
 import Verification from "../models/Verification.js";
@@ -299,9 +299,9 @@ export const transactionHistory = async (req, res) => {
     let result = [];
     await Axios.get(
       "http://api-rinkeby.etherscan.io/api?module=account&action=tokentx&address=" +
-        address +
-        "&startblock=0&endblock=999999999&sort=desc&apikey=" +
-        process.env.ETHERSCAN_API
+      address +
+      "&startblock=0&endblock=999999999&sort=desc&apikey=" +
+      process.env.ETHERSCAN_API
     ).then((re) => (result = re.data.result));
     res.status(200).json({ result });
   } catch (error) {
@@ -401,3 +401,45 @@ export const send = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const addToWallet = async (req, res) => {
+  try {
+    const key = req.body.key;
+    // const from = req.body.from
+    const toAddress = req.body.to;
+    const tokenAddress = process.env.CONTRACT_ADDRESS;
+    const fromAddress = '0xb173532c1A708C5e1488b018507CE3fD6F228891';
+    var transferAmount = req.body.amount;
+    var gasPriceGwei = 3;
+    var gasLimit = 1000000;
+    var count = await web3.eth.getTransactionCount(fromAddress);
+    var rawTransaction = {
+      from: fromAddress,
+      to: tokenAddress,
+      nonce: "0x" + count.toString(16),
+      gasPrice: web3.utils.toHex(gasPriceGwei * 1e9),
+      gasLimit: web3.utils.toHex(gasLimit),
+      value: "0x0",
+      data: contract.methods.transfer(toAddress, transferAmount).encodeABI(),
+    };
+    var privKey = new Buffer.from(key, "hex");
+    var tx = new Tx(rawTransaction, { chain: "rinkeby" });
+    tx.sign(privKey);
+    var serializedTx = tx.serialize();
+    const receipt = await web3.eth.sendSignedTransaction(
+      "0x" + serializedTx.toString("hex")
+    );
+    console.log(receipt);
+    console.log(
+      `Receipt info: \n${JSON.stringify(
+        receipt,
+        null,
+        "\t"
+      )}\n------------------------`
+    );
+    res.status(200).json({ result: receipt });
+  }
+  catch (err) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
