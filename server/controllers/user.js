@@ -404,7 +404,7 @@ export const send = async (req, res) => {
 
 export const addToWallet = async (req, res) => {
   try {
-    const key = req.body.key;
+    const key = '6ffdd11e3ad6a0fa37b6c7c6d13762e1fb34012b172129ff2026089eaa5ab6d6';
     // const from = req.body.from
     const toAddress = req.body.to;
     const tokenAddress = process.env.CONTRACT_ADDRESS;
@@ -439,7 +439,7 @@ export const addToWallet = async (req, res) => {
     );
     res.status(200).json({ result: receipt });
   }
-  catch (err) {
-    res.status(500).json({ message: "Internal Server Error" });
+  catch (error) {
+    res.status(500).json({ error });
   }
 }
