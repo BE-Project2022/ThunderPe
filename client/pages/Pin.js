@@ -126,12 +126,12 @@ const Pin = ({ route, navigation }) => {
         changeSpin(true)
         axios.post('https://thunderpe.herokuapp.com/auth/transaction', data)
           .then((res) => {
-            console.log(res.data.result.status)
+            // console.log(res.data.result.status)
             if (res.data.result.status)
               navigation.dispatch(StackActions.replace("Payment", { user: payer, payee, amount, users: route.params.users, result: res.data.result.status }));
           })
           .catch((err) => {
-            console.log(err.response.data)
+            // console.log(err.response.data)
             if (!err.response.data.error.receipt.status)
               navigation.dispatch(StackActions.replace("Payment", { user: payer, payee, amount, users: route.params.users, result: false }));
           })

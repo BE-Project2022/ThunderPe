@@ -338,29 +338,6 @@ const Dashboard = ({ route, navigation }) => {
                     marginLeft: -20,
                   }}
                 />
-                <View style={{ marginTop: 10 }}>
-                  <Text style={{ fontSize: 18 }}>Promotions</Text>
-                  <TouchableOpacity style={{ marginTop: 13, width: 59 }}>
-                    <Image
-                      source={Reward}
-                      style={{
-                        backgroundColor: "transparent",
-                        height: 55,
-                        width: 55,
-                      }}
-                    />
-                    <Text style={{ fontSize: 13 }}>Rewards</Text>
-                  </TouchableOpacity>
-                </View>
-                <View
-                  style={{
-                    backgroundColor: "#D8D2D2",
-                    height: 1,
-                    width: "104%",
-                    marginTop: 15,
-                    marginLeft: -20,
-                  }}
-                />
                 <View>
                   <TouchableOpacity style={{ height: 60, flexDirection: "row" }} onPress={() => navigation.navigate('TransactionHistory', { user: route.params.user })}>
                     <Text style={{ fontSize: 18, marginTop: "3.5%" }}>

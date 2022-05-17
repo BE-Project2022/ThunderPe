@@ -17,11 +17,19 @@ const TransactionHistory = ({ navigation, route }) => {
     const [history, setHistory] = useState([])
     const [spin, changeSpin] = useState(false);
     let data = []
+    // let timestamp = '1652765732'
+    // let time = moment.unix(timestamp)
+    // console.log(time)
+    // const dates = time.toString()
+    // console.log('DATES: ', dates)
+    // const temp = dates.split(" ")
+    // console.log(temp)
+
     useEffect(async () => {
         changeSpin(true)
         const temp = await axios.post('https://thunderpe.herokuapp.com/auth/transactionHistory', user)
         data = temp.data.result
-        // console.log(data)
+        // console.log(data[0])
         // console.log(temp.data.result.length)
         updateHistory()
     }, [])
@@ -34,14 +42,14 @@ const TransactionHistory = ({ navigation, route }) => {
 
     const updateHistory = async () => {
         console.log('HIs')
-        console.log(user.address.toLowerCase())
+        // console.log(user.address.toLowerCase())
         history.splice(0, history.length)
         let temp = []
         for (var i = 0; i < data.length; i++) {
             if (data[i].from === user.address.toLowerCase()) {
-                console.log('HERE')
+                // console.log('HERE')
                 const to = data[i].to.toLowerCase()
-                // console.log(to)
+                console.log(to)
                 const toAddr = { address: to }
                 try {
                     const receiver = await axios.post('https://thunderpe.herokuapp.com/auth/oneUser', toAddr)
@@ -50,14 +58,15 @@ const TransactionHistory = ({ navigation, route }) => {
                     if (receiver.data) {
                         var timestamp = data[i].timeStamp
                         var time = moment.unix(timestamp)
-                        // console.log(typeof time)
-                        const dates = time.toString().split('T')
-                        // console.log(dates[0])
+                        // console.log(timestamp)
+                        // console.log(time)
+                        const dates = time.toString()
+                        // console.log('DATES: ', dates)
                         const d = dates[0]
-                        const temp = dates[0].split(" ")
+                        const temp = dates.split(" ")
                         // console.log(temp)
                         const answer = temp[0] + ' ' + temp[1] + ' ' + temp[2] + ' ' + temp[3]
-                        // console.log(answer)
+                        // console.log('ANSEWER: ', answer)
                         // console.log(receiver.data.user.fullname)
                         const create = {
                             id: i,
@@ -84,10 +93,10 @@ const TransactionHistory = ({ navigation, route }) => {
                         var timestamp = data[i].timeStamp
                         var time = moment.unix(timestamp)
                         // console.log(typeof time)
-                        const dates = time.toString().split('T')
+                        const dates = time.toString()
                         // console.log(dates[0])
                         const d = dates[0]
-                        const temp = dates[0].split(" ")
+                        const temp = dates.split(" ")
                         // console.log(temp)
                         const answer = temp[0] + ' ' + temp[1] + ' ' + temp[2] + ' ' + temp[3]
                         // console.log(answer)

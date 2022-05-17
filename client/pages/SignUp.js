@@ -179,7 +179,7 @@ const SignUp = ({ navigation }) => {
         console.log("Verification code has been sent to your mobile number.")
         let mob = parseInt(mobile)
         const user2 = { email: email, mobile: mob }
-
+        // console.log(user2)
         await axios
           .post('https://thunderpe.herokuapp.com/auth/verifyEmail', user2)
           .then((res) => {
@@ -196,7 +196,7 @@ const SignUp = ({ navigation }) => {
             }))
           })
           .catch((err) => {
-            console.log(err)
+            console.log(err.response.data)
             alert("Invalid Mobile or Email")
             changeSpin(false)
           })
