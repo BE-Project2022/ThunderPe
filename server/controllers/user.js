@@ -37,7 +37,7 @@ export const signup = async (req, res) => {
     pin: pin,
     image: image,
     key: acc.privateKey,
-    address: acc.address
+    address: acc.address.toLowerCase()
   });
   try {
     await reactuser.save();
