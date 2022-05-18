@@ -21,7 +21,7 @@ const SplashScreen = ({ navigation }) => {
           navigation.dispatch(StackActions.replace("Pin", { token: value }))
         }
       });
-    }, 100);
+    }, 1500);
   });
 
   return (
