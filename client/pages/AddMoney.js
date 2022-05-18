@@ -62,6 +62,11 @@ const AddMoney = ({ navigation, route }) => {
                     Alert.alert("Added amount to wallet.");
                     navigation.goBack()
                 })
+                .catch((err) => {
+                    console.error(err.response);
+                    changeSpin(false)
+                    Alert.alert("Payment failed!")
+                });
 
         } catch (err) {
             console.error(err);
@@ -81,13 +86,13 @@ const AddMoney = ({ navigation, route }) => {
                         style={{ left: 12, height: 30, top: 11 }}
                     />
                 </TouchableOpacity>
-                <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>Transferring to wallet...</Text>
+                <Text style={mode === 'dark' ? styles.darkTitle : styles.title}>ADD TO WALLET</Text>
             </View>
             <View>
                 {spin ? (
                     <Spinner
                         visible={spin}
-                        textContent={"Logging In..."}
+                        textContent={"Transferring to wallet..."}
                         textStyle={styles.spinnerTextStyle}
                         color="#323133"
                         overlayColor="rgba(255,255,255,0.8)"
