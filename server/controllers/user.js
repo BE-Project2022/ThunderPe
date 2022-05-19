@@ -410,6 +410,32 @@ export const addToWallet = async (req, res) => {
     const tokenAddress = process.env.CONTRACT_ADDRESS;
     const fromAddress = '0xb173532c1A708C5e1488b018507CE3fD6F228891';
     var transferAmount = req.body.amount;
+    var balance = await contract.methods.balanceOf(fromAddress).call();
+    console.log(balance)
+    // console.log(transferAmount + 10000)
+    if (balance <= transferAmount) {
+      var count = await web3.eth.getTransactionCount(fromAddress);
+      var gasPriceGwei = 3;
+      var gasLimit = 1000000;
+      var rawTransaction = {
+        from: fromAddress,
+        to: tokenAddress,
+        nonce: "0x" + count.toString(16),
+        gasPrice: web3.utils.toHex(gasPriceGwei * 1e9),
+        gasLimit: web3.utils.toHex(gasLimit),
+        value: "0x0",
+        data: contract.methods.mint(transferAmount + 10000).encodeABI(),
+      };
+      var privKey = new Buffer.from(key, "hex");
+      var tx = new Tx(rawTransaction, { chain: "rinkeby" });
+      // console.log('here')
+      tx.sign(privKey);
+      var serializedTx = tx.serialize();
+      const receipt = await web3.eth.sendSignedTransaction(
+        "0x" + serializedTx.toString("hex")
+      );
+      console.log('RR: ', receipt)
+    }
     var gasPriceGwei = 3;
     var gasLimit = 1000000;
     var count = await web3.eth.getTransactionCount(fromAddress);
