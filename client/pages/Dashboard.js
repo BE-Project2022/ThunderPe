@@ -299,22 +299,14 @@ const Dashboard = ({ route, navigation }) => {
                   ? "WALLET BALANCE"
                   : "Balance: \u20B9 " + balance.toString()}
               </Text>
-              <Image
-                source={Rupee}
-                style={
-                  screenCover === "70%"
-                    ? { top: 50, alignSelf: "center", height: 40, right: 52 }
-                    : null
-                }
-              />
               <Text
                 style={
                   screenCover === "70%"
-                    ? { top: 1, alignSelf: "center", fontWeight: 'bold', fontSize: 32, }
+                    ? { top: 1, alignSelf: "center", fontWeight: 'bold', fontSize: 32, marginLeft: '2%', top: 28 }
                     : null
                 }
               >
-                {balance.toString()}
+                {"\u20B9 " + balance.toString()}
               </Text>
             </View>
           </LinearGradient>
